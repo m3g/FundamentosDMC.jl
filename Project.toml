@@ -1,0 +1,13 @@
+name = "CELFI"
+uuid = "7c3e4e1e-8f1e-4385-8ce4-0b12e1255643"
+authors = ["Leandro Martinez <leandro@iqm.unicamp.br> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
