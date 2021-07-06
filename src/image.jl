@@ -20,3 +20,4 @@ function image_one(x,side)
     return xmod
   end
 end
+
