@@ -4,15 +4,19 @@
 image(x,sides)
 ```
 
-Move coordinates to minimum perioddic images
+Move coordinates to minimum perioddic image.
 
 """
-function image(x,sides)
-  image = mod.(x,sides)
-  if image < -sides/2
-    image = image + sides
-  elseif image > sides/2
-    image = image - sides
+image(x,sides) = image_one.(x,sides)
+
+# Translate a single coordinate according to periodic conditions
+function image_one(x,side)
+  xmod = x%side 
+  if xmod <= -side/2
+    return xmod + side
+  elseif xmod > side/2
+    return xmod - side
+  else
+    return xmod
   end
-  return image
 end

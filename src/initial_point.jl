@@ -1,70 +1,74 @@
 """
 
 ```
-initial_point(opt::Options)
+initial_point(n,opt::Options)
 ```
 
-Create initial point, minimizes its energy, and returns it.
+Create initial coordinates of `n` points, minimizes its energy, and returns it.
 
 ### Example
 ```julia-repl
-julia> opt = Options(n=1000,sides=Point(100,100)); # 1000 particles with side 100.
+julia> opt = Options(sides=Point(100,100)); # box with side 100.
 
-julia> x0 = initial(opt)
+julia> x0 = initial(1000,opt)
 
 ```
 
 """
-function initial_point(opt::Options)
-  @unpack n, sides, eps, sig = opt 
+function initial_point(n,opt::Options)
+  # Simplify code by aliasing common variables
+  @unpack sides, eps, sig = opt 
   u(x) = potential(x,opt)
-  f!(x,f) = forces!(x,f,opt)
+  f!(f,x) = forces!(f,x,opt)
 
   # Creating random initial coordinates
   x = rand(Point,n)
   for i in 1:n
-    x[i] = -sides/2 .+ sides .* x[i]
+    x[i] = -sides/2 + sides .* x[i]
   end
 
   # Minimizing the energy of the initial point
-  ulast = u(x)
-  println(" Energy before minimization: ", ulast)
+  ubest = u(x)
+  println(" Energy before minimization: ", ubest)
 
   dx = 1.
   fnorm = 1.
   xtrial = zeros(Point,n)
   f = zeros(Point,n)
+  trial = 0
   while fnorm > 1.e-5
+    trial += 1
 
-    # Compute gradient
-    f!(x,f)
+    # Compute gradient (≡ -forces)
+    f!(f,x)
     fnorm = 0.
-    for i in 1:n
-      fnorm = fnorm + f[i].x^2 + f[i].y^2
+    for v in f
+      fnorm += norm2(v)
     end
-    fnorm = fnorm / n
+    fnorm = fnorm/n
 
-    # Compute trial point ( xtrial = x - (dU/dx)*dx )
+    # Compute trial point ( xtrial = x - (dU/dx)*dx = x + f*dx )
     for i in 1:n
       xtrial[i] = x[i] + f[i]*dx
-      xtrial[i] = image(xtrial[i],sides)
     end
-    ustep = u(xtrial)
+    utrial = u(xtrial)
 
-    # If energy decreased, accept, if not, reject and decrease dx
-    if ustep < ulast
+    # If energy decreased, accept new point, if not, reject it and decrease dx
+    if utrial < ubest
+      @printf(
+        "ACCEPTED U = %12.5e FNORM = %12.5e DX = %12.5e TRIAL = %10i\n", 
+        utrial, fnorm, dx, trial 
+      )
       for i in 1:n
         x[i] = xtrial[i]
       end
-      ulast = ustep
+      ubest = utrial
       dx = dx * 2
-      println("U = $ustep (accepted, fnorm = $fnorm)")
     else
       dx = dx / 2
-      println("U = $ustep (rejected, fnorm = $fnorm)")
     end
-
   end
 
-  print("Energy after minimization: ", u(x))
+  println("Energy after minimization: ", u(x))
+  return x
 end

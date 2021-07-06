@@ -15,7 +15,8 @@ function md(pars=Parameters())
   ")
 
   # unpack some Parameters to simplify code
-  @unpack n, ts, nsteps, kavg_target = pars 
+  @unpack ts, nsteps, kavg_target = pars 
+  n = length(x)
 
   # closure some parameters to simplify code
   potential(x) = potential(x,pars)

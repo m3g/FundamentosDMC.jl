@@ -4,8 +4,9 @@ using Printf
 using Parameters
 using StaticArrays
 
-export Options
+export Options, Point
 export initial_point
+
 
 include("./Point.jl")
 include("./Options.jl")
