@@ -10,14 +10,14 @@ Minimizes the potential energy of `x`. Modifies `x`.
 ```julia-repl
 julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ];
 
-julia> minimize!(x0,opt)
+julia> minimize!(x,opt)
 
 ```
 
 """
 function minimize!(x::Vector{T},opt::Options{T}) where T
   # Simplify code by aliasing common variables
-  n = length(x0)
+  n = length(x)
   u(x) = potential(x,opt)
   f!(f,x) = forces!(f,x,opt)
 
@@ -61,6 +61,10 @@ function minimize!(x::Vector{T},opt::Options{T}) where T
     else
       dx = dx / 2
     end
+  end
+
+  for i in 1:n
+    x[i] = image(x[i],opt.sides)
   end
 
   println("Energy after minimization: ", u(x))

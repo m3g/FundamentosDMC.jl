@@ -6,7 +6,7 @@ using StaticArrays
 using FastPow
 
 export Options, Point2D, Point3D
-export initial_point
+export minimize!
 export printxyz
 
 include("./Points.jl")

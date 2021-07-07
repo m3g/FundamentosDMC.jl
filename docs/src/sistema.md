@@ -68,6 +68,7 @@ Los parámetros de las simulaciones son controlados en la inicialización de la 
 
 ```julia-repl
 julia> opt = Options(sides=[100,100],dt=0.01)
+Options{Point2D}
 -------------------
 Simulation options:
 -------------------
@@ -95,7 +96,7 @@ En este caso, ajustamos en tamaño del sistema y el paso de tiempo manualmente, 
 
 La coordenadas iniciales son creadas aleatoriamente, usando: 
 ```julia-repl
-julia> x0 = [ opt.sides .* rand(Point) for i in 1:100 ]
+julia> x0 = [ opt.sides .* rand(Point2D) for i in 1:100 ]
 100-element Vector{Point}:
  [18.36579648764145, 7.711401822973363]
  [41.784092301135665, 45.61852102711508]
@@ -105,7 +106,7 @@ julia> x0 = [ opt.sides .* rand(Point) for i in 1:100 ]
  [26.845528447086274, 92.88216539818639]
 
 ```
-que genera `100` puntos aleatórios con coordenadas entre `[0,0]` y `opt.sides = [100,100]`, en este caso.
+que genera `100` puntos en 2 dimensiones, aleatórios, con coordenadas entre `[0,0]` y `opt.sides = [100,100]`, en este caso. `Point2D` es un tipo de variable que representa un punto en dos dimensiones. Mas adelante vamos a ver que todo el código es genérico, y podemos hacer simulaciones en 3 dimensiones apenas modificando el tipo de variable asociado. 
 
 !!! note
     El punto `.` en `.*` indica que es una multiplicación componente-a-componente, de cada componente del vector `opt.sides` por cada componente del vector associado a cada punto. 
