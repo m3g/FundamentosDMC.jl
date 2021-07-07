@@ -1,13 +1,13 @@
 """
 
 ```
-md(x,opt)
+md(x::Vector{T},opt) where T
 ```
 
 Performs a simple MD simulation starting from `x`, with options given by `opt` 
 
 """
-function md(x,opt::Options)
+function md(x::Vector{T},opt::Options{T}) where T
 
   println("""
   -----------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ function md(x,opt::Options)
       )
       if opt.printvel
         for i = 1:n
-          println(velocities_file,v[i][1]^2 + v[i][2]^2)
+          println(velocities_file,norm2(v[i]))
         end
       end
     end

@@ -5,11 +5,11 @@ using Parameters
 using StaticArrays
 using FastPow
 
-export Options, Point
+export Options, Point2D, Point3D
 export initial_point
+export printxyz
 
-
-include("./Point.jl")
+include("./Points.jl")
 include("./Options.jl")
 include("./image.jl")
 
@@ -17,7 +17,7 @@ include("./potential.jl")
 include("./kinetic.jl")
 include("./forces.jl")
 
-include("./initial_point.jl")
+include("./minimize.jl")
 include("./printxyz.jl")
 
 include("./md-simple.jl")

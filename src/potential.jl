@@ -3,7 +3,7 @@
 Function that computes the potential energy
 
 """
-function potential(x,opt)
+function potential(x::Vector{T},opt::Options{T}) where T
   @unpack sides, eps, sig = opt
   n = length(x)
   u = 0.

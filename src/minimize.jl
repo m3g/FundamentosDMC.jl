@@ -1,31 +1,25 @@
 """
 
 ```
-initial_point(n,opt::Options)
+minimize!(x,opt::Options)
 ```
 
-Create initial coordinates of `n` points, minimizes its energy, and returns it.
+Minimizes the potential energy of `x`. Modifies `x`.
 
 ### Example
 ```julia-repl
-julia> opt = Options(sides=Point(100,100)); # box with side 100.
+julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ];
 
-julia> x0 = initial(1000,opt)
+julia> minimize!(x0,opt)
 
 ```
 
 """
-function initial_point(n,opt::Options)
+function minimize!(x::Vector{T},opt::Options{T}) where T
   # Simplify code by aliasing common variables
-  @unpack sides, eps, sig = opt 
+  n = length(x0)
   u(x) = potential(x,opt)
   f!(f,x) = forces!(f,x,opt)
-
-  # Creating random initial coordinates
-  x = rand(Point,n)
-  for i in 1:n
-    x[i] = -sides/2 + sides .* x[i]
-  end
 
   # Minimizing the energy of the initial point
   ubest = u(x)
@@ -33,10 +27,10 @@ function initial_point(n,opt::Options)
 
   dx = 1.
   fnorm = 1.
-  xtrial = zeros(Point,n)
-  f = zeros(Point,n)
+  xtrial = zeros(T,n)
+  f = zeros(T,n)
   trial = 0
-  while fnorm > 1.e-5
+  while fnorm > 1.e-5 && trial < 20_000
     trial += 1
 
     # Compute gradient (≡ -forces)

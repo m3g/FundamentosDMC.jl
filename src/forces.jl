@@ -1,18 +1,16 @@
 """
 
 ```
-forces!(x::Vector{Point},f::Vector{Point},pars::Parameters)
+forces!(x::Vector{T},f::Vector{T},opt::Options) where T
 ```
 
 Subroutine that computes the force. It modifies the input `f` vector.
 
 """
-function forces!(f,x,opt)
-  @unpack eps, sig, sides = opt
+function forces!(f::Vector{T},x::Vector{T},opt::Options{T}) where T
   n = length(x)
-  for i in 1:n
-    f[i] = zero(Point)
-  end
+  @unpack eps, sig, sides = opt
+  @. f = zero(T)
   for i in 1:n-1
     for j in i+1:n
       dx = image(x[j] - x[i], sides)

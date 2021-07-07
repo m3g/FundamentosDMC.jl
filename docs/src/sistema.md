@@ -57,5 +57,80 @@ la temperatura que corresponde a $kT = 0.6$ unidades. Los sistemas
 simulados tiene 100 partículas, por lo tanto la energía cinética media
 es $100kT=60$ unidades.
 
+## Parámetros y opciones de la simulación
+
+Para inciar los trabajos, abra una sección de `Julia`, y dé el comando:
+```julia-repl
+julia> using CELFI
+```
+
+Los parámetros de las simulaciones son controlados en la inicialización de la estructure `Options`, por ejemplo:
+
+```julia-repl
+julia> opt = Options(sides=[100,100],dt=0.01)
+-------------------
+Simulation options:
+-------------------
+dt = 0.01
+nsteps = 2000
+sides = [100.0, 100.0]
+eps = 1.0
+sig = 2.0
+kavg_target = 0.6
+ibath = 1
+printxyz = true
+printvel = false
+iprint = 1
+iprintxyz = 2
+trajectory_file = traj.xyz
+energies_file = energies.dat
+velocities_file = velocities.dat
+
+julia>
+```
+
+En este caso, ajustamos en tamaño del sistema y el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos paráemetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), energía cinética (temperatura), y los nombres de los archivos de salida. 
+
+## Coordenadas iniciales
+
+La coordenadas iniciales son creadas aleatoriamente, usando: 
+```julia-repl
+julia> x0 = [ opt.sides .* rand(Point) for i in 1:100 ]
+100-element Vector{Point}:
+ [18.36579648764145, 7.711401822973363]
+ [41.784092301135665, 45.61852102711508]
+ [23.850299728474454, 63.797752122286425]
+ ⋮
+ [92.5679156243071, 39.272476774702206]
+ [26.845528447086274, 92.88216539818639]
+
+```
+que genera `100` puntos aleatórios con coordenadas entre `[0,0]` y `opt.sides = [100,100]`, en este caso.
+
+!!! note
+    El punto `.` en `.*` indica que es una multiplicación componente-a-componente, de cada componente del vector `opt.sides` por cada componente del vector associado a cada punto. 
+
+y, en seguida, son
+variadas usando el Método del Gradiente para minimizar la energía. El
+método consiste en mover las partículas según la aproximación de Taylor
+de orden uno, en la dirección de descenso de energía:
+\[
+\vec{x}_{i+1} = \vec{x}_i - \nabla V(\vec{x}_i) \Delta x
+\]  
+Si la energía en el punto $\vec{x}_{i+1}$ es menor que la energía en el
+punto $\vec{x}_i$, se acepta el punto $\vec{x}_{i+1}$ y el proceso es
+repetido. Si no, $\Delta x$ es disminuido ($\Delta x = \Delta x / 2$), y
+un nuevo punto $\vec{x}_{i+1}$ es calculado. Como la aproximación debe
+ser una buena aproximación en las cercanias del punto corriente ($\vec{x}_i$), un
+gradiente negativo garante que la función disminuye para $\Delta x$
+suficientemente pequeño. El proceso es interrumpido cuando la norma del
+gradiente es pequeña. En mecánica, $-\nabla V = \vec{F}$, entonces la
+función que calcula el gradiente es la misma que calcula las fuerzas en
+la simulación. Abra el archivo {\tt src/initial.f90} para
+discutir como se crea el punto inicial. 
+
+
+
+
 
 
