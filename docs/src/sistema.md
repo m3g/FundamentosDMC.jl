@@ -5,11 +5,7 @@ La simulación es de un fluido de 100 partículas (mono-atómicas) que
 interactúan por un
 potencial de Lennard-Jones, en un sistema bi-dimensional, periódico.
 
-$
-V = 4\epsilon \left( \frac{\sigma^{12}}{r^{12}} - \frac{\sigma^6}{r^6} \right)
-$
-
-[teste](t)
+$V = 4\epsilon \left( \frac{\sigma^{12}}{r^{12}} - \frac{\sigma^6}{r^6} \right)$
 
 Abra el archivo [potential.jl](https://github.com/m3g/CELFI.jl/blob/master/src/potential.jl) y entienda la implementación del
 cálculo de la energía potencial. Note que el cálculo depende de 3
@@ -39,21 +35,17 @@ donde la media, hecha sobre $v_x$ aqui, es equivalente si hecha sobre
 cualquier otro grado de libertad de translación. En un sistema
 tridimensional, por lo tanto, 
 
-$
-\left<\frac{1}{2}m |\vec{v}|^2 \right> = 
+$\left<\frac{1}{2}m |\vec{v}|^2 \right> = 
 \left<\frac{1}{2}m \left(v_x^2 + v_y^2 + v_z^2\right) \right> = 
-3\left< \frac{1}{2} m v_x^2 \right> = \frac{3}{2}kT
-$
+3\left< \frac{1}{2} m v_x^2 \right> = \frac{3}{2}kT$
 
 que es el resultado usual.
 
 Nuestras simulaciones son de un sistema bi-dimensional. En este caso,
 
-$
-\left< \frac{1}{2}m |\vec{v}|^2 \right> = 
+$\left< \frac{1}{2}m |\vec{v}|^2 \right> = 
 \left< \frac{1}{2}m \left(v_x^2 + v_y^2\right)\right> =
-2\left< \frac{1}{2}m v_x^2 \right> = kT 
-$
+2\left< \frac{1}{2}m v_x^2 \right> = kT$
 
 En los códigos de dinámica molecular, la definición de temperatura se
 da, así, por la definición de la energía cinética media o, en este caso,
