@@ -7,7 +7,7 @@ makedocs(
     modules=[CELFI],
     sitename="CELFI.jl",
     pages = [
-        "Home" => "index.md",
+        "Início" => "index.md",
         "Sistema simulado" => "sistema.md",
     ]
 )

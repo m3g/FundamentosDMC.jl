@@ -17,7 +17,7 @@ del potencial), y el archivo [kinetic.jl](https://github.com/m3g/CELFI.jl/blob/m
 de la energía cinética. Como el sistema usa condiciones periódicas de
 contorno, las coordenadas tienen que siempre ser calculadas en relación
 a la imagen mínima. El cálculo de la imagen mínima está implementado en
-el archivo [image.jl](https://github.com/m3g/CELFI.jl/blob/master/src/kinetic.jl). Es interesante entender la
+el archivo [image.jl](https://github.com/m3g/CELFI.jl/blob/master/src/image.jl). Es interesante entender la
 implementación de cada una de estas funciones, que son comunes a todos
 los métodos que vamos a describir. 
 
