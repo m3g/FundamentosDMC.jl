@@ -16,7 +16,7 @@ Ejecute el interpretador, e instale el paquete deste curso, usando:
 ```julia
 julia> ] add https://github.com/m3g/CELFI.jl
 ```
-(el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`")
+(el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
 
 
 ## Instalación de VMD
@@ -26,7 +26,7 @@ Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las
 ## Códigos
 
 `Julia` es un lenguage de programación de alta peformance, dinámico, y con sintaxis bastante simple. Todos los códigos de este curso están disponíbles en repositório 
-[https://github.com/m3g/CELFI.jl](https://github.com/m3g/CELFi.jl), y su lectura, será estimulada en la medida que avanzemos en la ejecución del tutorial. 
+[https://github.com/m3g/CELFI.jl](https://github.com/m3g/CELFi.jl), y su lectura será estimulada en la medida que avanzemos en la ejecución del tutorial. 
 
 Los códigos aqui son razonablemente eficientes para al realización del tutorial, pero no están optimizados para máxima peformance, para que su lectura sea más fácil. 
 
