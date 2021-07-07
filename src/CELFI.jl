@@ -18,8 +18,9 @@ include("./kinetic.jl")
 include("./forces.jl")
 
 include("./initial_point.jl")
-
 include("./printxyz.jl")
+
+include("./md-simple.jl")
 
 end
 

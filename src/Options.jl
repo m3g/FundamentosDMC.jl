@@ -14,7 +14,7 @@ julia> opt = Options(side=200.,nsteps=2000)
 """
 @with_kw struct Options
   # Time
-  ts::Float64 = 0.1
+  dt::Float64 = 0.1
   nsteps::Int = 2000
 
   # System parameters

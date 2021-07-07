@@ -1,30 +1,25 @@
 """
 
 ```
-md(ts,tprod;pars)
+md(x,opt)
 ```
 
-Performs a simple MD simulation with time-step `ts` and parameters given by `pars`. 
+Performs a simple MD simulation starting from `x`, with options given by `opt` 
 
 """
-function md(pars=Parameters())
-  println("
-           -----------------------------------------------------------------------------------------
-                                                    Simple MD
-           -----------------------------------------------------------------------------------------
-  ")
+function md(x,opt::Options)
 
-  # unpack some Parameters to simplify code
-  @unpack ts, nsteps, kavg_target = pars 
+  println("""
+  -----------------------------------------------------------------------------------------
+  Simple MD
+  -----------------------------------------------------------------------------------------
+  """)
+
+  # aliases to simplify code
   n = length(x)
-
-  # closure some parameters to simplify code
-  potential(x) = potential(x,pars)
-  kinetic(x) = kinetic(x,pars)
-  forces!(x,f) = forces!(x,f,pars)
-
-  # Initial positions
-  x = initial(n)
+  @unpack dt, nsteps, kavg_target = opt
+  u(x) = potential(x,opt)
+  f!(x,f) = forces!(x,f,opt)
 
   # Initialize velocities with proper average kinetic energy
   v = rand(Point,n)
@@ -32,52 +27,48 @@ function md(pars=Parameters())
   @. v = sqrt(kavg_target/kavg)*v
 
   # Open trajectory files for writting
-  trajectory_file = open(pars.trajectory_file,"w")
-  energies_file = open(pars.energies_file,"w")
-  velocities_file = open(pars.velocities_file,"w")
+  trajectory_file = open(opt.trajectory_file,"w")
+  energies_file = open(opt.energies_file,"w")
+  velocities_file = open(opt.velocities_file,"w")
  
-  println(" Potential energy at initial point: " , potential(x))
+  println(" Potential energy at initial point: " , u(x))
   println(" Kinetic energy at initial point: ", kinetic(v))
-  eini = potential(x) + kinetic(v)
-  kini = kinetic(v)
-  println(" Total initial energy = ', eini")
-  printxyz(time,x,pars,trajectory_file)
+  println(" Total initial energy = ", u(x) + kinetic(v))
   
-  # Save first set of forces 
-  forces!(x,f)
+  # Initialize velocity vector and save first set of forces 
+  f = zeros(Point,n)
+  f!(f,x)
   flast = copy(f)
 
   # Running simulation
-
   time = 0.
+  printxyz(time,x,opt,trajectory_file)
   for istep = 1:nsteps
 
     # Updating positions 
-    for i in 1:n
-      x[i] = x[i] + v[i]*dt + 0.5*f[i]*dt^2
-      x[i] = image(x[i]) # keep minimum image for vizualization
-    end
+    @. x = x + v*dt + 0.5*f*dt^2
 
     time += dt
     kstep = kinetic(v) 
-    ustep = potential(x)
+    ustep = u(x)
     energy = kstep + ustep 
     kavg = kstep / n
-
-    if mod(istep,iprint) == 0 
-      @printf(" TIME = %12.5f U = %12.5f K = %12.5f TOT = %12.5f ", time, ustep, kstep, energy)
-      if pars.printvel
+    if mod(istep,opt.iprint) == 0 
+      @printf(" TIME = %12.5f U = %12.5f K = %12.5f TOT = %12.5f \n", 
+        time, ustep, kstep, energy
+      )
+      if opt.printvel
         for i = 1:n
           println(velocities_file,v[i][1]^2 + v[i][2]^2)
         end
       end
     end
-    if mod(istep,iprintxyz) == 0 
-      printxyz(time,x,pars,trajectory_file)
+    if mod(istep,opt.iprintxyz) == 0 
+      printxyz(time,x,opt,trajectory_file)
     end
 
     # Stop if simulation exploded
-    if ustep > 1.e10
+    if ustep > 1e10
       println(" Simulation exploded: Energy = ", energy)
       close(trajectory_file)
       close(velocities_file)
@@ -86,15 +77,11 @@ function md(pars=Parameters())
     end
 
     # Updating the forces
-    for i in 1:n
-      flast[i] = f[i]
-    end
-    forces!(x,f)
+    @. flast = f
+    f!(f,x)
 
     # Updating velocities
-    for i in 1:n
-      v[i] = v[i] + 0.5*(f[i] + flast[i])*dt
-    end
+    @. v = v + 0.5*(f + flast)*dt 
 
   end
   close(trajectory_file)
