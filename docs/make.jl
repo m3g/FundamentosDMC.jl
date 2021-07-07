@@ -8,6 +8,7 @@ makedocs(
     sitename="CELFI.jl",
     pages = [
         "Home" => "index.md",
+        "Sistema simulado" => "sistema.md",
     ]
 )
 deploydocs(
