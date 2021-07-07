@@ -26,7 +26,7 @@ Instale el interpretador de `Julia`, de [https://julialang.org/](https://juliala
 
 Ejecute el interpretador, e instale el paquete deste curso, usando: 
 
-```julia
+```julia-repl
 julia> ] add https://github.com/m3g/CELFI.jl
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
