@@ -1,10 +1,16 @@
 
 
-Leandro Martínez, Institute of Chemistry, University of Campinas
-
-[http://m3g.iqm.unicamp.br](http://m3g.iqm.unicap.br)
-
 # Fundamentos de Mecánica Estadística y Simulaciones
+
+```@raw html
+<center>
+Leandro Martínez
+<br>
+*Instituto de Quimica, Universidad de Campinas*
+<br>
+[http://m3g.iqm.unicamp.br](http://m3g.iqm.unicap.br)
+</center>
+```
 
 Este tutorial contiene las explicaciones para rodar y analizar
 simulaciones de Dinámica Molecular y Mote-Carlo de un sistema
