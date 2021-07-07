@@ -1,4 +1,9 @@
 
+
+Leandro Martínez, Institute of Chemistry, University of Campinas
+
+[http://m3g.iqm.unicamp.br](http://m3g.iqm.unicap.br)
+
 # Fundamentos de Mecánica Estadística y Simulaciones
 
 Este tutorial contiene las explicaciones para rodar y analizar
