@@ -3,6 +3,7 @@ module CELFI
 using Printf
 using Parameters
 using StaticArrays
+using FastPow
 
 export Options, Point
 export initial_point
