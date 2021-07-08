@@ -9,7 +9,7 @@ export Options
 export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
-export md
+export md, md_isokinetic
 
 include("./Points.jl")
 include("./Options.jl")
@@ -25,6 +25,7 @@ include("./printxyz.jl")
 
 include("./velocities.jl")
 include("./md-simple.jl")
+include("./md-isokinetic.jl")
 
 end
 

@@ -10,6 +10,7 @@ makedocs(
         "Início" => "index.md",
         "Sistema simulado" => "sistema.md",
         "Simulación microcanónica" => "simple.md",
+        "Termostato isocinético" => "isokinetic.md",
     ]
 )
 deploydocs(

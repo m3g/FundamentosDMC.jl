@@ -25,6 +25,7 @@ struct Options{T}
   # Temperature bath parameters
   kavg_target
   ibath::Int
+  iequil::Int
 
   # Output and printing options
   printxyz::Bool
@@ -42,6 +43,7 @@ function Options(;
   sig::Float64 = 2.,
   kavg_target = 0.6,
   ibath::Int = 1,
+  iequil::Int = div(nsteps,10),
   printxyz::Bool = true,
   printvel::Bool = false,
   iprint::Int = 1,
@@ -61,7 +63,7 @@ function Options(;
     end
   end
   Options{typeof(sides)}(dt,nsteps,sides,eps,sig,kavg_target,
-          ibath,printxyz,printvel,iprint,iprintxyz,
+          ibath,iequil,printxyz,printvel,iprint,iprintxyz,
           trajectory_file)
 
 end
