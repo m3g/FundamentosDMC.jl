@@ -22,7 +22,7 @@ function md(x::Vector{T},opt::Options{T}) where T
   f!(x,f) = forces!(x,f,opt)
 
   # Initialize velocities with proper average kinetic energy
-  v = rand(Point,n)
+  v = rand(T,n)
   kavg = kinetic(v) / n
   @. v = sqrt(kavg_target/kavg)*v
 
@@ -36,7 +36,7 @@ function md(x::Vector{T},opt::Options{T}) where T
   println(" Total initial energy = ", u(x) + kinetic(v))
   
   # Initialize velocity vector and save first set of forces 
-  f = zeros(Point,n)
+  f = zeros(T,n)
   f!(f,x)
   flast = copy(f)
 
@@ -54,7 +54,7 @@ function md(x::Vector{T},opt::Options{T}) where T
     energy = kstep + ustep 
     kavg = kstep / n
     if mod(istep,opt.iprint) == 0 
-      @printf(" TIME = %12.5f U = %12.5f K = %12.5f TOT = %12.5f \n", 
+      @printf(" TIME = %12.3f U = %12.5e K = %12.5e TOT = %12.5e \n", 
         time, ustep, kstep, energy
       )
       if opt.printvel

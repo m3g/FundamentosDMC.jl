@@ -37,7 +37,7 @@ struct Options{T}
 end
 
 function Options(;
-  dt::Float64 = 0.1,
+  dt::Float64 = 0.05,
   nsteps::Int = 2000,
   sides = nothing,
   eps::Float64 = 1.,

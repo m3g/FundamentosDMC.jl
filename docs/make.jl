@@ -9,6 +9,7 @@ makedocs(
     pages = [
         "Início" => "index.md",
         "Sistema simulado" => "sistema.md",
+        "Simulación microcanónica" => "simple.md",
     ]
 )
 deploydocs(

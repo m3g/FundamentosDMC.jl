@@ -102,9 +102,30 @@ julia> x0 = copy(x)
 En seguida, minimizamos la energia con la función `minimize!`:
 ```julia-repl
 julia> minimize!(x,opt)
+Energy before minimization: 38322.72337856496
+Energy after minimization: -74.15646912098042
 ```
 
 En `Julia` es una convención que las funciones que modifican sus argumentos terminan en `!`. En este caso, la función va a modificar las posiciones, `x`, de las partículas. 
+
+Podemos ver rapidamente que ocurrió con las particulas, colocando-las en un gráfico. Primero, generamos un gráfico de los puntos antes de la minimización:
+```julia-repl
+julia> using Plots
+
+julia> scatter(Tuple.(x0))
+```
+Los puntos deben estar aleatoriamente distribuídos, y en particular algunos puntos deben estar muy cercanos a los otros, lo que genera potenciales muy repulsivos.
+
+En seguida, hacemos el gráfico del punto con energia mínima obtenido:
+```julia-repl
+julia> scatter(Tuple.(x))
+```
+y notará que los puntos ahora tienen una nueva disposición: hay puntos formando clusteres, porque el potencial de Lennard-Jones es atractivo en distáncias largas. Pero no hay más puntos muy cercanos generando repulsiones muy grandes.
+
+Este punto inicial de energia mínima será usado en nuestras simulaciones. 
+
+!!! note
+    Los gráficos puden ser salvos como figuras con `savefig("plot.pdf")`, por ejemplo.
 
 ## 2.4. Temperatura
 

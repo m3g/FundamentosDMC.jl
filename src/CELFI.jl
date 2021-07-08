@@ -9,6 +9,7 @@ export Options
 export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
+export md
 
 include("./Points.jl")
 include("./Options.jl")
