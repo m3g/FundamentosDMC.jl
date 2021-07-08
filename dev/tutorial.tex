@@ -33,28 +33,6 @@
 \sffamily
 \noindent
 
-
-\subsubsection*{Coordenadas iniciales}
-
-La coordenadas iniciales son creadas aleatoriamente y, en seguida, son
-variadas usando el Método del Gradiente para minimizar la energía. El
-método consiste en mover las partículas según la aproximación de Taylor
-de orden uno, en la dirección de descenso de energía:
-\[
-\vec{x}_{i+1} = \vec{x}_i - \nabla V(\vec{x}_i) \Delta x
-\]  
-Si la energía en el punto $\vec{x}_{i+1}$ es menor que la energía en el
-punto $\vec{x}_i$, se acepta el punto $\vec{x}_{i+1}$ y el proceso es
-repetido. Si no, $\Delta x$ es disminuido ($\Delta x = \Delta x / 2$), y
-un nuevo punto $\vec{x}_{i+1}$ es calculado. Como la aproximación debe
-ser una buena aproximación en las cercanias del punto corriente ($\vec{x}_i$), un
-gradiente negativo garante que la función disminuye para $\Delta x$
-suficientemente pequeño. El proceso es interrumpido cuando la norma del
-gradiente es pequeña. En mecánica, $-\nabla V = \vec{F}$, entonces la
-función que calcula el gradiente es la misma que calcula las fuerzas en
-la simulación. Abra el archivo {\tt src/initial.f90} para
-discutir como se crea el punto inicial. 
-
 \subsection{Simulación de Dinámica Molecular Simple}
 
 Abra el archivo {\tt src/md-simple.f90}, que contiene el algoritmo de
