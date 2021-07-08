@@ -1,7 +1,7 @@
 
 # Control de temperatura isocinético
 
- La función implementada en [md-isokinetic.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-simple.jl) implementa el control de temperatura
+ La función implementada en [md-isokinetic.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-isokinetic.jl) implementa el control de temperatura
 isocinético. En este método, las velocidades son escalonadas por un
 parámetro $\lambda = \sqrt{T_0/T}$ a intervalos regulares, para
 termostatizar el sistema a la temperatura $T_0$. 
