@@ -26,6 +26,7 @@ julia> opt = Options(nsteps=2000)
   iequil::Int = div(nsteps,100)
   tau::Int = div(nsteps,100)
   lambda::Float64 = 0.1
+  alpha::Float64 = 0.1
 
   # Output and printing options
   printxyz::Bool = true

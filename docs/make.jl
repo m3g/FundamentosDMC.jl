@@ -13,6 +13,9 @@ makedocs(
         "Termostato isocinético" => "isokinetic.md",
         "Termostato de Berendsen" => "berendsen.md",
         "Termostato de Langevin" => "langevin.md",
+        "Monte-Carlo" => "montecarlo.md",
+        "Comparando MD y MC" => "md_vs_mc.md",
+        "Help entries" => "help.md",
     ]
 )
 deploydocs(

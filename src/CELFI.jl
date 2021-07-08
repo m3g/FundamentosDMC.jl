@@ -6,10 +6,9 @@ using StaticArrays
 using FastPow
 
 export System, Options 
-export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
-export md, md_isokinetic, md_berendsen, md_langevin
+export md, md_isokinetic, md_berendsen, md_langevin, mc
 
 include("./Points.jl")
 include("./System.jl")
@@ -29,6 +28,7 @@ include("./md-simple.jl")
 include("./md-isokinetic.jl")
 include("./md-berendsen.jl")
 include("./md-langevin.jl")
+include("./mc.jl")
 
 end
 
