@@ -1,34 +1,28 @@
 """
 
 ```
-minimize!(x,opt::Options;print=false,tol=1e-5,maxtrial=20_000)
+minimize!(sys::System{T},opt::Options)
 ```
 
-Minimizes the potential energy of `x`. Modifies `x`.
+Minimizes the potential energy of `sys.x0`. Modifies `sys.x0`.
 
 ### Example
 ```julia-repl
-julia> opt = Options();
+julia> sys = System(n=100,sides=[100,100])
 
-julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ];
-
-julia> minimize!(x,opt)
+julia> minimize!(sys,Options(tol=1e-3))
 Energy before minimization: 38322.72337856496
 Energy after minimization: -74.15646912098042
 
 ```
 
 """
-function minimize!(
-  x::Vector{T},opt::Options{T};
-  print::Bool=false,
-  tol::Float64 = 1e-5,
-  maxtrial::Int = 20_000 
-) where T
+function minimize!(sys::System{T},opt::Options=Options()) where T
   # Simplify code by aliasing common variables
-  n = length(x)
-  u(x) = potential(x,opt)
-  f!(f,x) = forces!(f,x,opt)
+  @unpack n, x0, sides = sys
+  x = x0
+  u(x) = potential(x,sys,opt)
+  f!(f,x) = forces!(f,x,sys,opt)
 
   # Minimizing the energy of the initial point
   ubest = u(x)
@@ -58,7 +52,7 @@ function minimize!(
 
     # If energy decreased, accept new point, if not, reject it and decrease dx
     if utrial < ubest
-      if print
+      if opt.minprint
         @printf(
           "ACCEPTED U = %12.5e FNORM = %12.5e DX = %12.5e TRIAL = %10i\n", 
           utrial, fnorm, dx, trial 
@@ -75,7 +69,7 @@ function minimize!(
   end
 
   for i in 1:n
-    x[i] = image(x[i],opt.sides)
+    x[i] = image(x[i],sides)
   end
 
   println("Energy after minimization: ", u(x))

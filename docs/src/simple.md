@@ -31,7 +31,7 @@ La simulación no tiene control de temperatura o de presión. Es una propagació
 
 Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute le comando:
 ```julia-repl
-julia> log = md(x,Options(dt=1.0))
+julia> out = md(sys,Options(dt=0.1))
 
 ```
 En princípio, está previso realizar 2000 pasos de integración de las equaciones 
@@ -42,12 +42,21 @@ la elección del paso de integración, y los valores de energía cinética
 obtenidos. Las simulaciones que siguen van a usar un paso de integración
 `dt = 0.05`.
 
-La variable `log` que sale de la simulación es una matriz con las energias y la 
-temperatura en cada paso de la simulación. Es probable que la simulación "explote" con pasos de tiempo grandes. Para visualizar este processo, podemos hacer:
+Es posible controlar la frequéncia de impresión y el número de puntos salvos en el archivo de trajectoria con las opciones `iprint` y `iprintxyz`:
 ```julia-repl
-julia> plot(log,ylim=[-100,100],
+julia> out = md(sys,Options(dt=0.1,iprint=1,iprintxyz=5))
+```
+El número total de pasos se controla con el parámetro `nsteps`.
+
+La variable `out` que sale de la simulación es una matriz con las energias y la temperatura en cada paso de la simulación. Es probable que la simulación "explote" con pasos de tiempo grandes. Para visualizar este processo, podemos hacer:
+```julia-repl
+julia> using Plots
+
+julia> plot(
+         out,ylim=[-100,100],
          label=["Potential" "Kinetic" "Total" "Temperature"],
-         xlabel="step")
+         xlabel="step"
+       )
 ```
 
 Y obtendremos un gráfico similar a:
@@ -99,12 +108,11 @@ Para salir de `VMD` use el comando `exit`, y para volver al prompt de `Julia` de
 ```julia
 using CELFI, Plots
 
-opt = Options(sides=[100,100],dt=0.05)
-x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
-minimize!(x,opt)
-log = md(x,opt)
+sys = System(n=100)
+minimize!(sys)
+out = md(sys,Options(dt=0.05))
 
-plot(log,ylim=[-100,100],
+plot(out,ylim=[-100,100],
   label=["Potential" "Kinetic" "Total" "Temperature"],
   xlabel="step"
 )

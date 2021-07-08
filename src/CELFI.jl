@@ -5,13 +5,14 @@ using Parameters
 using StaticArrays
 using FastPow
 
-export Options 
+export System, Options 
 export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
-export md, md_isokinetic
+export md, md_isokinetic, md_berendsen
 
 include("./Points.jl")
+include("./System.jl")
 include("./Options.jl")
 
 include("./image.jl")
@@ -26,6 +27,7 @@ include("./printxyz.jl")
 include("./velocities.jl")
 include("./md-simple.jl")
 include("./md-isokinetic.jl")
+include("./md-berendsen.jl")
 
 end
 

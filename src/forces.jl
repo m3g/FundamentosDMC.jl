@@ -7,9 +7,9 @@ forces!(x::Vector{T},f::Vector{T},opt::Options) where T
 Subroutine that computes the force. It modifies the input `f` vector.
 
 """
-function forces!(f::Vector{T},x::Vector{T},opt::Options{T}) where T
-  n = length(x)
-  @unpack eps, sig, sides = opt
+function forces!(f::Vector{T},x::Vector{T},sys::System{T},opt::Options) where T
+  @unpack n, sides = sys
+  @unpack eps, sig = opt
   @. f = zero(T)
   for i in 1:n-1
     for j in i+1:n

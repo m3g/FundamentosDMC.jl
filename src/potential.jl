@@ -3,9 +3,9 @@
 Function that computes the potential energy
 
 """
-function potential(x::Vector{T},opt::Options{T}) where T
-  @unpack sides, eps, sig = opt
-  n = length(x)
+function potential(x::Vector{T},sys::System{T},opt::Options) where T
+  @unpack n, sides = sys
+  @unpack eps, sig = opt
   u = 0.
   for i in 1:n-1
     for j in i+1:n

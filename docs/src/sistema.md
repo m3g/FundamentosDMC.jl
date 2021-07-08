@@ -21,55 +21,46 @@ el archivo [image.jl](https://github.com/m3g/CELFI.jl/blob/master/src/image.jl).
 implementación de cada una de estas funciones, que son comunes a todos
 los métodos que vamos a describir. 
 
-## 2.1. Parámetros y opciones de la simulación
+## 2.1. Coordenadas iniciales
 
 Para inciar los trabajos, abra una sección de `Julia`, y dé el comando:
 ```julia-repl
 julia> using CELFI
 ```
-
-Los parámetros de las simulaciones son controlados en la inicialización de la estructure `Options`, por ejemplo:
-
+El sistema inicial puede ser creado aleatoriamente, usando: 
 ```julia-repl
-julia> opt = Options(sides=[100,100],dt=0.01)
-Options{Point2D}
--------------------
-Simulation options:
--------------------
-dt = 0.01
-nsteps = 2000
-sides = [100.0, 100.0]
-eps = 1.0
-sig = 2.0
-kavg_target = 0.6
-ibath = 1
-printxyz = true
-printvel = false
-iprint = 1
-iprintxyz = 2
-trajectory_file = traj.xyz
-```
-
-En este caso, ajustamos en tamaño del sistema y el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos paráemetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), energía cinética (temperatura), y los nombres de los archivos de salida. 
-
-## 2.2. Coordenadas iniciales
-
-La coordenadas iniciales pueden ser creadas aleatoriamente, usando: 
-```julia-repl
-julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
-100-element Vector{Point}:
- [18.36579648764145, 7.711401822973363]
- [41.784092301135665, 45.61852102711508]
- [23.850299728474454, 63.797752122286425]
- ⋮
- [92.5679156243071, 39.272476774702206]
- [26.845528447086274, 92.88216539818639]
+julia> sys = System(n=100,sides=[100,100]) 
+System{Point2D}:
+ Number of particles = 100
+ Box sides = [100.0, 100.0]
 
 ```
-que genera `100` puntos en 2 dimensiones, aleatórios, con coordenadas entre `[0,0]` y `opt.sides = [100,100]`, en este caso. `Point2D` es un tipo de variable que representa un punto en dos dimensiones. Mas adelante vamos a ver que todo el código es genérico, y podemos hacer simulaciones en 3 dimensiones apenas modificando el tipo de variable asociado. 
+que genera `100` puntos en 2 dimensiones, aleatórios, con coordenadas entre `[-50,-50]` y `[50,50]`, en este caso. `Point2D` es un tipo de variable que representa un punto en dos dimensiones. Mas adelante vamos a ver que todo el código es genérico, y podemos hacer simulaciones en 3 dimensiones apenas modificando el tipo de variable asociado. 
 
-!!! note
-    El punto `.` en `.*` indica que es una multiplicación componente-a-componente, de cada componente del vector `opt.sides` por cada componente del vector associado a cada punto. 
+## 2.1. Parámetros y opciones de la simulación
+
+Los parámetros de las simulaciones son controlados en la estructura `Options`, por ejemplo, para ajuster el paso de tiempo, pasamos el parámetro `dt` a la estructura. Esto puede ser echo en la llamada de las funciones de simulacion, como veremos.
+
+```julia-repl
+julia> Options(dt=0.1)
+Options
+  dt: Float64 0.1
+  nsteps: Int64 2000
+  eps: Float64 1.0
+  sig: Float64 2.0
+  kavg_target: Float64 0.6
+  ibath: Int64 20
+  iequil: Int64 200
+  tau: Int64 200
+  printxyz: Bool true
+  iprintxyz: Int64 200
+  iprint: Int64 200
+  minprint: Bool false
+  trajectory_file: String "traj.xyz"
+
+```
+
+En este caso, ajustamos el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos parámetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), energía cinética objetivo (temperatura), y los nombres de los archivos de salida. 
 
 ## 2.3. Minimización de la energia
 
@@ -92,17 +83,20 @@ discutir como se crea el punto inicial.
 
 Antes de ejecutar la minimización de energia, vamos a copiar el punto inicial, para comparación:
 ```julia-repl
-julia> x0 = copy(x)
+julia> x0 = copy(sys.x0)
 ```
 
 En seguida, minimizamos la energia con la función `minimize!`:
 ```julia-repl
-julia> minimize!(x,opt)
+julia> minimize!(sys)
 Energy before minimization: 38322.72337856496
 Energy after minimization: -74.15646912098042
 ```
 
-En `Julia` es una convención que las funciones que modifican sus argumentos terminan en `!`. En este caso, la función va a modificar las posiciones, `x`, de las partículas. 
+!!! note
+    En `Julia` es una convención que las funciones que modifican sus argumentos terminan en `!`. En este caso, la función va a modificar las posiciones, `sys.x0`, de las partículas. 
+
+Si desea ver la progression de las energias, active la opcion `minprint`, con `minimize!(sys,Options(minprint=true))`.
 
 Podemos ver rapidamente que ocurrió con las particulas, colocando-las en un gráfico. Primero, generamos un gráfico de los puntos antes de la minimización:
 ```julia-repl
@@ -114,7 +108,7 @@ Los puntos deben estar aleatoriamente distribuídos, y en particular algunos pun
 
 En seguida, hacemos el gráfico del punto con energia mínima obtenido:
 ```julia-repl
-julia> scatter(Tuple.(x))
+julia> scatter(Tuple.(sys.x0))
 ```
 y notará que los puntos ahora tienen una nueva disposición: hay puntos formando clusteres, porque el potencial de Lennard-Jones es atractivo en distáncias largas. Pero no hay más puntos muy cercanos generando repulsiones muy grandes.
 
@@ -163,11 +157,11 @@ es $100kT=60$ unidades. Las velocidades iniciales van a ser generadas aleatoriam
 
 ```julia
 using CELFI, Plots
-opt = Options(sides=[100,100],dt=0.01)
-x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
-x0 = copy(x)
+sys = System(n=100,sides=[100,100])
+x0 = copy(sys.x0)
+minimize!(sys)
 scatter(Tuple.(x0))
-scatter(Tuple.(x))
+scatter(Tuple.(sys.x0))
 ```
 
 Observación: el comando `Tuple.(x)` convierte el vector de vectores en un vector de pares (tuplas), que es correctamente interpretado por `Plots` como una única série de puntos.

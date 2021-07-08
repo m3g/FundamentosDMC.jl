@@ -18,22 +18,20 @@ El sistema es inicializado de la misma forma que antes, esto es:
 ```julia-repl
 julia> using CELFI, Plots
 
-julia> opt = Options(side=[100,100]);
+julia> sys = System(n=100,sides=[100,100]) 
 
-julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ];
-
-julia> minimize!(x,opt);
+julia> minimize!(sys);
 ```
 
 En seguida, vamos a ejecutar la simulación, ahora con termostato isocinético, por `2000` pasos, de los cuales `200` son de equilibración. El termostato es aplicado a cada `ibath` pasos:
 
-```julia
-julia> log = md_isokinetic(x,Options(iequil=200,nsteps=2_000,ibath=20))
+```julia-repl
+julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1))
 ```
 
 El gráfico de las energias en función del tiempo puede ser obtenido con:
 ```julia-repl
-julia> plot(log,ylim=[-100,100],
+julia> plot(out,ylim=[-100,100],
          label=["Potential" "Kinetic" "Total" "Temperature"],
          xlabel="step"
        )
@@ -45,7 +43,7 @@ Debe notar-se que la energia total no es más constante dureante el periódo de 
 La temperatura puede ser observada con:
 ```julia-repl
 julia> plot(
-         log[:,4],
+         out[:,4],
          label=["Temperature"],
          xlabel="step"
        )
@@ -54,13 +52,12 @@ Note que se mantiene practicamente constante e igual a la temperatura objetivo (
 
 Pruebe diferentes parámetros, y entienda el efecto del tiempo de equilibración y de la frequéncia de equilibración sobre la temperatura. 
 
-Una buena condición para visualizar los resultados se obtiene con `ibath=20`  y
-`iequil=20_000`, para `nsteps=20_000`. 
-```julia
-julia> log = md_isokinetic(x,Options(iequil=2000,ibath=20,nsteps=20_000))
+Una buena condición para visualizar los resultados se obtiene con `ibath=50`  y `iequil=5_000`, para `nsteps=20_000`. 
+```julia-repl
+julia> out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
 ```
 
-En estas condiciones, normalmente, no se debe observar un desvio sistemático de las energias o de la temperatura después de la equilibración. 
+En estas condiciones, normalmente, no se debe observar un desvio sistemático de las energias o de la temperatura después de la equilibración. Repita los gráficos (en el prompt de `Julia`, la flecha para arriba accede a los comandos anteriores).
 
 La trajectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriormente. 
 
@@ -68,16 +65,13 @@ La trajectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriorme
 
 ```julia
 using CELFI, Plots
-opt = Options(sides=[100,100])
-x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
-minimize!(x,opt)
-log = md_isokinetic(x,Options(iequil=2000,ibath=20,nsteps=20_000))
-
+sys = System(n=100,sides=[100,100])
+minimize!(sys)
+out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
 plot(
-  log,ylim=[-100,100],
+  out,ylim=[-100,100],
   label=["Potential" "Kinetic" "Total" "Temperature"],
   xlabel="step"
 )
-
-plot(log[:,4],label="Temperature",xlabel="step")
+plot(out[:,4],label="Temperature",xlabel="step")
 ```
