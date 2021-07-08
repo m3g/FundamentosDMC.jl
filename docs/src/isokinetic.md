@@ -12,6 +12,8 @@ el tiempo dentro del cual los escalonamientos son realizados. El
 objetivo debe ser obtener una simulación estable, con energía cinética
 media adecuada a la deseada (60 unidades), después de la equilibración.
 
+# 4.1. Control de parámetros y termalización  
+
 El sistema es inicializado de la misma forma que antes, esto es:
 ```julia-repl
 julia> using CELFI, Plots
@@ -62,7 +64,7 @@ En estas condiciones, normalmente, no se debe observar un desvio sistemático de
 
 La trajectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriormente. 
 
-## Código completo resumido
+## 4.2. Código completo resumido
 
 ```julia
 using CELFI, Plots

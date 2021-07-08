@@ -91,7 +91,7 @@ function md_isokinetic(x0::Vector{T},opt::Options{T}) where T
     # Isokinetic-bath: rescale velocities to obtain target average kinetic energy
     #
     if istep <= iequil && mod(istep,ibath) == 0
-      @. v = v * (kavg_target/kavg)
+      @. v = v * sqrt(kavg_target/kavg)
     end
 
   end
