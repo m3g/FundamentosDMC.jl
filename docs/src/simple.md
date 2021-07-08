@@ -31,7 +31,7 @@ La simulación no tiene control de temperatura o de presión. Es una propagació
 
 Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute le comando:
 ```julia-repl
-julia> md(x,Options(dt=1.0))
+julia> log = md(x,Options(dt=1.0))
 
 ```
 En princípio, está previso realizar 2000 pasos de integración de las equaciones 
@@ -42,22 +42,76 @@ la elección del paso de integración, y los valores de energía cinética
 obtenidos. Las simulaciones que siguen van a usar un paso de integración
 `dt = 0.05`.
 
-Al conseguir una simulación estable hasta
-el fin, observe el gráfico de energía en función del tiempo, usando el
-comando:
-\command{xmgrace -nxy energies.dat}
+La variable `log` que sale de la simulación es una matriz con las energias y la 
+temperatura en cada paso de la simulación. Es probable que la simulación "explote" con pasos de tiempo grandes. Para visualizar este processo, podemos hacer:
+```julia-repl
+julia> plot(log,ylim=[-100,100],
+         label=["Potential" "Kinetic" "Total" "Temperature"],
+         xlabel="step")
+```
+
+Y obtendremos un gráfico similar a:
+```@raw html
+<center> 
+<img src="../figures/exploded.png">
+</center>
+```
+
+Para pasos de tiempo menores la simulación debe conseguir llegar hasta el fin. Podemos ver el resultado nuevamente, y debe ser algo similar a: 
+```@raw html
+<center> 
+<img src="../figures/not_exploded.png">
+</center>
+```
+
 Observe y trate de entender las amplitudes de las oscilaciones de las
 energías cinética y potencial, y las amplitudes de las
 oscilaciones de la energía total. A que se deben cada una de las
 oscilaciones? Observe como estas oscilaciones dependen del paso de
 integración.
 
-Por fin, visualice la trayectoria, usando
-\command{vmd -e view.vmd}
-Dentro de VMD, dé el comando 
-\command{pbc set \{ 100. 100. 100. \} -all}
-y represente explícitamente el sistema periódico eligiendo {\tt
-+X;+Y;-X;-Y} en
-\command{Graphics$\to$Representations$\to$Periodic}
+## 3.2. Visualización de la trajectoria
+
+Por fin, abra la trayectoria usando VMD. No es necesário salir de la sección de `Julia`. Al apretar `;` (punto y coma) aparecerá un prompt `shell>`, desde el cual 
+es posible ejecutar a `VMD`, si este está instalado correctamente y disponible en el `path`:
+
+```julia-repl
+shell> vmd traj.xyz
+```
+Dentro de VMD, elija la representación de `VDW`, en 
+```
+Graphics -> Representations -> Drawing Method -> VDW
+```
+y dé el comando 
+```
+vmd> pbc set { 100. 100. 100. } -all
+``` 
+para indicar la periodicidad del sistema. 
+Para representar explícitamente el sistema periódico, elija `+X;+Y;-X;-Y` en
+```
+Graphics -> Representations -> Periodic
+```
+
+Para salir de `VMD` use el comando `exit`, y para volver al prompt de `Julia` desde `shell>`, use `backspace`. 
+
+## Código completo
+
+```julia
+using CELFI, Plots
+
+opt = Options(sides=[100,100],dt=0.05)
+x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
+minimize!(x,opt)
+log = md(x,opt)
+
+plot(log,ylim=[-100,100],
+  label=["Potential" "Kinetic" "Total" "Temperature"],
+  xlabel="step"
+)
+```
+
+Es generado el archivo `traj.xyz` que puede ser visualizado en `VMD`. 
+
+
 
 

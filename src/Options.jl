@@ -32,8 +32,6 @@ struct Options{T}
   iprint::Int
   iprintxyz::Int
   trajectory_file::String
-  energies_file::String
-  velocities_file::String
 end
 
 function Options(;
@@ -49,8 +47,6 @@ function Options(;
   iprint::Int = 1,
   iprintxyz::Int = 2,
   trajectory_file::String = "traj.xyz",
-  energies_file::String = "energies.dat",
-  velocities_file::String = "velocities.dat",
 )
 
   if sides === nothing
@@ -66,7 +62,7 @@ function Options(;
   end
   Options{typeof(sides)}(dt,nsteps,sides,eps,sig,kavg_target,
           ibath,printxyz,printvel,iprint,iprintxyz,
-          trajectory_file,energies_file,velocities_file)
+          trajectory_file)
 
 end
 
