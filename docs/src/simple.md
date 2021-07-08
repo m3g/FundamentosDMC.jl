@@ -94,7 +94,7 @@ Graphics -> Representations -> Periodic
 
 Para salir de `VMD` use el comando `exit`, y para volver al prompt de `Julia` desde `shell>`, use `backspace`. 
 
-## Código completo
+## 3.3. Código completo resumido
 
 ```julia
 using CELFI, Plots

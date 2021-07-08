@@ -46,10 +46,15 @@ Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las
 
 Los códigos aqui son razonablemente eficientes para al realización del tutorial, pero no están optimizados para máxima peformance, para que su lectura sea más fácil. 
 
+## 1.4. Código completo resumido
 
+Los paquetes pueden ser instalados desde un script, con:
 
-
-
+```julia
+import Pkg
+Pkg.add("https://github.com/m3g/CELFI.jl")
+Pkg.add("Plots")
+```
 
 
 

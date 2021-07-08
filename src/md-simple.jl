@@ -24,10 +24,8 @@ function md(x0::Vector{T},opt::Options{T}) where T
   # Copy the initial point, to preserve it
   x = copy(x0)
 
-  # Initialize velocities with proper average kinetic energy
-  v = rand(T,n)
-  kavg = kinetic(v) / n
-  @. v = sqrt(kavg_target/kavg)*v
+  # Obtain initial velocities
+  v = velocities(n,opt)
 
   # Open trajectory file for writting
   trajectory_file = open(opt.trajectory_file,"w")
@@ -58,8 +56,6 @@ function md(x0::Vector{T},opt::Options{T}) where T
     @. x = x + v*dt + 0.5*f*dt^2
 
     # Updating the forces
-
-
     @. flast = f
     f!(f,x)
 

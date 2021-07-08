@@ -23,6 +23,7 @@ include("./forces.jl")
 include("./minimize.jl")
 include("./printxyz.jl")
 
+include("./velocities.jl")
 include("./md-simple.jl")
 
 end

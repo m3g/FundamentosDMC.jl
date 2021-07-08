@@ -48,10 +48,6 @@ printvel = false
 iprint = 1
 iprintxyz = 2
 trajectory_file = traj.xyz
-energies_file = energies.dat
-velocities_file = velocities.dat
-
-julia>
 ```
 
 En este caso, ajustamos en tamaño del sistema y el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos paráemetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), energía cinética (temperatura), y los nombres de los archivos de salida. 
@@ -163,8 +159,18 @@ la temperatura que corresponde a $kT = 0.6$ unidades. Los sistemas
 simulados tiene 100 partículas, por lo tanto la energía cinética media
 es $100kT=60$ unidades. Las velocidades iniciales van a ser generadas aleatoriamente al princípio de la simulación. 
 
+## 2.5. Código completo resumido
 
+```julia
+using CELFI, Plots
+opt = Options(sides=[100,100],dt=0.01)
+x = [ opt.sides .* rand(Point2D) for i in 1:100 ]
+x0 = copy(x)
+scatter(Tuple.(x0))
+scatter(Tuple.(x))
+```
 
+Observación: el comando `Tuple.(x)` convierte el vector de vectores en un vector de pares (tuplas), que es correctamente interpretado por `Plots` como una única série de puntos.
 
 
 
