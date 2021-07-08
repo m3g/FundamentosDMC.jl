@@ -1,42 +1,4 @@
 
-\subsection{Control de temperatura de Berendsen}
-
-El programa {\tt bin/md-berendsen} implementa el control de temperatura
-de Berendsen. Este método también es un método basado en el
-escalonamiento de velocidades, pero es más suave. Las velocidades son
-escalonadas por
-\[
-\lambda = \left[  
-1 + \frac{\Delta t}{\tau} \left(
-\frac{T_0}{T(t)} -1
-\right)
-\right]^{1/2}
-\]
-donde $\Delta t$ es el paso de integración y $\tau$ es un parámetro que
-define la velocidad con que el escalonamiento es realizado. El
-escalonamiento es más suave y más lento. El programa va a demandar el
-valor de $\tau$ y el tiempo de equilibración. 
-
-Pruebe diferentes parámetros. Entre los cuales, estos: 
-{\tt \begin{center}\begin{tabular}{cc}
-\hline
-  $\tau$ & $t_{\mathrm{equil}}$ \\
-\hline
-    50   &  500 \\
-    50   &  1500 \\
-   300   &  1500 \\
-   300   &  3000 \\
-\hline
-\end{tabular}\end{center}}
-Observe los gráficos de energía resultantes, usando el comando
-\command{xmgrace -nxy energies.dat}
-Observe la suavidad, o no, de la curva de energía total. Observe si la
-energía cinética se aproximó de la energía media deseada ($kT=60$).\\
-
-\noindent
-Abra el archivo {\tt src/md-berendsen.f90} y entienda la implementación
-del baño de Berendsen.
-
 \subsection{Control de temperatura (dinámica) de Langevin}
 
 El termostato de Langevin consiste en la suposición de que dada
