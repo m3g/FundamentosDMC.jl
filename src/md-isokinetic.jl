@@ -4,7 +4,7 @@
 md_isokinetic(sys::System{T},opt::Options) where T
 ```
 
-Performs a MD simulation  with an isokinetic bath. 
+Performs a MD simulation with an isokinetic bath. 
 
 """
 function md_isokinetic(sys::System{T},opt::Options=Options()) where T
@@ -82,8 +82,10 @@ function md_isokinetic(sys::System{T},opt::Options=Options()) where T
       @printf(" TIME = %12.3f U = %12.5e K = %12.5e TOT = %12.5e \n", 
         time, ustep, kstep, energy
       )
-      printxyz(time,x,sys,trajectory_file)
       out[istep,:] .= (ustep,kstep,energy,kavg)
+    end
+    if mod(istep,opt.iprintxyz) == 0
+      printxyz(time,x,sys,trajectory_file)
     end
 
     #

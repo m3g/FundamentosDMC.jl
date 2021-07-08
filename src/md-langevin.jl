@@ -1,31 +1,31 @@
 """
 
 ```
-md_berendsen(sys::System{T},opt::Options) where T
+md_langevin(sys::System{T},opt::Options) where T
 ```
 
-Performs a MD simulation with a Berendsen bath. 
+Performs a MD simulation with a Langevin bath. 
 
 """
-function md_berendsen(sys::System{T},opt::Options=Options()) where T
+function md_langevin(sys::System{T},opt::Options=Options()) where T
 
   println("""
   -----------------------------------------------------------------------------------------
-  NVT - Berendsen-bath simulation 
+  NVT - Langevin-bath simulation 
   -----------------------------------------------------------------------------------------
   """)
 
   # aliases to simplify code
   @unpack n, x0 = sys
-  @unpack dt, nsteps, kavg_target, iequil, tau = opt
+  @unpack dt, nsteps, kavg_target, lambda = opt
   u(x) = potential(x,sys,opt)
   f!(f,x) = forces!(f,x,sys,opt)
 
   # Copy the initial point, to preserve it
   x = copy(x0)
 
-  # Obtain initial velocities
-  v = velocities(sys,opt)
+  # Obtain initial velocities 
+  v = zeros(T,n) 
 
   # Open trajectory file for writting
   trajectory_file = open(opt.trajectory_file,"w")
@@ -59,8 +59,12 @@ function md_berendsen(sys::System{T},opt::Options=Options()) where T
     @. flast = f
     f!(f,x)
 
-    # Updating velocities
-    @. v = v + 0.5*(f + flast)*dt 
+    # Add Langevin friction
+    @. f = f - lambda*v
+
+    # Updating velocities including random forces
+    @. v = v + 0.5*(f + flast)*dt + 
+           sqrt(2*lambda*kavg_target*dt)*randn(T)
 
     # Update step and print data
     time += dt
@@ -86,14 +90,6 @@ function md_berendsen(sys::System{T},opt::Options=Options()) where T
     end
     if mod(istep,opt.iprintxyz) == 0
       printxyz(time,x,sys,trajectory_file)
-    end
-
-    #
-    # Berendsen-bath
-    #
-    if istep <= iequil
-      lambda = sqrt( 1 + (dt/tau)*(kavg_target/kavg-1) )
-      @. v = v * lambda
     end
 
   end

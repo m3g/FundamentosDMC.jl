@@ -9,7 +9,7 @@ export System, Options
 export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
-export md, md_isokinetic, md_berendsen
+export md, md_isokinetic, md_berendsen, md_langevin
 
 include("./Points.jl")
 include("./System.jl")
@@ -28,6 +28,7 @@ include("./velocities.jl")
 include("./md-simple.jl")
 include("./md-isokinetic.jl")
 include("./md-berendsen.jl")
+include("./md-langevin.jl")
 
 end
 
