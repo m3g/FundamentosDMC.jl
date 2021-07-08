@@ -60,7 +60,7 @@ particular para acoplamientos grandes.
 using CELFI, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
-out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=1))
+out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5))
 plot(
   out,ylim=[-100,100],
   label=["Potential" "Kinetic" "Total" "Temperature"],
