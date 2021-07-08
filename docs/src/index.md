@@ -1,5 +1,4 @@
 
-
 # Fundamentos de Mecánica Estadística y Simulaciones
 
 ```@raw html
@@ -20,7 +19,7 @@ bi-dimensional simple. El objetivo es que el estudiante entre en
 contacto con diversos detalles técnicos involucrados en la realización
 de simulaciones y sus limitaciones. 
 
-## Instalación de CELFI.jl
+## 1.1. Instalación de CELFI.jl
 
 Instale el interpretador de `Julia`, de [https://julialang.org/](https://julialang.org).
 
@@ -31,12 +30,16 @@ julia> ] add https://github.com/m3g/CELFI.jl
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
 
+Instale también el paquete `Plots`, que va a ser usado para graficar algunos resultados:
+```julia-repl
+julia> ] add Plots
+```
 
-## Instalación de VMD
+## 1.2. Instalación de VMD
 
 Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las trajectories. Certifique-se de tenerlo instalado también.
 
-## Códigos
+## 1.3. Códigos
 
 `Julia` es un lenguage de programación de alta peformance, dinámico, y con sintaxis bastante simple. Todos los códigos de este curso están disponíbles en repositório 
 [https://github.com/m3g/CELFI.jl](https://github.com/m3g/CELFi.jl), y su lectura será estimulada en la medida que avanzemos en la ejecución del tutorial. 

@@ -53,7 +53,7 @@ function Options(;
   velocities_file::String = "velocities.dat",
 )
 
-  if sides == nothing
+  if sides === nothing
     sides = Point2D(100,100)
   else
     if length(sides) == 2

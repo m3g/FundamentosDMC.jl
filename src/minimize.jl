@@ -1,21 +1,30 @@
 """
 
 ```
-minimize!(x,opt::Options)
+minimize!(x,opt::Options;print=false,tol=1e-5,maxtrial=20_000)
 ```
 
 Minimizes the potential energy of `x`. Modifies `x`.
 
 ### Example
 ```julia-repl
+julia> opt = Options();
+
 julia> x = [ opt.sides .* rand(Point2D) for i in 1:100 ];
 
 julia> minimize!(x,opt)
+Energy before minimization: 38322.72337856496
+Energy after minimization: -74.15646912098042
 
 ```
 
 """
-function minimize!(x::Vector{T},opt::Options{T}) where T
+function minimize!(
+  x::Vector{T},opt::Options{T};
+  print::Bool=false,
+  tol::Float64 = 1e-5,
+  maxtrial::Int = 20_000 
+) where T
   # Simplify code by aliasing common variables
   n = length(x)
   u(x) = potential(x,opt)
@@ -23,7 +32,7 @@ function minimize!(x::Vector{T},opt::Options{T}) where T
 
   # Minimizing the energy of the initial point
   ubest = u(x)
-  println(" Energy before minimization: ", ubest)
+  println("Energy before minimization: ", ubest)
 
   dx = 1.
   fnorm = 1.
@@ -49,10 +58,12 @@ function minimize!(x::Vector{T},opt::Options{T}) where T
 
     # If energy decreased, accept new point, if not, reject it and decrease dx
     if utrial < ubest
-      @printf(
-        "ACCEPTED U = %12.5e FNORM = %12.5e DX = %12.5e TRIAL = %10i\n", 
-        utrial, fnorm, dx, trial 
-      )
+      if print
+        @printf(
+          "ACCEPTED U = %12.5e FNORM = %12.5e DX = %12.5e TRIAL = %10i\n", 
+          utrial, fnorm, dx, trial 
+        )
+      end
       for i in 1:n
         x[i] = xtrial[i]
       end
@@ -68,5 +79,5 @@ function minimize!(x::Vector{T},opt::Options{T}) where T
   end
 
   println("Energy after minimization: ", u(x))
-  return x
+  return nothing 
 end

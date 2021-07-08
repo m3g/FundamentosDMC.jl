@@ -5,12 +5,14 @@ using Parameters
 using StaticArrays
 using FastPow
 
-export Options, Point2D, Point3D
+export Options 
+export Point2D, Point3D, scatter, scatter!
 export minimize!
 export printxyz
 
 include("./Points.jl")
 include("./Options.jl")
+
 include("./image.jl")
 
 include("./potential.jl")
