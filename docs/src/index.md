@@ -2,7 +2,7 @@
 # Fundamentos de Dinámica Molecular Clásica
 
 ```@raw html
-<center>
+<br>
 Leandro Martínez
 <br>
 <i>Instituto de Quimica, Universidad de Campinas</i>
@@ -10,7 +10,6 @@ Leandro Martínez
 <a href=http://m3g.iqm.unicamp.br>http://m3g.iqm.unicamp.br</a>
 <br>
 <br>
-<center>
 ```
 
 Este tutorial contiene las explicaciones para rodar y analizar
@@ -26,7 +25,7 @@ Instale el interpretador de `Julia`, de [https://julialang.org/](https://juliala
 Ejecute el interpretador, e instale el paquete deste curso, usando: 
 
 ```julia-repl
-julia> ] add https://github.com/m3g/FundamentosDMC.jl
+julia> import Pkg; Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
 
@@ -52,7 +51,7 @@ Los paquetes pueden ser instalados desde un script, con:
 
 ```julia
 import Pkg
-Pkg.add("https://github.com/m3g/FundamentosDMC.jl")
+Pkg.add("url=https://github.com/m3g/FundamentosDMC.jl")
 Pkg.add("Plots")
 ```
 

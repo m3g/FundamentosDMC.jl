@@ -6,6 +6,7 @@ using StaticArrays
 using FastPow
 
 export System, Options 
+export Point2D, Point3D
 export minimize!
 export printxyz
 export md, md_isokinetic, md_berendsen, md_langevin, mc
