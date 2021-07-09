@@ -1,13 +1,28 @@
-
-
 # Comparación entre MC y MD
 
-Ejecute, nuevamente, el programa {\tt bin/md-langevin} con los
-parámetros $\lambda=0.01$ y $\Delta t=0.05$. Observe el gráfico
-de energías. Compare la energía {\it potencial} de este gráfico con la
-energía potencial de la simulación de Monte-Carlo.
+Vamos a comparar el conjunto de estructuras generados por una dinámica molecular con un conjunto de estructuras generado por una simulación de Monte-Carlo. 
 
-\subsubsection{Cálculo de la estructura}
+## Generando un buen muestreo por MD
+
+Ejecute, nuevamente, el programa `md_langevin` con los
+parámetros $\lambda=0.01$, por 40 mil pasos: 
+
+```julia-repl
+julia> md_out = md_langevin(sys,Options(lambda=0.01,nsteps=40_000))
+```
+
+## Generando un buen muestreo de MC
+
+```julia-repl
+julia> md_out = mc(sys,Options(delta=0.05,nsteps=200_000))
+```
+
+
+
+
+Observe el gráfico de energías. Compare la energía {\it potencial} de este gráfico con la energía potencial de la simulación de Monte-Carlo.
+
+## Función de distribución radial 
 
 Vamos a comparar la estructura media obtenida usando MD con la
 estructura media obtenida con MC. Para eso vamos a usar la función
@@ -23,9 +38,11 @@ es el área total del sistema simulado. El número de partículas esperado
 en un intervalo de distancias entre $r$ y $r+\Delta r$ de cada partícula
 es, por lo tanto $n(r)=\rho A(r)$, donde $A(r)$ es el área de una cáscara
 circular de radio menor $r$ y radio mayor $r+\Delta r$:
-\begin{center}
-\includegraphics[width=6cm]{./area.pdf}
-\end{center}
+```@raw html
+<center>
+<img src=../figures/area.svg>
+</center>
+```
 Vemos que $A(r)=\pi (r+\Delta r)^2 - \pi r^2 \approx 2\pi r\Delta r$.
 De este modo, el número de partículas esperado, en media, seria de 
 $n(r)=2\pi r\Delta r\rho$, si no hubiese interacciones. 
@@ -36,7 +53,9 @@ interacciones favorables, por ejemplo, la probabilidad de encontrar dos
 partículas próximas es mayor. Esta distribución de partículas es uno de
 los parámetros estructurales más importantes.
 
-El programa {\tt bin/gr} calcula, a partir de la trayectoria, la función
+## Cálculo de $g(r)$
+
+El programa [radial_distribution.jl](https://github.com/m3g/CELFI.jl/blob/master/src/radial_distribution.jl)   calcula, a partir de una trayectoria, la función
 $g(r)=n'(r)/n(r)$, done $n(r)$ esta definido anteriormente, y $n'(r)$ es
 el número medio de partículas efectivamente observado entre $r$ y $r+\Delta r$
 en la simulación. 
@@ -47,8 +66,7 @@ usando el comando
 \command{./bin/md-langevin 15000}
 Use los parámetros
 $\lambda=0.01$ y $\Delta t=0.05$. Observe la trayectoria resultante y
-calcule al función $g(r)$ simplemente ejecutando el programa {\tt
-bin/gr}. En seguida, visualice el $g(r)$ con
+calcule al función $g(r)$ simplemente ejecutando el program `radial_distribution`. En seguida, visualice el $g(r)$ con
 \command{xmgrace gr.dat} 
 Mantenga este gráfico abierto, para comparación futura. Entienda que
 significa, en función de la visualización de la simulación. 

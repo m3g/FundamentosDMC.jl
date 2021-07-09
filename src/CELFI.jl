@@ -9,6 +9,7 @@ export System, Options
 export minimize!
 export printxyz
 export md, md_isokinetic, md_berendsen, md_langevin, mc
+export radial_distribution 
 
 include("./Points.jl")
 include("./System.jl")
@@ -29,6 +30,8 @@ include("./md-isokinetic.jl")
 include("./md-berendsen.jl")
 include("./md-langevin.jl")
 include("./mc.jl")
+
+include("./radial_distribution.jl")
 
 end
 

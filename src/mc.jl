@@ -35,7 +35,7 @@ function mc(sys::System{T},opt::Options=Options()) where T
   out = zeros(1)
 
   # Write coordinates to trajectory file, and update log vectors
-  printxyz(0.,x,sys,trajectory_file)
+  printxyz(0,x,sys,trajectory_file)
   out[1] = ucurrent 
 
   # Running simulation
@@ -66,7 +66,7 @@ function mc(sys::System{T},opt::Options=Options()) where T
         last_print = istep
       end
       if istep - last_printxyz >= opt.iprintxyz
-        printxyz(time,x,sys,trajectory_file)
+        printxyz(naccepted,x,sys,trajectory_file)
         last_printxyz = istep
       end
 
