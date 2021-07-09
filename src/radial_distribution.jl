@@ -4,7 +4,7 @@
 radial_distribution(trajfile::String,dmax::Float64=10.,nbins::Int=10,T::DataType=Point2D)
 ```
 
-Computes the g(r). If `ptype=Point3D` the system will be read as three-dimensional.
+Computes the g(r). If `T=Point3D` the system will be read as three-dimensional.
 
 """
 function radial_distribution(
