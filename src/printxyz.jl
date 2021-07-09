@@ -14,9 +14,9 @@ function printxyz(time,x,sys,buffer)
   for i in 1:n
     xt = image(x[i],sys.sides)
     if length(xt) == 2
-      println(buffer,@sprintf("He %12.5f %12.5f %12.5f", xt[1], xt[2], 0.))
+      print(buffer,@sprintf("He %12.5f %12.5f %12.5f\n", xt[1], xt[2], 0.))
     else
-      println(buffer,@sprintf("He %12.5f %12.5f %12.5f", xt[1], xt[2], xt[3]))
+      print(buffer,@sprintf("He %12.5f %12.5f %12.5f\n", xt[1], xt[2], xt[3]))
     end
   end
 end

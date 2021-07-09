@@ -10,7 +10,7 @@ parámetros $\lambda=0.01$, por 40 mil pasos, y salve la trajectoria en un archi
 ```julia-repl
 julia> md_out = md_langevin(
          sys,
-         Options(lambda=0.01,nsteps=40_000,trajectory_file="md.xyz")
+         Options(lambda=0.01,nsteps=100_000,trajectory_file="md.xyz")
        )
 ```
 
