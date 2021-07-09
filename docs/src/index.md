@@ -10,7 +10,7 @@ Leandro Martínez
 <a href=http://m3g.iqm.unicamp.br>http://m3g.iqm.unicamp.br</a>
 <br>
 <br>
-</center>
+<center>
 ```
 
 Este tutorial contiene las explicaciones para rodar y analizar
