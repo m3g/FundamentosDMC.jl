@@ -11,32 +11,36 @@ function radial_distribution(
   sys::System{T},
   trajfile::String;
   dmax::Float64=10.,
-  nbins::Int=20
+  nbins::Int=100
 ) where T
 
-  function shell_volume(ibin,nbins,dmax,T::DataType)
-    Δr = dmax/nbins
-    r = (ibin-1)*Δr
+  function shell_volume(r,Δr,T::DataType)
     if T == Point2D
       return π*((r+Δr)^2 - r^2)
     elseif T == Point3D
       return (4π/3)*((r+Δr)^3 - r^3)
+    else
+      error("T must be Point2D or Point3D")
     end
   end
 
   # Initialize histogram
   @unpack n, sides = sys
   x = zeros(T,n)
-  gr = zeros(nbins)
   density = n / prod(sides) 
+  
+  Δr = dmax/nbins
+  r = [ (i-1/2)*Δr for i in 1:nbins ]
+  g = zeros(nbins)
 
   # Reading coordinates, computing distances, and adding to histogram
   file = open(trajfile,"r")
   nframes = 0
   while true
-    length(readline(file)) == 0 && break
-    readline(file)
+    length(readline(file,keep=true)) == 0 && break # number of atoms or end-of-file, ignore or exit
+    readline(file) # title, ignore
 
+    nframes += 1 
     # read atomic coordinates
     for i in 1:n
       atom_data = split(readline(file))
@@ -49,7 +53,7 @@ function radial_distribution(
         dx = image(x[j] - x[i],sides)
         idist = ceil(Int,nbins*(norm(dx)/dmax))
         if idist <= nbins 
-          gr[idist] = gr[idist] + 1.
+          g[idist] += 1.
         end
       end
     end
@@ -61,23 +65,9 @@ function radial_distribution(
   # Normalizing by the number of frames and number of atoms
   # Normalizing by the number of atoms expected in an area or volume 
   for i in 1:nbins
-    gr[i] = gr[i] / (nframes*(n-1))
-    gr[i] = gr[i] / (density*shell_volume(i,nbins,dmax,T))
+    g[i] = g[i] / (nframes*((n-1)/2))
+    g[i] = g[i] / (density*shell_volume(r[i],Δr,T))
   end
 
-  return gr
+  return r, g
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -5,21 +5,24 @@ Vamos a comparar el conjunto de estructuras generados por una dinámica molecula
 ## Generando un buen muestreo por MD
 
 Ejecute, nuevamente, el programa `md_langevin` con los
-parámetros $\lambda=0.01$, por 40 mil pasos: 
+parámetros $\lambda=0.01$, por 40 mil pasos, y salve la trajectoria en un archivo con nombre próprio, como `md.xyz`: 
 
 ```julia-repl
-julia> md_out = md_langevin(sys,Options(lambda=0.01,nsteps=40_000))
+julia> md_out = md_langevin(
+         sys,
+         Options(lambda=0.01,nsteps=40_000,trajectory_file="md.xyz")
+       )
 ```
 
 ## Generando un buen muestreo de MC
 
+Ejecute una larga simulación de Monte-Carlo (`200_000` pasos)
+
 ```julia-repl
-julia> md_out = mc(sys,Options(delta=0.05,nsteps=200_000))
+julia> mc_out = mc(sys,
+                  Options(alpha=0.1,nsteps=200_000,trajectory_file="mc.xyz")
+       )
 ```
-
-
-
-
 Observe el gráfico de energías. Compare la energía {\it potencial} de este gráfico con la energía potencial de la simulación de Monte-Carlo.
 
 ## Función de distribución radial 
