@@ -1,7 +1,7 @@
 
 # Simulaciones de Monte-Carlo
 
-En la función [mc.jl](https://github.com/m3g/CELFI.jl/blob/master/src/mc.jl) está implementado el método de Monte-Carlo.
+En la función [mc.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/mc.jl) está implementado el método de Monte-Carlo.
 
 Las simulaciones de Monte-Carlo tienen un principio totalmente distinto
 de las simulaciones de dinámica, pero se supone que muestrean el mismo
@@ -63,7 +63,7 @@ Observe la trayectoria (con los mismos comandos de antes).
 ## 7.2. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = mc(sys,Options(alpha=0.05,nsteps=50_000))

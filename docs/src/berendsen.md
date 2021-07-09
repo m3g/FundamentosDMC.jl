@@ -1,7 +1,7 @@
 
 # Control de temperatura de Berendsen
 
-En la función [md-berendsen.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-berendsen.jl) está implementado el control de temperatura
+En la función [md-berendsen.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/md-berendsen.jl) está implementado el control de temperatura
 de Berendsen. Este método también es un método basado en el
 escalonamiento de velocidades, pero es más suave. Las velocidades son
 escalonadas por
@@ -52,7 +52,7 @@ energía cinética se aproximó de la energía media deseada ($kT=60$).
 ## 5.2. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000))

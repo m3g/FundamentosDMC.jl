@@ -1,7 +1,7 @@
 
 # Termostato de Langevin
 
-En la función [md-langevin.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-langevin.jl) está implementado el control de temperatura
+En la función [md-langevin.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/md-langevin.jl) está implementado el control de temperatura
 de Langevin.
 
 El termostato de Langevin consiste en la suposición de que dada
@@ -57,7 +57,7 @@ particular para acoplamientos grandes.
 ## 6.2. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5))

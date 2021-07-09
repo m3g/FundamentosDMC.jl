@@ -1,11 +1,11 @@
 import Pkg
 Pkg.add("Documenter")
 using Documenter
-using CELFI
+using FundamentosDMC
 push!(LOAD_PATH,"../src/")
 makedocs(
-    modules=[CELFI],
-    sitename="CELFI.jl",
+    modules=[FundamentosDMC],
+    sitename="FundamentosDMC.jl",
     pages = [
         "Início" => "index.md",
         "Sistema simulado" => "sistema.md",
@@ -19,7 +19,7 @@ makedocs(
     ]
 )
 deploydocs(
-    repo = "github.com/m3g/CELFI.jl.git",
+    repo = "github.com/m3g/FundamentosDMC.jl.git",
     target = "build",
     branch = "gh-pages",
     versions = ["stable" => "v^", "v#.#" ],

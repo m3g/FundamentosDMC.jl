@@ -7,17 +7,17 @@ potencial de Lennard-Jones, en un sistema bi-dimensional, periódico.
 
 $V = 4\epsilon \left( \frac{\sigma^{12}}{r^{12}} - \frac{\sigma^6}{r^6} \right)$
 
-Abra el archivo [potential.jl](https://github.com/m3g/CELFI.jl/blob/master/src/potential.jl) y entienda la implementación del
+Abra el archivo [potential.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/potential.jl) y entienda la implementación del
 cálculo de la energía potencial. Note que el cálculo depende de 3
 parámetros: $\epsilon$, $\sigma$, y el tamaño del sistema periódico. Los
 parámetros están definidos en la estructura de datos `opt`, de entrada (veremos más tarde como usarla). 
 
-El archivo [forces.jl](https://github.com/m3g/CELFI.jl/blob/master/src/forces.jl) contiene el cálculo de las fuerzas (el gradiente
-del potencial), y el archivo [kinetic.jl](https://github.com/m3g/CELFI.jl/blob/master/src/kinetic.jl) contiene el cálculo
+El archivo [forces.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/forces.jl) contiene el cálculo de las fuerzas (el gradiente
+del potencial), y el archivo [kinetic.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/kinetic.jl) contiene el cálculo
 de la energía cinética. Como el sistema usa condiciones periódicas de
 contorno, las coordenadas tienen que siempre ser calculadas en relación
 a la imagen mínima. El cálculo de la imagen mínima está implementado en
-el archivo [image.jl](https://github.com/m3g/CELFI.jl/blob/master/src/image.jl). Es interesante entender la
+el archivo [image.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/image.jl). Es interesante entender la
 implementación de cada una de estas funciones, que son comunes a todos
 los métodos que vamos a describir. 
 
@@ -25,7 +25,7 @@ los métodos que vamos a describir.
 
 Para inciar los trabajos, abra una sección de `Julia`, y dé el comando:
 ```julia-repl
-julia> using CELFI
+julia> using FundamentosDMC
 ```
 El sistema inicial puede ser creado aleatoriamente, usando: 
 ```julia-repl
@@ -78,7 +78,7 @@ un nuevo punto $\vec{x}_{i+1}$ es calculado. Como la aproximación debe
 ser una buena aproximación en las cercanias del punto corriente ($\vec{x}_i$), un
 gradiente negativo garante que la función disminuye para $\Delta x$
 suficientemente pequeño. El proceso es interrumpido cuando la norma del
-gradiente es pequeña, o cuando demasiados puntos fueron testados. En mecánica, $-\nabla V = \vec{F}$, entonces la función que calcula el gradiente es la misma que calcula las fuerzas en la simulación. Abra el archivo [minimize.jl](https://github.com/m3g/CELFI.jl/blob/master/src/minimize.jl) para
+gradiente es pequeña, o cuando demasiados puntos fueron testados. En mecánica, $-\nabla V = \vec{F}$, entonces la función que calcula el gradiente es la misma que calcula las fuerzas en la simulación. Abra el archivo [minimize.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/minimize.jl) para
 discutir como se crea el punto inicial. 
 
 Antes de ejecutar la minimización de energia, vamos a copiar el punto inicial, para comparación:
@@ -156,7 +156,7 @@ es $100kT=60$ unidades. Las velocidades iniciales van a ser generadas aleatoriam
 ## 2.5. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 x0 = copy(sys.x0)
 minimize!(sys)

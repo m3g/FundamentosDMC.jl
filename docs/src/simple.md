@@ -1,6 +1,6 @@
 # Simulación de Dinámica Molecular Microcanónica
 
-Abra el archivo [md-simple.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-simple.jl), que contiene el algoritmo de
+Abra el archivo [md-simple.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/md-simple.jl), que contiene el algoritmo de
 simulación. La simulación empieza con velocidades aleatorias, ajustadas
 para la media termodinámica deseada de 0.6 unidades/átomo. A esta
 energía cinética media le llamaremos ``temperatura''.
@@ -106,7 +106,7 @@ Para salir de `VMD` use el comando `exit`, y para volver al prompt de `Julia` de
 ## 3.3. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 
 sys = System(n=100)
 minimize!(sys)

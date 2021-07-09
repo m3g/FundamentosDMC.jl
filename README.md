@@ -4,19 +4,19 @@
 <img height=80px src=https://user-images.githubusercontent.com/5021636/124803389-6bcd3680-df2f-11eb-8e97-2d38defa015f.png>
 </p>
 
-# Fundamentos de Mecánica Estadística y Simulaciones
+# Fundamentos de Dinámica Molecular Clásica
 
-<center><h3>Tutorial y documentación: https://m3g.github.io/CELFI.jl/dev</h3></center>
+<center><h3>Tutorial y documentación: https://m3g.github.io/FundamentosDMC.jl/dev</h3></center>
 
 Este tutorial contiene las explicaciones para rodar y analizar simulaciones de Dinámica Molecular y Mote-Carlo de un sistema bi-dimensional simple. El objetivo es que el estudiante entre en contacto con diversos detalles técnicos involucrados en la realización de simulaciones y sus limitaciones.
 
-### Instalación de `CELFI.jl`
+### Instalación de `FundamentosDMC.jl`
 
 Instale el interpretador de Julia, de https://julialang.org/.
 
 Ejecute el interpretador, e instale el paquete deste curso, usando:
 ```julia
-julia> ] add https://github.com/m3g/CELFI.jl
+julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ...`)
 

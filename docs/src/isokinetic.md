@@ -1,7 +1,7 @@
 
 # Control de temperatura isocinético
 
- La función implementada en [md-isokinetic.jl](https://github.com/m3g/CELFI.jl/blob/master/src/md-isokinetic.jl) implementa el control de temperatura
+ La función implementada en [md-isokinetic.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/md-isokinetic.jl) implementa el control de temperatura
 isocinético. En este método, las velocidades son escalonadas por un
 parámetro $\lambda = \sqrt{T_0/T}$ a intervalos regulares, para
 termostatizar el sistema a la temperatura $T_0$. 
@@ -16,7 +16,7 @@ media adecuada a la deseada (60 unidades), después de la equilibración.
 
 El sistema es inicializado de la misma forma que antes, esto es:
 ```julia-repl
-julia> using CELFI, Plots
+julia> using FundamentosDMC, Plots
 
 julia> sys = System(n=100,sides=[100,100]) 
 
@@ -64,7 +64,7 @@ La trajectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriorme
 ## 4.2. Código completo resumido
 
 ```julia
-using CELFI, Plots
+using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))

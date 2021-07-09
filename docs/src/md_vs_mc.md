@@ -2,10 +2,10 @@
 
 Vamos a comparar el conjunto de estructuras generados por una dinámica molecular con un conjunto de estructuras generado por una simulación de Monte-Carlo. 
 
-## Generando un buen muestreo por MD
+## 8.1. Generando un buen muestreo por MD
 
 Ejecute, nuevamente, el programa `md_langevin` con los
-parámetros $\lambda=0.01$, por 40 mil pasos, y salve la trajectoria en un archivo con nombre próprio, como `md.xyz`: 
+parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trajectoria en un archivo con nombre próprio, como `md.xyz`: 
 
 ```julia-repl
 julia> md_out = md_langevin(
@@ -14,18 +14,33 @@ julia> md_out = md_langevin(
        )
 ```
 
-## Generando un buen muestreo de MC
+## 8.2. Generando un buen muestreo de MC
 
 Ejecute una larga simulación de Monte-Carlo (`200_000` pasos)
 
 ```julia-repl
 julia> mc_out = mc(sys,
-                  Options(alpha=0.1,nsteps=200_000,trajectory_file="mc.xyz")
+                  Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
        )
 ```
-Observe el gráfico de energías. Compare la energía {\it potencial} de este gráfico con la energía potencial de la simulación de Monte-Carlo.
 
-## Función de distribución radial 
+## 8.3. Comparando las energias potenciales
+
+La primera columna de `md_out` tiene la energia potencial en la simulación de dinámica molecular. Vamos a hacer el gráfico de esta energia:
+
+```julia-repl
+julia> plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
+```
+
+Y vamos a añadir al mismo gráfico la energia potencial obtenida en la simulación de Monte-Carlo, que está en `mc_out` (note el `!` al final de `plot!`, indicando que el gráfico anterior va a ser modificado):
+
+```julia-repl
+julia> plot!(mc_out,label="Potential energy- MC",xlabel="step")
+```
+
+Note la similaridad, o diferencia entre los dos gráficos. Acuerde-se que en ninguna de estas simulaciones controlamos explicitamente la energia potencial. 
+
+## 8.4. Función de distribución radial 
 
 Vamos a comparar la estructura media obtenida usando MD con la
 estructura media obtenida con MC. Para eso vamos a usar la función
@@ -56,49 +71,61 @@ interacciones favorables, por ejemplo, la probabilidad de encontrar dos
 partículas próximas es mayor. Esta distribución de partículas es uno de
 los parámetros estructurales más importantes.
 
-## Cálculo de $g(r)$
+## 8.5. Cálculo de $g(r)$
 
-El programa [radial_distribution.jl](https://github.com/m3g/CELFI.jl/blob/master/src/radial_distribution.jl)   calcula, a partir de una trayectoria, la función
+El programa [radial_distribution.jl](https://github.com/m3g/FUndamentosDMC.jl/blob/master/src/radial_distribution.jl)   calcula, a partir de una trayectoria, la función
 $g(r)=n'(r)/n(r)$, done $n(r)$ esta definido anteriormente, y $n'(r)$ es
 el número medio de partículas efectivamente observado entre $r$ y $r+\Delta r$
 en la simulación. 
 
-Haga una simulación de dinámica molecular con el termostato de Langevin,
-ahora por más tiempo, 
-usando el comando 
-\command{./bin/md-langevin 15000}
-Use los parámetros
-$\lambda=0.01$ y $\Delta t=0.05$. Observe la trayectoria resultante y
-calcule al función $g(r)$ simplemente ejecutando el program `radial_distribution`. En seguida, visualice el $g(r)$ con
-\command{xmgrace gr.dat} 
-Mantenga este gráfico abierto, para comparación futura. Entienda que
-significa, en función de la visualización de la simulación. 
+Para calcular la función de distribución radial de la simulación de dinámica molecular, ejecute:
+```julia-repl    
+julia> rmd, gmd = radial_distribution(sys,"md.xyz")
+```
 
-En seguida, haga una simulación de 200.000 pasos de Monte-Carlo con el programa 
-{\tt bin/mc} usando una perturbación de 0.05~\AA. Observe la trayectoria
-generada. Ejecute nuevamente el
-programa {\tt bin/gr} para obtener la $g(r)$ de esta simulación de
-Monte-Carlo. Incorpore los datos al mismo gráfico del $g(r)$ obtenido
-por dinámica molecular. Compare. Las simulaciones, con sus naturalezas
+`rmc` y `rmd` son las distáncias y las densidades relativas de partículas a cada distáncia, en relación a la densidad del sistema. 
+
+En seguida, obtengamos la $g(r)$ de la simulación de Monte-Carlo: 
+```julia-repl    
+julia> rmc, gmc = radial_distribution(sys,"mc.xyz")
+```
+
+Cree en gráfico de la función de distribución de la simulación de dinámica molecular, con:
+```julia-repl
+julia> plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+```
+
+Note el aumento de densidad local en distáncias cortas, que resulta de las interacciones favorables entre las partículas. Note también que la densidad relativa tiende a `1.0` en distáncias grandes, cuando la correlación de la posición entre partículas no és mas importante.  
+
+Agregue al mismo gráfico la función de distribuición obtenida a partir de la simulación de Monte-Carlo:  
+```julia-repl
+julia> plot!(rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
+```
+ Compare. Las simulaciones, con sus naturalezas
 totalmente distintas, muestrearon las mismas estructuras?  
 
-\end{document}
+## 8.2. Código completo resumido
 
+```julia
+using FundamentosDMC, Plots
+sys = System(n=100,sides=[100,100])
+minimize!(sys)
 
+md_out = md_langevin(
+  sys,
+  Options(lambda=0.01,nsteps=100_000,trajectory_file="md.xyz")
+)
+mc_out = mc(sys,
+           Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
+)
+plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
+plot!(mc_out,label="Potential energy- MC",xlabel="step")
+savefig("potential_energy.pdf")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+rmd, gmd = radial_distribution(sys,"md.xyz")
+rmc, gmc = radial_distribution(sys,"mc.xyz")
+plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+plot!(rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
+savefig("gr.pdf")
+```
 
