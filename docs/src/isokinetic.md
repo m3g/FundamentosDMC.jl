@@ -26,7 +26,7 @@ julia> minimize!(sys);
 En seguida, vamos a ejecutar la simulación, ahora con termostato isocinético, por `2000` pasos, de los cuales `200` son de equilibración. El termostato es aplicado a cada `ibath` pasos:
 
 ```julia-repl
-julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1))
+julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1));
 ```
 
 El gráfico de las energias en función del tiempo puede ser obtenido con:
@@ -35,7 +35,6 @@ julia> plot(out,ylim=[-100,100],
          label=["Potential" "Kinetic" "Total" "Temperature"],
          xlabel="step"
        )
-
 ```
 
 Debe notar-se que la energia total no es más constante dureante el periódo de equilibración. Las energia potencial y cinética deben haber convergido un poco mejor que en la simulación sin control de temperatura, aunque esta primera simulación es muy corta. 
@@ -54,7 +53,7 @@ Pruebe diferentes parámetros, y entienda el efecto del tiempo de equilibración
 
 Una buena condición para visualizar los resultados se obtiene con `ibath=50`  y `iequil=5_000`, para `nsteps=20_000`. 
 ```julia-repl
-julia> out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
+julia> out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000));
 ```
 
 En estas condiciones, normalmente, no se debe observar un desvio sistemático de las energias o de la temperatura después de la equilibración. Repita los gráficos (en el prompt de `Julia`, la flecha para arriba accede a los comandos anteriores).

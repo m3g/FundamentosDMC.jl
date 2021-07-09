@@ -11,7 +11,7 @@ parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trajectoria en un arch
 julia> md_out = md_langevin(
          sys,
          Options(lambda=0.01,nsteps=100_000,trajectory_file="md.xyz")
-       )
+       );
 ```
 
 ## 8.2. Generando un buen muestreo de MC
@@ -21,7 +21,7 @@ Ejecute una larga simulación de Monte-Carlo (`200_000` pasos)
 ```julia-repl
 julia> mc_out = mc(sys,
                   Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
-       )
+       );
 ```
 
 ## 8.3. Comparando las energias potenciales

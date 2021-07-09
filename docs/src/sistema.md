@@ -50,11 +50,13 @@ Options
   sig: Float64 2.0
   kavg_target: Float64 0.6
   ibath: Int64 20
-  iequil: Int64 200
-  tau: Int64 200
+  iequil: Int64 20
+  tau: Int64 20
+  lambda: Float64 0.1
+  alpha: Float64 0.1
   printxyz: Bool true
-  iprintxyz: Int64 200
-  iprint: Int64 200
+  iprintxyz: Int64 20
+  iprint: Int64 20
   minprint: Bool false
   trajectory_file: String "traj.xyz"
 
