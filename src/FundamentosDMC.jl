@@ -1,4 +1,4 @@
-module FundamentosDM
+module FundamentosDMC
 
 using Printf
 using Parameters
