@@ -7,7 +7,7 @@ https://sites.google.com/view/simulacionenquimica/
 
 # Fundamentos de Dinámica Molecular Clásica
 
-<center><h3>Tutorial y documentación: https://m3g.github.io/FundamentosDMC.jl/dev</h3></center>
+<center><h3>Tutorial y documentación: https://m3g.github.io/FundamentosDMC.jl/stable</h3></center>
 
 Leandro Martínez - Instituto de Química - Universidad de Campinas
 
