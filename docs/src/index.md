@@ -57,7 +57,7 @@ Los paquetes pueden ser instalados desde un script, con:
 
 ```julia
 import Pkg
-Pkg.add("url=https://github.com/m3g/FundamentosDMC.jl")
+Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
 Pkg.add("Plots")
 ```
 
