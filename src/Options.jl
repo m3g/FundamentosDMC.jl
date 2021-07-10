@@ -22,16 +22,16 @@ julia> opt = Options(nsteps=2000)
 
   # Temperature bath parameters
   kavg_target ::Float64 = 0.6
-  ibath::Int = div(nsteps,10)
-  iequil::Int = div(nsteps,10)
-  tau::Int = div(nsteps,10)
+  ibath::Int = 10
+  iequil::Int = 10
+  tau::Int = 10
   lambda::Float64 = 0.1
   alpha::Float64 = 0.1
 
   # Output and printing options
   printxyz::Bool = true
-  iprintxyz::Int = div(nsteps,10)
-  iprint::Int = div(nsteps,10) 
+  iprintxyz::Int = 10
+  iprint::Int = 10
   minprint::Bool = false
   trajectory_file::String = "traj.xyz"
 
