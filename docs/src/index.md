@@ -25,7 +25,13 @@ Instale el interpretador de `Julia`, de [https://julialang.org/](https://juliala
 Ejecute el interpretador, e instale el paquete deste curso, usando: 
 
 ```julia-repl
-julia> import Pkg; Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
+julia> import Pkg Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
+
+julia> Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
+```
+o, alternativamente,
+```
+julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
 
