@@ -30,11 +30,11 @@ fluctuación-disipación, que describe el movimiento Browniano.
 
 # 6.1. Control de parámetros y termalización  
 
-El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinámica de Langevin. En este caso, programa inicializa las velocidades en cero, para que el efecto del termostato sea destacado. Vamos a imprimir la trajectoria con más frequéncia para que se note el efecto de la friccion al início:
+El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinámica de Langevin. En este caso, programa inicializa las velocidades en cero, para que el efecto del termostato sea destacado. Vamos a imprimir la trayectoria con más frecuencia para que se note el efecto de la fricción al início:
 
 Por ejemplo,
 ```julia-repl
-julia> out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5))
+julia> out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5));
 
 ```
 Ejecute el programa con diversos parámetros, en particular estos:

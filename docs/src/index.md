@@ -40,10 +40,10 @@ Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las
 
 ## 1.3. Códigos
 
-`Julia` es un lenguage de programación de alta peformance, dinámico, y con sintaxis bastante simple. Todos los códigos de este curso están disponíbles en repositório 
-[https://github.com/m3g/FundamentosDMC.jl](https://github.com/m3g/CELFi.jl), y su lectura será estimulada en la medida que avanzemos en la ejecución del tutorial. 
+`Julia` es un lenguaje de programación de alta performance, dinámico, y con sintaxis bastante simple. Todos los códigos de este curso están disponibles en repositório 
+[https://github.com/m3g/FundamentosDMC.jl](https://github.com/m3g/CELFi.jl), y su lectura será estimulada en la medida que avancemos en la ejecución del tutorial. 
 
-Los códigos aqui son razonablemente eficientes para al realización del tutorial, pero no están optimizados para máxima peformance, para que su lectura sea más fácil. 
+Los códigos aqui son razonablemente eficientes para al realización del tutorial, pero no están optimizados para máxima performance, para que su lectura sea más fácil. 
 
 ## 1.4. Código completo resumido
 

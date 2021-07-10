@@ -25,24 +25,24 @@ unitarias, para simplificar. La simulación es ejecutada por `nsteps`
 pasos, con paso de integración $\Delta t$, este siendo un parámetro de
 entrada, `dt`, definido en `Options`. 
 
-La simulación no tiene control de temperatura o de presión. Es una propagación de la trajectória según las leyes de Newton, que deberían conservar la energia. A esto se le llama una simulación "microcanónica", o "NVE" (que conserva, en princípio, el número de partículas, el volumen y la energia total).
+La simulación no tiene control de temperatura o de presión. Es una propagación de la trayectoria según las leyes de Newton, que deberían conservar la energia. A esto se le llama una simulación "microcanónica", o "NVE" (que conserva, en princípio, el número de partículas, el volumen y la energia total).
 
 ## 3.1. Paso de integración
 
 Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute le comando:
 ```julia-repl
-julia> out = md(sys,Options(dt=0.1))
+julia> out = md(sys,Options(dt=0.1));
 
 ```
 En princípio, está previso realizar 2000 pasos de integración de las equaciones 
-de movimimiento.  Pruebe pasos de integración entre `1.0` y `0.01`. 
+de movimiento.  Pruebe pasos de integración entre `1.0` y `0.01`. 
 Note que pasa con la energía. Note que pasa con la energía
 cinética media, la cual fue inicializada en 0.6 unidades/átomo. Discuta
 la elección del paso de integración, y los valores de energía cinética
 obtenidos. Las simulaciones que siguen van a usar un paso de integración
 `dt = 0.05`.
 
-Es posible controlar la frequéncia de impresión y el número de puntos salvos en el archivo de trajectoria con las opciones `iprint` y `iprintxyz`:
+Es posible controlar la frecuencia de impresión y el número de puntos salvos en el archivo de trayectoria con las opciones `iprint` y `iprintxyz`:
 ```julia-repl
 julia> out = md(sys,Options(dt=0.1,iprint=1,iprintxyz=5))
 ```
@@ -79,9 +79,9 @@ oscilaciones de la energía total. A que se deben cada una de las
 oscilaciones? Observe como estas oscilaciones dependen del paso de
 integración.
 
-## 3.2. Visualización de la trajectoria
+## 3.2. Visualización de la trayectoria
 
-Por fin, abra la trayectoria usando VMD. No es necesário salir de la sección de `Julia`. Al apretar `;` (punto y coma) aparecerá un prompt `shell>`, desde el cual 
+Por fin, abra la trayectoria usando VMD. No es necesario salir de la sección de `Julia`. Al apretar `;` (punto y coma) aparecerá un prompt `shell>`, desde el cual 
 es posible ejecutar a `VMD`, si este está instalado correctamente y disponible en el `path`:
 
 ```julia-repl

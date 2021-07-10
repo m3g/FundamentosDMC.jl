@@ -37,7 +37,7 @@ julia> plot(out,ylim=[-100,100],
        )
 ```
 
-Debe notar-se que la energia total no es más constante dureante el periódo de equilibración. Las energia potencial y cinética deben haber convergido un poco mejor que en la simulación sin control de temperatura, aunque esta primera simulación es muy corta. 
+Debe notar-se que la energia total no es más constante durante el período de equilibración. Las energia potencial y cinética deben haber convergido un poco mejor que en la simulación sin control de temperatura, aunque esta primera simulación es muy corta. 
 
 La temperatura puede ser observada con:
 ```julia-repl
@@ -47,9 +47,9 @@ julia> plot(
          xlabel="step"
        )
 ```
-Note que se mantiene practicamente constante e igual a la temperatura objetivo (0.60) durante la equilibración, pero después divergéncias pueden ser observadas. Si el sistema no está equilibrado, estas divergéncias pueden ser sistemáticas. 
+Note que se mantiene praticamente constante e igual a la temperatura objetivo (0.60) durante la equilibración, pero después divergencias pueden ser observadas. Si el sistema no está equilibrado, estas divergencias pueden ser sistemáticas. 
 
-Pruebe diferentes parámetros, y entienda el efecto del tiempo de equilibración y de la frequéncia de equilibración sobre la temperatura. 
+Pruebe diferentes parámetros, y entienda el efecto del tiempo de equilibración y de la frecuencia de equilibración sobre la temperatura. 
 
 Una buena condición para visualizar los resultados se obtiene con `ibath=50`  y `iequil=5_000`, para `nsteps=20_000`. 
 ```julia-repl
@@ -58,7 +58,7 @@ julia> out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000));
 
 En estas condiciones, normalmente, no se debe observar un desvio sistemático de las energias o de la temperatura después de la equilibración. Repita los gráficos (en el prompt de `Julia`, la flecha para arriba accede a los comandos anteriores).
 
-La trajectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriormente. 
+La trayectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriormente. 
 
 ## 4.2. Código completo resumido
 

@@ -39,7 +39,7 @@ que genera `100` puntos en 2 dimensiones, aleatórios, con coordenadas entre `[-
 
 ## 2.1. Parámetros y opciones de la simulación
 
-Los parámetros de las simulaciones son controlados en la estructura `Options`, por ejemplo, para ajuster el paso de tiempo, pasamos el parámetro `dt` a la estructura. Esto puede ser echo en la llamada de las funciones de simulacion, como veremos.
+Los parámetros de las simulaciones son controlados en la estructura `Options`, por ejemplo, para ajustar el paso de tiempo, pasamos el parámetro `dt` a la estructura. Esto puede ser echo en la llamada de las funciones de simulación, como veremos.
 
 ```julia-repl
 julia> Options(dt=0.1)
@@ -98,9 +98,9 @@ Energy after minimization: -74.15646912098042
 !!! note
     En `Julia` es una convención que las funciones que modifican sus argumentos terminan en `!`. En este caso, la función va a modificar las posiciones, `sys.x0`, de las partículas. 
 
-Si desea ver la progression de las energias, active la opcion `minprint`, con `minimize!(sys,Options(minprint=true))`.
+Si desea ver la progression de las energias, active la opción `minprint`, con `minimize!(sys,Options(minprint=true))`.
 
-Podemos ver rapidamente que ocurrió con las particulas, colocando-las en un gráfico. Primero, generamos un gráfico de los puntos antes de la minimización:
+Podemos ver rapidamente que ocurrió con las partículas, colocando-las en un gráfico. Primero, generamos un gráfico de los puntos antes de la minimización:
 ```julia-repl
 julia> using Plots
 
@@ -112,12 +112,12 @@ En seguida, hacemos el gráfico del punto con energia mínima obtenido:
 ```julia-repl
 julia> scatter(Tuple.(sys.x0))
 ```
-y notará que los puntos ahora tienen una nueva disposición: hay puntos formando clusteres, porque el potencial de Lennard-Jones es atractivo en distáncias largas. Pero no hay más puntos muy cercanos generando repulsiones muy grandes.
+y notará que los puntos ahora tienen una nueva disposición: hay puntos formando clusteres, porque el potencial de Lennard-Jones es atractivo en distancias largas. Pero no hay más puntos muy cercanos generando repulsiones muy grandes.
 
 Este punto inicial de energia mínima será usado en nuestras simulaciones. 
 
 !!! note
-    Los gráficos puden ser salvos como figuras con `savefig("plot.pdf")`, por ejemplo.
+    Los gráficos pueden ser salvos como figuras con `savefig("plot.pdf")`, por ejemplo.
 
 ## 2.4. Temperatura
 
@@ -125,12 +125,12 @@ La temperatura del sistema es un parámetro también definido internamente
 en el programa (puede ser modificado a gusto, pero no lo haremos). La
 temperatura se define a partir energía cinética media asociada a cada
 grado de libertad de movimiento del sistema. En el caso que todos los
-movimientos pueden ser escritos como translaciones, la definición es
+movimientos pueden ser escritos como traslaciones, la definición es
 
 $\frac{1}{2}kT = \left< \frac{1}{2} m v_x^2\right>$
 
 donde la media, hecha sobre $v_x$ aqui, es equivalente si hecha sobre
-cualquier otro grado de libertad de translación. En un sistema
+cualquier otro grado de libertad de traslación. En un sistema
 tridimensional, por lo tanto, 
 
 $\left<\frac{1}{2}m |\vec{v}|^2 \right> = 

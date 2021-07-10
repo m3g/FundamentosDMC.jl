@@ -18,10 +18,10 @@ escalonamiento es más suave y más lento.
 
 # 5.1. Control de parámetros y termalización  
 
-El parámetro $\tau$ se ajusta con la opcion `tau` de `Options`. Por ejemplo:
+El parámetro $\tau$ se ajusta con la opción `tau` de `Options`. Por ejemplo:
 
 ```julia-repl
-julia> out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000))
+julia> out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000));
 
 ```
 

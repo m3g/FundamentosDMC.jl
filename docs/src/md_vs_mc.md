@@ -5,7 +5,7 @@ Vamos a comparar el conjunto de estructuras generados por una dinámica molecula
 ## 8.1. Generando un buen muestreo por MD
 
 Ejecute, nuevamente, el programa `md_langevin` con los
-parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trajectoria en un archivo con nombre próprio, como `md.xyz`: 
+parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trayectoria en un archivo con nombre próprio, como `md.xyz`: 
 
 ```julia-repl
 julia> md_out = md_langevin(
@@ -83,7 +83,7 @@ Para calcular la función de distribución radial de la simulación de dinámica
 julia> rmd, gmd = radial_distribution(sys,"md.xyz")
 ```
 
-`rmc` y `rmd` son las distáncias y las densidades relativas de partículas a cada distáncia, en relación a la densidad del sistema. 
+`rmc` y `rmd` son las distancias y las densidades relativas de partículas a cada distancia, en relación a la densidad del sistema. 
 
 En seguida, obtengamos la $g(r)$ de la simulación de Monte-Carlo: 
 ```julia-repl    
@@ -95,9 +95,9 @@ Cree en gráfico de la función de distribución de la simulación de dinámica 
 julia> plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
 ```
 
-Note el aumento de densidad local en distáncias cortas, que resulta de las interacciones favorables entre las partículas. Note también que la densidad relativa tiende a `1.0` en distáncias grandes, cuando la correlación de la posición entre partículas no és mas importante.  
+Note el aumento de densidad local en distancias cortas, que resulta de las interacciones favorables entre las partículas. Note también que la densidad relativa tiende a `1.0` en distancias grandes, cuando la correlación de la posición entre partículas no és mas importante.  
 
-Agregue al mismo gráfico la función de distribuición obtenida a partir de la simulación de Monte-Carlo:  
+Agregue al mismo gráfico la función de distribución obtenida a partir de la simulación de Monte-Carlo:  
 ```julia-repl
 julia> plot!(rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
 ```

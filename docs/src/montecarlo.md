@@ -31,12 +31,12 @@ Tasas de aceptación del orden de 20 a 30\% son consideradas ideales.
 
 ## 7.1. Ejecución
 
-Ejecute la funcion `mc`. Vamos a variar la magnitud de las perturbaciones. Las perturbaciones de las posiciones son Gaussianas, y la magnitud de
+Ejecute la función `mc`. Vamos a variar la magnitud de las perturbaciones. Las perturbaciones de las posiciones son Gaussianas, y la magnitud de
 entrada es el desvío estándar. El número de pasos corresponde al número
 de nuevas estructuras, no necesariamente aceptadas, generadas:
 
 ```julia-repl
-julia> out = mc(sys,Options(alpha=0.05,nsteps=50_000))
+julia> out = mc(sys,Options(alpha=0.05,nsteps=50_000));
 ```
 
 Para un número de pasos de 50.000, pruebe diferentes perturbaciones,
