@@ -19,8 +19,9 @@ julia> md_out = md_langevin(
 Ejecute una larga simulación de Monte-Carlo (`200_000` pasos)
 
 ```julia-repl
-julia> mc_out = mc(sys,
-                  Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
+julia> mc_out = mc(
+         sys,
+         Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
        );
 ```
 
@@ -115,8 +116,9 @@ md_out = md_langevin(
   sys,
   Options(lambda=0.01,nsteps=100_000,trajectory_file="md.xyz")
 )
-mc_out = mc(sys,
-           Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
+mc_out = mc(
+  sys,
+  Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
 )
 plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
 plot!(mc_out,label="Potential energy- MC",xlabel="step")
