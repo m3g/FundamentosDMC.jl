@@ -1,12 +1,12 @@
 # Ejecución en 3D
 
-Todos los códigos aqui pueden generar simulaciones tri-dimensionales. En realidad los únicos códigos que tienen alguna 
+Todos los códigos aqui pueden generar simulaciones tridimensionales. En realidad los únicos códigos que tienen alguna 
 dimensionalidad definida son los que escriben el archivo de salida (`printxyz`) y el que calcula la función de distribución
-radial (`radial_distribution`). Todos los otros códigos son genéricos, y lo que hace depende apenas del tipo de variable de entrada, o sea, de la dimensión de la caja y de lo puntos. A lo largo de los códigos.  
+radial (`radial_distribution`). Todos los otros códigos son genéricos, y lo que hace depende apenas del tipo de variable de entrada, o sea, de la dimensión de la caja y de lo puntos.  
 
 ## 9.1. Inicializando el sistema con 3 dimensiones:
 
-Basta crear el sistema en un caja tri-dimensional:
+Basta crear el sistema en un caja tridimensional:
 
 ```julia-repl
 julia> sys = System(n=100,sides=[50,50,50])
@@ -14,7 +14,7 @@ System{Point3D}:
  Number of particles = 100
  Box sides = [50.0, 50.0, 50.0]
 ```
-Note que ahora los puntos son del tipo `Point3D`. Efectivamente, las coordenadas, `sys.x0` son tri-dimensionales:
+Note que ahora los puntos son del tipo `Point3D`. Efectivamente, las coordenadas, `sys.x0` son tridimensionales:
 
 ```julia-repl
 julia> sys.x0
@@ -69,7 +69,7 @@ minimize!(sys)
 
 md_out = md_langevin(
   sys,
-  Options(lambda=0.01,nsteps=100_000,trajectory_file="md.xyz")
+  Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
 )
 rmd, gmd = radial_distribution(sys,"md.xyz")
 plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
