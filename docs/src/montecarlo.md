@@ -47,7 +47,7 @@ Una vez elegida la perturbación, ejecute el programa con número de pasos
 de 200.000, lo que implica que aproximadamente 60.000 pasos van a ser
 aceptados (para una tasa de 30\%). 
 
-Observe la evolución de la energía potencial, haciendo gráficos con: 
+Observe la evolución de la energia potencial, haciendo gráficos con: 
 
 ```julia-repl
 plot(out,ylim=[-100,100], label="Potential", xlabel="step")

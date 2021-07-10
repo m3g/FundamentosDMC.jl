@@ -35,7 +35,7 @@ Pruebe diferentes parámetros, con `20_000` pasos de simulación. Entre los cual
 |  300   |  3000|
 |        |      |
 
-Observe los gráficos de energía resultantes, usando los mismos comandos de antes:
+Observe los gráficos de energia resultantes, usando los mismos comandos de antes:
 ```julia-repl
 julia> using Plots
 
@@ -46,8 +46,8 @@ julia> plot(
        )
 ```
 
-Observe la suavidad, o no, de la curva de energía total. Observe si la
-energía cinética se aproximó de la energía media deseada ($kT=60$).
+Observe la suavidad, o no, de la curva de energia total. Observe si la
+energia cinética se aproximó de la energia media deseada ($kT=60$).
 
 ## 5.2. Código completo resumido
 

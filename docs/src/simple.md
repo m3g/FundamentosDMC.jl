@@ -29,7 +29,7 @@ La simulación no tiene control de temperatura o de presión. Es una propagació
 
 ## 3.1. Paso de integración
 
-Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute le comando:
+Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute el comando:
 ```julia-repl
 julia> out = md(sys,Options(dt=0.1));
 

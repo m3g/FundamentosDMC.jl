@@ -9,7 +9,7 @@ Su ejecución demanda la definición de dos parámetros
 adicionales: el intervalo de tiempo entre dos escalonamientos de
 velocidades, y el tiempo de equilibración. El tiempo de equilibración es
 el tiempo dentro del cual los escalonamientos son realizados. El
-objetivo debe ser obtener una simulación estable, con energía cinética
+objetivo debe ser obtener una simulación estable, con energia cinética
 media adecuada a la deseada (60 unidades), después de la equilibración.
 
 # 4.1. Control de parámetros y termalización  
