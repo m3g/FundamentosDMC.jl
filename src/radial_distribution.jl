@@ -34,32 +34,29 @@ function radial_distribution(
   g = zeros(nbins)
 
   # Reading coordinates, computing distances, and adding to histogram
-  file = open(trajfile,"r")
   nframes = 0
-  while true
-    length(readline(file,keep=true)) == 0 && break # number of atoms or end-of-file, ignore or exit
-    readline(file) # title, ignore
-
-    nframes += 1 
-    # read atomic coordinates
-    for i in 1:n
-      atom_data = split(readline(file))
-      x[i] = T(ntuple(i -> parse(Float64,atom_data[i+1]), length(x[i])))
-    end
-
-    # Compute distances and add to histogram
-    for i in 1:n-1
-      for j in i+1:n
-        dx = image(x[j] - x[i],sides)
-        idist = ceil(Int,nbins*(norm(dx)/dmax))
-        if idist <= nbins 
-          g[idist] += 1.
+  open(trajfile) do file 
+    while !(eof(file))
+      readline(file) # number of atoms, ignore
+      readline(file) # title, ignore
+      nframes += 1 
+      # read atomic coordinates
+      for i in 1:n
+        atom_data = split(readline(file))
+        x[i] = T(ntuple(i -> parse(Float64,atom_data[i+1]), length(x[i])))
+      end
+      # Compute distances and add to histogram
+      for i in 1:n-1
+        for j in i+1:n
+          dx = image(x[j] - x[i],sides)
+          idist = ceil(Int,nbins*(norm(dx)/dmax))
+          if idist <= nbins 
+            g[idist] += 1.
+          end
         end
       end
     end
-
   end
-  close(file)
   println("Number of frames read = ", nframes)
 
   # Normalizing by the number of frames and number of atoms
