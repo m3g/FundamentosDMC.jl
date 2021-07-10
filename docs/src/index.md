@@ -30,7 +30,7 @@ julia> import Pkg Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
 julia> Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
 ```
 o, alternativamente,
-```
+```julia-repl
 julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
 (el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
