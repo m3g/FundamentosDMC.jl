@@ -15,6 +15,7 @@ makedocs(
         "Termostato de Langevin" => "langevin.md",
         "Monte-Carlo" => "montecarlo.md",
         "Comparando MD y MC" => "md_vs_mc.md",
+        "Ejecución en 3D" => "running3D.md",
         "Help entries" => "help.md",
     ]
 )
