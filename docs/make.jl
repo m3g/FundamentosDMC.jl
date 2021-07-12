@@ -16,6 +16,7 @@ makedocs(
         "Monte-Carlo" => "montecarlo.md",
         "Comparando MD y MC" => "md_vs_mc.md",
         "Ejecución en 3D" => "running3D.md",
+        "Distribución de velocidades" => "velocities.md",
         "Help entries" => "help.md",
     ]
 )
