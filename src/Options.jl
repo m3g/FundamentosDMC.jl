@@ -21,6 +21,7 @@ julia> opt = Options(nsteps=2000)
   sig::Float64 = 2.
 
   # Temperature bath parameters
+  initial_velocities::Symbol = :normal
   kavg_target ::Float64 = 0.6
   ibath::Int = 10
   iequil::Int = 10
