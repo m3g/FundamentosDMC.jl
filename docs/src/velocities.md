@@ -1,7 +1,11 @@
 
 # Distribución de velocidades
 
-Las velocidades de las partículas en un sistema molecular siguen la distribución de Maxwell-Boltzmann. Vamos a ver si esto efectivamente ocurre en nuestras simulaciones. 
+Las velocidades de las partículas en un sistema molecular siguen la distribución de Maxwell-Boltzmann:
+
+$$f(v) ~dv= \left(\frac{m}{2 \pi kT}\right)^{3/2}\, 4\pi v^2 e^{ -\frac{mv^2}{2kT}} ~ dv$$
+
+Vamos a ver si esto efectivamente ocurre en nuestras simulaciones. 
 
 ## 10.1. Distribución inicial de velocidades
 
@@ -68,5 +72,99 @@ que resulta en:
 <img src=../figures/velocities.svg>
 </center>
 ```
+
+## 10.2. Las velocidades en equilirio
+
+Vamos a comparar las distribuciónes iniciales con una distribución obtenida de 
+una simulación. Para eso, vamos a repetir la simulación de Langevin, pero ahora 
+en 3 dimensiones, la cual fué  iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trajectoria de las velocidades también:
+```julia-repl
+julia> sys = System(n=100,sides=[50,50,50])
+System{Point3D}:
+ Number of particles = 100
+ Box sides = [50.0, 50.0, 50.0]
+ 
+julia> minimize!(sys)
+
+julia> md_out = md_langevin(
+         sys,
+         Options(
+           lambda=0.01,
+           nsteps=100_000,
+           velocity_file="vel.xyz",
+           initial_velocities=:zero
+         )
+       )
+```
+
+Calculamos la distribución de velocidades de esta trayectoria con:
+```julia-repl
+julia> v_sim = velocity_distribution(sys,"vel.xyz");
+Number of frames read = 10001
+ Average velocity = [0.003014992500749613, -0.04277096828317029, -0.01629199255074569]
+ Average velocity norm = 1.2234527952231138
+ Average kinetic energy = 0.8819808992851449
+
+```
+
+Haga el gráfico de esta distribución de velocidades: 
+```julia-repl
+julia> plot(
+         v_sim,
+         label="Langevin",
+         xlabel="velocity norm",
+         ylabel="frequency",
+         linewidth=2
+       )
+```
+
+Compare, visualmente, el resulado con lo que es esperado para la distribución de Maxwell-Boltzmann.
+
+## 10.3. Ajustando los datos 
+
+La curva de `v_sim` puede ser ajustada para ver como bien, o mal, corresponde a la distribución de Maxwell-Boltzmann. Esta tiene la forma general
+
+$$ f(v)dv = A v^2 e^{-v^2/2kT} dv$$
+
+Esta función tiene apenas dos parámetros ajustables: $A$ y $kT$ (o simplemente $T$, pero aqui mantenemos la constante junto con la 
+temperatura). 
+
+Podemos ajustar esta curva a los datos obtenidos usando un software de ajuste, o por ejemplo el paquete [LsqFit.jl](https://github.com/JuliaNLSolvers/LsqFit.jl):
+
+### Instalación
+
+```julia-repl
+julia> ] add LsqFit
+```
+
+### Ajustando el modelo
+
+```julia-repl
+julia> using LsqFit
+
+julia> @. model(v,p) = p[1]*v^2 exp(-v^2/(2*p[2]))
+
+julia> p0 = rand(2) # punto inicial
+
+julia> fit = curve_fit(model, v_sim[1], v_sim[2], p0)
+
+```
+
+Y vemos como bien los datos son ajustados con el modelo, viendo el parámetro `fit.resid`:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
