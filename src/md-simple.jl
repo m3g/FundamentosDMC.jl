@@ -25,10 +25,11 @@ function md(sys::System{T},opt::Options=Options()) where T
   x = copy(x0)
 
   # Obtain initial velocities
-  v = velocities(sys,opt)
+  v = init_velocities(sys,opt)
 
-  # Open trajectory file for writting
+  # Open trajectory files for writting
   trajectory_file = open(opt.trajectory_file,"w")
+  velocity_file = open(opt.velocity_file,"w")
 
   # log matrix will contain potential, kinetic, total energies, and "temperature" 
   out = zeros(nsteps,4)
@@ -37,8 +38,8 @@ function md(sys::System{T},opt::Options=Options()) where T
   println(" Kinetic energy at initial point: ", kinetic(v))
   println(" Total initial energy = ", u(x) + kinetic(v))
 
-  # Write coordinates to trajectory file, and update log vectors
-  printxyz(0.,x,sys,trajectory_file)
+  # Write coordinates and velocities to trajectory files, and update log vectors
+  printxyz(0.,x,v,sys,trajectory_file,velocity_file)
   out[1,:] .= (u(x), kinetic(v), u(x) + kinetic(v), kinetic(v)/n) 
   
   # Initialize velocity vector and save first set of forces 
@@ -73,6 +74,7 @@ function md(sys::System{T},opt::Options=Options()) where T
     if ustep > 1e10
       println(" Simulation exploded: Energy = ", energy)
       close(trajectory_file)
+      close(velocity_file)
       return out[1:istep,:]
     end
 
@@ -85,13 +87,15 @@ function md(sys::System{T},opt::Options=Options()) where T
       out[istep,:] .= (ustep,kstep,energy,kavg)
     end
     if mod(istep,opt.iprintxyz) == 0
-      printxyz(time,x,sys,trajectory_file)
+      printxyz(time,x,v,sys,trajectory_file,velocity_file)
     end
 
   end
 
   close(trajectory_file)
-  println("Wrote file: ", opt.trajectory_file)
+  close(velocity_file)
+  println("Wrote trajectory file: ", opt.trajectory_file)
+  println("Wrote velocities file: ", opt.velocity_file)
   return out 
 end
 

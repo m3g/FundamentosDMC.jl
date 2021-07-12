@@ -31,8 +31,9 @@ julia> opt = Options(nsteps=2000)
   # Output and printing options
   printxyz::Bool = true
   iprintxyz::Int = 10
-  iprint::Int = 10
+  iprint::Int = div(nsteps,100)
   minprint::Bool = false
   trajectory_file::String = "traj.xyz"
+  velocity_file::String = "vel.xyz"
 
 end
