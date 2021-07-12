@@ -34,7 +34,10 @@ El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinám
 
 Por ejemplo,
 ```julia-repl
-julia> out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5));
+julia> out = md_langevin(
+         sys,
+         Options(lambda=0.1,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
+       );
 
 ```
 Ejecute el programa con diversos parámetros, en particular estos:
@@ -60,7 +63,10 @@ particular para acoplamientos grandes.
 using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
-out = md_langevin(sys,Options(lambda=0.1,nsteps=20_000,iprintxyz=5))
+out = md_langevin(
+  sys,
+  Options(lambda=0.1,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
+)
 plot(
   out,ylim=[-100,100],
   label=["Potential" "Kinetic" "Total" "Temperature"],
