@@ -124,7 +124,7 @@ Compare, visualmente, el resulado con lo que es esperado para la distribución d
 
 La curva de `v_sim` puede ser ajustada para ver como bien, o mal, corresponde a la distribución de Maxwell-Boltzmann. Esta tiene la forma general
 
-$$ f(v)dv = A v^2 e^{-v^2/2kT} dv$$
+$$f(v)dv = A v^2 e^{-v^2/2kT} dv$$
 
 Esta función tiene apenas dos parámetros ajustables: $A$ y $kT$ (o simplemente $T$, pero aqui mantenemos la constante junto con la 
 temperatura). 
@@ -142,15 +142,47 @@ julia> ] add LsqFit
 ```julia-repl
 julia> using LsqFit
 
-julia> @. model(v,p) = p[1]*v^2 exp(-v^2/(2*p[2]))
+julia> @. f(v,p) = p[1]*v^2*exp(-v^2/(2*p[2]))
 
 julia> p0 = rand(2) # punto inicial
 
-julia> fit = curve_fit(model, v_sim[1], v_sim[2], p0)
-
+julia> fit = curve_fit(f, v_sim[1], v_sim[2], p0)
 ```
 
-Y vemos como bien los datos son ajustados con el modelo, viendo el parámetro `fit.resid`:
+Y vemos como bien los datos son ajustados con el modelo, calculando la suma de quadarados de los resíduos:
+
+```julia-repl
+julia> sum(fit.resid.^2)
+2.016208460480086e-6
+```
+
+Y podemos visuzalizar el modelo ajustado graficamente, con:
+```julia-repl
+julia> plot(
+         [ v_sim, (v_sim[1], f.(v_sim[1],Ref(coef(fit)))) ],
+         label=[ "Simulation"  "Fit" ],
+         xlabel="velocity norm",
+         ylabel="frequency",
+         linewidth=2
+       )
+```
+(los detalles deste comando pueden ser discutidos en momento oportuno)
+
+```@raw html
+<center>
+<img src=../figures/velocities_fit.svg>
+</center>
+```
+
+Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. El segundo parámetro del ajuste debe corresponder a $kT$ en nuestra fórmula:
+```julia-repl
+julia> coef(Fit)
+2-element Vector{Float64}:
+ 0.2837017192118932
+ 0.14677392418409904
+```
+
+
 
 
 
