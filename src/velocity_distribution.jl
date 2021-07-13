@@ -33,7 +33,7 @@ function velocity_distribution(
       # read atomic coordinates
       for i in 1:n
         atom_data = split(readline(file))
-        v = T(ntuple(i -> parse(Float64,atom_data[i+1]), length(vavg)))
+        v = T(ntuple(i -> parse(Float64,atom_data[i+1]), dim(T)))
         ibin = floor(Int,(norm(v)/vmax)/Δv) + 1
         if ibin <= nbins
           vcount[ibin] += 1
@@ -48,7 +48,7 @@ function velocity_distribution(
 
   # Normalizing by the number of frames and number of atoms
   for i in 1:nbins
-    vcount[i] = vcount[i] / (nframes*n)
+    vcount[i] = vcount[i] / (nframes*n) / Δv
   end
   vavg = vavg / (nframes*n)
   println(" Average velocity = ", vavg)

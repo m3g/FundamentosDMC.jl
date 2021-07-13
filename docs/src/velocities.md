@@ -16,7 +16,7 @@ converge, la distribución de velocidades de las partículas. En nuestros progra
 tenemos trés diferentes maneras de generar la distribución *inicial* de velocidades: con normas distribuidas homogeneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro `initial_velocities` de `Options`. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: 
 
 ```julia-repl
-julia> sys = System(n=100_000,size=[100,100,100])
+julia> sys = System(n=100_000,sides=[50,50,50])
 System{Point2D}:
  Number of particles = 100000
  Box sides = [100.0, 100.0]

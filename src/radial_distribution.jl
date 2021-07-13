@@ -43,7 +43,7 @@ function radial_distribution(
       # read atomic coordinates
       for i in 1:n
         atom_data = split(readline(file))
-        x[i] = T(ntuple(i -> parse(Float64,atom_data[i+1]), length(x[i])))
+        x[i] = T(ntuple(i -> parse(Float64,atom_data[i+1]), dim(T)))
       end
       # Compute distances and add to histogram
       for i in 1:n-1
