@@ -18,7 +18,7 @@ function mc(sys::System{T},opt::Options=Options()) where T
 
   # aliases to simplify code
   @unpack x0 = sys
-  @unpack nsteps, kavg_target, alpha = opt
+  @unpack nsteps, kT, alpha = opt
   u(x) = potential(x,sys,opt)
 
   # Copy the initial point, to preserve it
@@ -53,7 +53,7 @@ function mc(sys::System{T},opt::Options=Options()) where T
 
     # Check if this conformation is accepted
     if (utrial < ucurrent) || 
-       (exp( -(utrial-ucurrent) / kavg_target ) > rand())
+       (exp( -(utrial-ucurrent) / kT) > rand())
 
       naccepted += 1
       ucurrent = utrial

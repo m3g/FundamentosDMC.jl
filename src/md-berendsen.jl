@@ -17,7 +17,7 @@ function md_berendsen(sys::System{T},opt::Options=Options()) where T
 
   # aliases to simplify code
   @unpack n, x0 = sys
-  @unpack dt, nsteps, kavg_target, iequil, tau = opt
+  @unpack dt, nsteps, kT, iequil, tau = opt
   u(x) = potential(x,sys,opt)
   f!(f,x) = forces!(f,x,sys,opt)
 
@@ -94,7 +94,7 @@ function md_berendsen(sys::System{T},opt::Options=Options()) where T
     # Berendsen-bath
     #
     if istep <= iequil
-      lambda = sqrt( 1 + (dt/tau)*(kavg_target/kavg-1) )
+      lambda = sqrt( 1 + (dt/tau)*((dim(T)*kT/2)/kavg-1) )
       @. v = v * lambda
     end
 

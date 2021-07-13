@@ -48,7 +48,7 @@ Options
   nsteps: Int64 2000
   eps: Float64 1.0
   sig: Float64 2.0
-  kavg_target: Float64 0.6
+  kT: Float64 0.6
   ibath: Int64 20
   iequil: Int64 20
   tau: Int64 20

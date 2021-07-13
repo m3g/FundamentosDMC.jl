@@ -17,7 +17,7 @@ function md_isokinetic(sys::System{T},opt::Options=Options()) where T
 
   # aliases to simplify code
   @unpack n, x0 = sys
-  @unpack dt, nsteps, kavg_target, ibath, iequil = opt
+  @unpack dt, nsteps, kT, ibath, iequil = opt
   u(x) = potential(x,sys,opt)
   f!(f,x) = forces!(f,x,sys,opt)
 
@@ -95,7 +95,7 @@ function md_isokinetic(sys::System{T},opt::Options=Options()) where T
     # Isokinetic-bath: rescale velocities to obtain target average kinetic energy
     #
     if istep <= iequil && mod(istep,ibath) == 0
-      @. v = v * sqrt(kavg_target/kavg)
+      @. v = v * sqrt((dim(T)*kT/2)/kavg)
     end
 
   end

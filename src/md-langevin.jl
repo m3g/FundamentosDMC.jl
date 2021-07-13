@@ -17,7 +17,7 @@ function md_langevin(sys::System{T},opt::Options=Options()) where T
 
   # aliases to simplify code
   @unpack n, x0 = sys
-  @unpack dt, nsteps, kavg_target, lambda = opt
+  @unpack dt, nsteps, kT, lambda = opt
   u(x) = potential(x,sys,opt)
   f!(f,x) = forces!(f,x,sys,opt)
 
@@ -65,7 +65,7 @@ function md_langevin(sys::System{T},opt::Options=Options()) where T
 
     # Updating velocities including random forces
     @. v = v + 0.5*(f + flast)*dt + 
-           sqrt(2*lambda*kavg_target*dt)*randn(T)
+           sqrt(2*lambda*kT*dt)*randn(T)
     remove_drift!(v)
 
     # Update step and print data
