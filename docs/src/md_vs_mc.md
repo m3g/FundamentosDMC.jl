@@ -16,12 +16,12 @@ julia> md_out = md_langevin(
 
 ## 8.2. Generando un buen muestreo de MC
 
-Ejecute una larga simulación de Monte-Carlo (`200_000` pasos)
+Ejecute una larga simulación de Monte-Carlo (`300_000` pasos)
 
 ```julia-repl
 julia> mc_out = mc(
          sys,
-         Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
+         Options(alpha=0.05,nsteps=300_000,trajectory_file="mc.xyz")
        );
 ```
 
@@ -118,7 +118,7 @@ md_out = md_langevin(
 )
 mc_out = mc(
   sys,
-  Options(alpha=0.05,nsteps=200_000,trajectory_file="mc.xyz")
+  Options(alpha=0.05,nsteps=300_000,trajectory_file="mc.xyz")
 )
 plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
 plot!(mc_out,label="Potential energy- MC",xlabel="step")
