@@ -15,8 +15,8 @@ function init_velocities(sys::System{T},opt::Options) where T
     v = randn(T,n)
   elseif opt.initial_velocities == :flat
     v = rand(T,n)
-    @. v = rand() * v / norm(v)
-    @. v = random_rotate(v)
+    @. v = random_rotate(v/norm(v))
+    @. v = rand()*v
   elseif opt.initial_velocities == :zero
     v = zeros(T,n)
   else
@@ -50,9 +50,8 @@ function random_rotate(v::Point3D)
   θ = 2π*rand()
   ϕ = 2π*rand()
   ψ = 2π*rand()
-  M = @SMatrix[ cos(θ)*cos(ψ)  -cos(ϕ)*sin(ψ)+sin(ϕ)*sin(θ)*cos(ψ)  sin(ϕ)*sin(ψ)+cos(ϕ)*sin(θ)*cos(ψ)
-                cos(θ)*sin(ψ)   cos(ϕ)*cos(ψ)+sin(ϕ)*sin(θ)*sin(ψ) -sin(ϕ)*cos(ψ)+cos(ϕ)*sin(θ)*sin(ψ)
-                  -sin(θ)                sin(ϕ)*cos(θ)                       cos(ϕ)*cos(ϕ)             ]
+  M = @SMatrix[ cos(ψ)*cos(θ)*cos(ϕ)-sin(ψ)*sin(ϕ)   -cos(ψ)*cos(θ)*sin(ϕ)-sin(ψ)*cos(ϕ)  cos(ψ)*sin(θ)
+                sin(ψ)*cos(θ)*cos(ϕ)+cos(ψ)*sin(ϕ)   -sin(ψ)*cos(θ)*sin(ϕ)+cos(ψ)*cos(ϕ)  sin(ψ)*sin(θ)
+                    -sin(θ)*cos(ϕ)                          sin(θ)*sin(ϕ)                    cos(θ)      ]
   return M*v
 end
-
