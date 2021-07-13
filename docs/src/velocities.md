@@ -75,13 +75,15 @@ que resulta en:
 </center>
 ```
 
+A distribución normal es la que se parece a la distribución de Maxwell-Boltzmann y es la default en las simulaciones. 
+
 ## 10.2. Las velocidades en equilirio
 
 Vamos a comparar las distribuciónes iniciales con una distribución obtenida de 
 una simulación. Para eso, vamos a repetir la simulación de Langevin, pero ahora 
 en 3 dimensiones, la cual fué  iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trajectoria de las velocidades también:
 ```julia-repl
-julia> sys = System(n=100,sides=[50,50,50])
+julia> sys = system(n=100,sides=[50,50,50])
 System{Point3D}:
  Number of particles = 100
  Box sides = [50.0, 50.0, 50.0]
@@ -182,28 +184,65 @@ julia> plot(
 ```
 
 Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. 
-
-Finalmente, en trés dimensiones, tenemos,
-
-$$\left<\frac{1}{2}mv^2\right> = \frac{3}{2}kT$$
-
-de forma que la energia cinética média tiene que ser $3/2$ por el segundo parámetro del ajuste:
+Asimismo, el segundo parámetro del fit tiene que ser el $kT$ que fué definido para la simulación:
 ```julia-repl
 julia> (3/2)*coef(fit)
 2-element Vector{Float64}:
  0.2837017192118932
  0.14677392418409904
 ```
-que corresponde al valor de energia cinética médio reportado por `velocity_distribution`. 
 
+## 10.4. Código completo resumido
 
+```julia
+using FundamentosDMC, Plots, LsqFit
 
+# system setup
+sys = System(n=100,sides=[50,50,50])
+minimize!(sys)
 
+# simulation
+md_out = md_langevin(
+  sys,
+  Options(
+    lambda=0.01,
+    nsteps=100_000,
+    velocity_file="vel.xyz",
+    initial_velocities=:zero
+  )
+)
 
+# plot velocity distribution
+v_sim = velocity_distribution(sys,"vel.xyz");
+plot(
+  v_sim,
+  label="Langevin",
+  xlabel="velocity norm",
+  ylabel="frequency",
+  linewidth=2
+)
 
+# Fit model
+@. f(v,p) = p[1]*v^2*exp(-v^2/(2*p[2]))
+x = v_sim[1]; y = v_sim[2]; # to make code clearer
+p0 = rand(2) # punto inicial
+fit = curve_fit(f, x, y, p0)
 
+# compare fit with simulation
+pars = coef(fit)
+yfit = [ f(xi,pars) for xi in x ]
+plot(
+  [ (x,y), (x,yfit) ],
+  label=[ "Simulation"  "Fit" ],
+  xlabel="velocity norm",
+  ylabel="frequency",
+  linewidth=2
+)
+savefig("./velocities_fit.pdf")
 
-
+# Check kT
+coef(fit)[2]
+```
 
 
 

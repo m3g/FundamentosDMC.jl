@@ -17,7 +17,7 @@ function velocity_distribution(
   # Initialize histogram
   @unpack n = sys
   Δv = vmax/nbins
-  vvals = [ (i-1/2)*Δv for i in 1:nbins ]
+  vvals = vmax*[ (i-1/2)*Δv for i in 1:nbins ]
   vcount = zeros(nbins)
   vavg = zero(T)
   vavg_norm = 0.
@@ -48,7 +48,7 @@ function velocity_distribution(
 
   # Normalizing by the number of frames and number of atoms
   for i in 1:nbins
-    vcount[i] = vcount[i] / (nframes*n) / Δv
+    vcount[i] = vcount[i] / (nframes*n*Δv)
   end
   vavg = vavg / (nframes*n)
   println(" Average velocity = ", vavg)
