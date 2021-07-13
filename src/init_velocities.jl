@@ -9,7 +9,7 @@ Initialize velocities with random distribution.
 """
 function init_velocities(sys::System{T},opt::Options) where T
   @unpack n = sys
-  @unpack kavg_target = opt
+  @unpack kT = opt
   # type of random distribution to be created
   if opt.initial_velocities == :normal
     v = randn(T,n)
@@ -26,7 +26,7 @@ function init_velocities(sys::System{T},opt::Options) where T
   remove_drift!(v)
   # Adjust average to desidred temperature  for i in 1:n
   kavg = kinetic(v)/n
-  @. v = sqrt(kavg_target/kavg)*v
+  @. v = sqrt((dim(T)*kT/2)/kavg)*v
   return v
 end
 

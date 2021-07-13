@@ -2,8 +2,8 @@
 
 Abra el archivo [md-simple.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/md-simple.jl), que contiene el algoritmo de
 simulación. La simulación empieza con velocidades aleatorias, ajustadas
-para la media termodinámica deseada de 0.6 unidades/átomo. A esta
-energía cinética media le llamaremos ``temperatura''.
+para la media termodinámica deseada de 0.6 unidades/átomo ($kT=0.6$ en un sistema bidimensional). A esta
+energía cinética media le llamaremos "temperatura".
 El algoritmo de integración es Velocity-Verlet, que consiste en propagar
 la posiciones con
 
