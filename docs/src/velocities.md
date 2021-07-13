@@ -11,6 +11,19 @@ Vamos a ver si esto efectivamente ocurre en nuestras simulaciones.
 
 ## 10.1. Distribución inicial de velocidades
 
+Podemos hacer el gráfico de la distribución de Maxwell-Boltzmann para ver su aspecto en función de la temperatura:
+
+```julia-repl
+julia> mb(v,kT) = (1/(2π*kT))^(3/2)*4π*v^2*exp(-v^2/(2*kT))
+mb (generic function with 1 method)
+
+julia> v = 0:0.1:5 # velocity range
+
+julia> y = mb.(x,0.6) # the . applies to all elements of x
+
+julia> plot(v,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequency")
+```
+
 Un aspecto interesante de ver en las simulaciones es como evoluciona, y como 
 converge, la distribución de velocidades de las partículas. En nuestros programas
 tenemos trés diferentes maneras de generar la distribución *inicial* de velocidades: con normas distribuidas homogeneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro `initial_velocities` de `Options`. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: 
