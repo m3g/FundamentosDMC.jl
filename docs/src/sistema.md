@@ -5,11 +5,11 @@ La simulación es de un fluido de 100 partículas (mono-atómicas) que
 interactúan por un
 potencial de Lennard-Jones, en un sistema bi-dimensional, periódico.
 
-$V = 4\epsilon \left( \frac{\sigma^{12}}{r^{12}} - \frac{\sigma^6}{r^6} \right)$
+$V = 4\varepsilon \left( \frac{\sigma^{12}}{r^{12}} - \frac{\sigma^6}{r^6} \right)$
 
 Abra el archivo [potential.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/potential.jl) y entienda la implementación del
 cálculo de la energia potencial. Note que el cálculo depende de 3
-parámetros: $\epsilon$, $\sigma$, y el tamaño del sistema periódico. Los
+parámetros: $\varepsilon$, $\sigma$, y el tamaño del sistema periódico. Los
 parámetros están definidos en la estructura de datos `opt`, de entrada (veremos más tarde como usarla). 
 
 El archivo [forces.jl](https://github.com/m3g/FundamentosDMC.jl/blob/master/src/forces.jl) contiene el cálculo de las fuerzas (el gradiente
@@ -63,7 +63,7 @@ Options
   velocity_file: String "vel.xyz"
 ```
 
-En este caso, ajustamos el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos parámetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), $kT$ (temperatura), y los nombres de los archivos de salida. 
+En este caso, ajustamos el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos parámetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\varepsilon$ y $\sigma$), $kT$ (temperatura), y los nombres de los archivos de salida. 
 
 ## 2.3. Minimización de la energia
 
