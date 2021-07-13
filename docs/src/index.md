@@ -14,7 +14,7 @@ Leandro Martínez
 
 Este tutorial contiene las explicaciones para rodar y analizar
 simulaciones de Dinámica Molecular y Mote-Carlo de un sistema
-bi-dimensional simple. El objetivo es que el estudiante entre en
+bidimensional simple. El objetivo es que el estudiante entre en
 contacto con diversos detalles técnicos involucrados en la realización
 de simulaciones y sus limitaciones. 
 
