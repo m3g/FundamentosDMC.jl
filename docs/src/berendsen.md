@@ -21,8 +21,11 @@ escalonamiento es más suave y más lento.
 El parámetro $\tau$ se ajusta con la opción `tau` de `Options`. Por ejemplo:
 
 ```julia-repl
-julia> out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000));
+julia> sys = System(n=100,sides=[100,100])
 
+julia> minimize!(sys)
+
+julia> out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000));
 ```
 
 Pruebe diferentes parámetros, con `20_000` pasos de simulación. Entre los cuales, estos: 
