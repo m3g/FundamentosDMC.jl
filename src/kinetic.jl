@@ -1,6 +1,10 @@
 """
 
-Function that computes the kinetic energy.
+```
+kinetic(v)
+```
+
+Function that computes the kinetic energy given a velocity vector `v`.
 
 """
 function kinetic(v)

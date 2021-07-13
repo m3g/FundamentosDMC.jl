@@ -1,6 +1,10 @@
 """
 
-Function that computes the potential energy
+```
+potential(x::Vector{T},sys::System{T},opt::Options) where T
+```
+
+Function that computes the potential energy given a vector of positions, `x`.
 
 """
 function potential(x::Vector{T},sys::System{T},opt::Options) where T

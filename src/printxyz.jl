@@ -1,10 +1,10 @@
 """
 
 ```
-printxyz(time,x,sys,traj_file_buffer,vel_file_buffer)
+printxyz(time,x,v,sys,traj_file_buffer,vel_file_buffer)
 ```
 
-Subroutine that writes the current coordinates and velocities to 
+Subroutine that writes the current coordinates *and* velocities to 
 output files, previously opened in respective buffers.
 
 """

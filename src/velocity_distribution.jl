@@ -1,7 +1,12 @@
 """
 
 ```
-velocity_distribution(velfile::String,vmax::Float64=10.,nbins::Int=10,T::DataType=Point2D)
+velocity_distribution(
+  velfile::String,l
+  vmax::Float64=10.,
+  nbins::Int=10,
+  T::DataType=Point2D
+)
 ```
 
 Computes the distribution of velocities. If `T=Point3D` the system will be read as three-dimensional.

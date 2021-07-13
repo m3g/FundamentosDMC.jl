@@ -90,13 +90,13 @@ que resulta en:
 
 A distribución normal es la que se parece a la distribución de Maxwell-Boltzmann y es la default en las simulaciones. 
 
-## 10.2. Las velocidades en equilirio
+## 10.2. Las velocidades en equilíbrio
 
 Vamos a comparar las distribuciónes iniciales con una distribución obtenida de 
 una simulación. Para eso, vamos a repetir la simulación de Langevin, pero ahora 
 en 3 dimensiones, la cual fué  iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trajectoria de las velocidades también:
 ```julia-repl
-julia> sys = system(n=100,sides=[50,50,50])
+julia> sys = System(n=100,sides=[50,50,50])
 System{Point3D}:
  Number of particles = 100
  Box sides = [50.0, 50.0, 50.0]
@@ -179,7 +179,7 @@ Y podemos visuzalizar el modelo ajustado graficamente, con:
 ```julia-repl
 julia> pars = coef(fit)
 
-julia> yfit = [ f(xi,pars) for xi in x ]
+julia> yfit = [ f(xi,pars) for xi in x ];
 
 julia> plot(
          [ (x,y), (x,yfit) ],
