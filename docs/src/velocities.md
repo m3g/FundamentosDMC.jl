@@ -186,10 +186,8 @@ julia> plot(
 Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. 
 Asimismo, el segundo parámetro del fit tiene que ser el $kT$ que fué definido para la simulación:
 ```julia-repl
-julia> (3/2)*coef(fit)
-2-element Vector{Float64}:
- 0.2837017192118932
- 0.14677392418409904
+julia> coef(fit)[2]
+ 0.5852713287386224
 ```
 
 ## 10.4. Código completo resumido
