@@ -48,21 +48,22 @@ Options
   nsteps: Int64 2000
   eps: Float64 1.0
   sig: Float64 2.0
+  initial_velocities: Symbol normal
   kT: Float64 0.6
-  ibath: Int64 20
-  iequil: Int64 20
-  tau: Int64 20
+  ibath: Int64 10
+  iequil: Int64 10
+  tau: Int64 10
   lambda: Float64 0.1
   alpha: Float64 0.1
   printxyz: Bool true
-  iprintxyz: Int64 20
+  iprintxyz: Int64 10
   iprint: Int64 20
   minprint: Bool false
   trajectory_file: String "traj.xyz"
-
+  velocity_file: String "vel.xyz"
 ```
 
-En este caso, ajustamos el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos parámetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), energia cinética objetivo (temperatura), y los nombres de los archivos de salida. 
+En este caso, ajustamos el paso de tiempo manualmente, y mantuvimos todas las otras opciones con valores default. Cada uno de estos parámetros será discutido oportunamente. Note que definen el tamaño, campo de fuerza ($\epsilon$ y $\sigma$), $kT$ (temperatura), y los nombres de los archivos de salida. 
 
 ## 2.3. Minimización de la energia
 
@@ -145,15 +146,9 @@ $\left< \frac{1}{2}m |\vec{v}|^2 \right> =
 \left< \frac{1}{2}m \left(v_x^2 + v_y^2\right)\right> =
 2\left< \frac{1}{2}m v_x^2 \right> = kT$
 
-En los códigos de dinámica molecular, la definición de temperatura se
-da, así, por la definición de la energia cinética media o, en este caso,
-por $kT$. En el código de Monte-Carlo la definición de temperatura se da
-por la tasa de aceptación, con la misma definición. 
-
 En todos los códigos fue escogido que se objetiva simular el sistema a
 la temperatura que corresponde a $kT = 0.6$ unidades. Los sistemas
-simulados tiene 100 partículas, por lo tanto la energia cinética media
-es $100kT=60$ unidades. Las velocidades iniciales van a ser generadas aleatoriamente al princípio de la simulación. 
+simulados tienen 100 partículas y son bidimensionales, por lo tanto la energia cinética media és de $100kT=60$ unidades. Las velocidades iniciales van a ser generadas aleatoriamente al princípio de la simulación. 
 
 ## 2.5. Código completo resumido
 
