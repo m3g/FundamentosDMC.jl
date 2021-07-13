@@ -1,9 +1,11 @@
 
 # Distribución de velocidades
 
-Las velocidades de las partículas en un sistema molecular siguen la distribución de Maxwell-Boltzmann:
+Las velocidades de las partículas en un sistema molecular (tridimensional) siguen la distribución de Maxwell-Boltzmann:
 
 $$f(v) ~dv= \left(\frac{m}{2 \pi kT}\right)^{3/2}\, 4\pi v^2 e^{ -\frac{mv^2}{2kT}} ~ dv$$
+
+Esencialmente, esta ecuación dice que la probabilidad de que una partícula tenga una velocidad en el intervalo $v\pm dv$ es proporcional a $v^2 e^{-v^2/kT}$. Esto se debe a dos motivos: primero, la probabilidad de que una partícula tenga una energia $E$ es dada por la distribución de Boltzmann, $e^{-E/kT}$. Como la energia cinética és $mv^2/2$, el quadrado de la velocidad aparece en el exponente. Segundo, la *degeneración* aumenta con $v^2$ con el aumento de la velocidad, porque el volumen del espacio que contiene los vectores de longitud $v$ aumenta con $v^2$ en tres dimensiones. Esto genera el término pré-exponencial proprocional a $v^2$. 
 
 Vamos a ver si esto efectivamente ocurre en nuestras simulaciones. 
 
@@ -144,9 +146,11 @@ julia> using LsqFit
 
 julia> @. f(v,p) = p[1]*v^2*exp(-v^2/(2*p[2]))
 
+julia> x = v_sim[1]; y = v_sim[2]; # to make code clearer
+
 julia> p0 = rand(2) # punto inicial
 
-julia> fit = curve_fit(f, v_sim[1], v_sim[2], p0)
+julia> fit = curve_fit(f, x, y, p0)
 ```
 
 Y vemos como bien los datos son ajustados con el modelo, calculando la suma de quadarados de los resíduos:
@@ -158,15 +162,18 @@ julia> sum(fit.resid.^2)
 
 Y podemos visuzalizar el modelo ajustado graficamente, con:
 ```julia-repl
+julia> pars = coef(fit)
+
+julia> yfit = [ f(xi,pars) for xi in x ]
+
 julia> plot(
-         [ v_sim, (v_sim[1], f.(v_sim[1],Ref(coef(fit)))) ],
+         [ (x,y), (x,yfit) ],
          label=[ "Simulation"  "Fit" ],
          xlabel="velocity norm",
          ylabel="frequency",
          linewidth=2
        )
 ```
-(los detalles deste comando pueden ser discutidos en momento oportuno)
 
 ```@raw html
 <center>
@@ -174,13 +181,20 @@ julia> plot(
 </center>
 ```
 
-Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. El segundo parámetro del ajuste debe corresponder a $kT$ en nuestra fórmula:
+Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. 
+
+Finalmente, en trés dimensiones, tenemos,
+
+$$\left<\frac{1}{2}mv^2\right> = \frac{3}{2}kT$$
+
+de forma que la energia cinética média tiene que ser $3/2$ por el segundo parámetro del ajuste:
 ```julia-repl
-julia> coef(Fit)
+julia> (3/2)*coef(fit)
 2-element Vector{Float64}:
  0.2837017192118932
  0.14677392418409904
 ```
+que corresponde al valor de energia cinética médio reportado por `velocity_distribution`. 
 
 
 

@@ -62,6 +62,7 @@ function md_berendsen(sys::System{T},opt::Options=Options()) where T
 
     # Updating velocities
     @. v = v + 0.5*(f + flast)*dt 
+    remove_drift!(v)
 
     # Update step and print data
     time += dt

@@ -22,6 +22,7 @@ include("./image.jl")
 
 include("./potential.jl")
 include("./kinetic.jl")
+include("./remove_drift.jl")
 include("./forces.jl")
 
 include("./minimize.jl")

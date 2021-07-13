@@ -66,6 +66,7 @@ function md_langevin(sys::System{T},opt::Options=Options()) where T
     # Updating velocities including random forces
     @. v = v + 0.5*(f + flast)*dt + 
            sqrt(2*lambda*kavg_target*dt)*randn(T)
+    remove_drift!(v)
 
     # Update step and print data
     time += dt
