@@ -25,7 +25,7 @@ unitarias, para simplificar. La simulación es ejecutada por `nsteps`
 pasos, con paso de integración $\Delta t$, este siendo un parámetro de
 entrada, `dt`, definido en `Options`. 
 
-La simulación no tiene control de temperatura o de presión. Es una propagación de la trayectoria según las leyes de Newton, que deberían conservar la energia. A esto se le llama una simulación "microcanónica", o "NVE" (que conserva, en princípio, el número de partículas, el volumen y la energia total).
+La simulación no tiene control de temperatura o de presión. Es una propagación de la trayectoria según las leyes de Newton, que deberían conservar la energía. A esto se le llama una simulación "microcanónica", o "NVE" (que conserva, en principio, el número de partículas, el volumen y la energía total).
 
 ## 3.1. Paso de integración
 
@@ -34,7 +34,7 @@ Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute el
 julia> out = md(sys,Options(dt=0.1));
 
 ```
-En princípio, está previso realizar 2000 pasos de integración de las equaciones 
+En principio, está previsto realizar 2000 pasos de integración de las ecuaciones 
 de movimiento.  Pruebe pasos de integración entre `1.0` y `0.01`. 
 Note que pasa con la energía. Note que pasa con la energía
 cinética media, la cual fue inicializada en 0.6 unidades/átomo. Discuta
@@ -48,7 +48,7 @@ julia> out = md(sys,Options(dt=0.1,iprint=1,iprintxyz=5))
 ```
 El número total de pasos se controla con el parámetro `nsteps`.
 
-La variable `out` que sale de la simulación es una matriz con las energias y la temperatura en cada paso de la simulación. Es probable que la simulación "explote" con pasos de tiempo grandes. Para visualizar este processo, podemos hacer:
+La variable `out` que sale de la simulación es una matriz con las energías y la temperatura en cada paso de la simulación. Es probable que la simulación "explote" con pasos de tiempo grandes. Para visualizar este proceso, podemos hacer:
 ```julia-repl
 julia> using Plots
 

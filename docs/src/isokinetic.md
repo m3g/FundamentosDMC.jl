@@ -9,10 +9,10 @@ Su ejecución demanda la definición de dos parámetros
 adicionales: el intervalo de tiempo entre dos escalonamientos de
 velocidades, y el tiempo de equilibración. El tiempo de equilibración es
 el tiempo dentro del cual los escalonamientos son realizados. El
-objetivo debe ser obtener una simulación estable, con energia cinética
+objetivo debe ser obtener una simulación estable, con energía cinética
 media adecuada a la deseada (60 unidades), después de la equilibración.
 
-# 4.1. Control de parámetros y termalización  
+# 4.1. Control de parámetros y termostatización
 
 El sistema es inicializado de la misma forma que antes, esto es:
 ```julia-repl
@@ -29,7 +29,7 @@ En seguida, vamos a ejecutar la simulación, ahora con termostato isocinético, 
 julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1));
 ```
 
-El gráfico de las energias en función del tiempo puede ser obtenido con:
+El gráfico de las energías en función del tiempo puede ser obtenido con:
 ```julia-repl
 julia> plot(out,ylim=[-100,100],
          label=["Potential" "Kinetic" "Total" "Temperature"],
@@ -37,7 +37,7 @@ julia> plot(out,ylim=[-100,100],
        )
 ```
 
-Debe notar-se que la energia total no es más constante durante el período de equilibración. Las energia potencial y cinética deben haber convergido un poco mejor que en la simulación sin control de temperatura, aunque esta primera simulación es muy corta. 
+Debe notar-se que la energía total no es más constante durante el período de equilibración. Las energía potencial y cinética deben haber convergido un poco mejor que en la simulación sin control de temperatura, aunque esta primera simulación es muy corta. 
 
 La temperatura puede ser observada con:
 ```julia-repl
@@ -47,7 +47,7 @@ julia> plot(
          xlabel="step"
        )
 ```
-Note que se mantiene praticamente constante e igual a la temperatura objetivo (0.60) durante la equilibración, pero después divergencias pueden ser observadas. Si el sistema no está equilibrado, estas divergencias pueden ser sistemáticas. 
+Note que se mantiene prácticamente constante e igual a la temperatura objetivo (0.60) durante la equilibración, pero después divergencias pueden ser observadas. Si el sistema no está equilibrado, estas divergencias pueden ser sistemáticas. 
 
 Pruebe diferentes parámetros, y entienda el efecto del tiempo de equilibración y de la frecuencia de equilibración sobre la temperatura. 
 
@@ -56,7 +56,7 @@ Una buena condición para visualizar los resultados se obtiene con `ibath=50`  y
 julia> out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000));
 ```
 
-En estas condiciones, normalmente, no se debe observar un desvio sistemático de las energias o de la temperatura después de la equilibración. Repita los gráficos (en el prompt de `Julia`, la flecha para arriba accede a los comandos anteriores).
+En estas condiciones, normalmente, no se debe observar un desvío sistemático de las energías o de la temperatura después de la equilibración. Repita los gráficos (en el prompt de `Julia`, la flecha para arriba accede a los comandos anteriores).
 
 La trayectoria, `traj.xyz`, puede ser vista con `VMD`, como explicado anteriormente. 
 

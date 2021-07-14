@@ -5,7 +5,7 @@ Las velocidades de las partículas en un sistema molecular (tridimensional) sigu
 
 $$f(v) ~dv= \left(\frac{m}{2 \pi kT}\right)^{3/2}\, 4\pi v^2 e^{ -\frac{mv^2}{2kT}} ~ dv$$
 
-Esencialmente, esta ecuación dice que la probabilidad de que una partícula tenga una velocidad en el intervalo $v\pm dv$ es proporcional a $v^2 e^{-v^2/kT}$. Esto se debe a dos motivos: primero, la probabilidad de que una partícula tenga una energia $E$ es dada por la distribución de Boltzmann, $e^{-E/kT}$. Como la energia cinética és $mv^2/2$, el quadrado de la velocidad aparece en el exponente. Segundo, la *degeneración* aumenta con $v^2$ con el aumento de la velocidad, porque el volumen del espacio que contiene los vectores de longitud $v$ aumenta con $v^2$ en tres dimensiones. Esto genera el término pré-exponencial proprocional a $v^2$. 
+Esencialmente, esta ecuación dice que la probabilidad de que una partícula tenga una velocidad en el intervalo $v\pm dv$ es proporcional a $v^2 e^{-v^2/kT}$. Esto se debe a dos motivos: primero, la probabilidad de que una partícula tenga una energía $E$ es dada por la distribución de Boltzmann, $e^{-E/kT}$. Como la energía cinética és $mv^2/2$, el cuadrado de la velocidad aparece en el exponente. Segundo, la *degeneración* aumenta con $v^2$ con el aumento de la velocidad, porque el volumen del espacio que contiene los vectores de longitud $v$ aumenta con $v^2$ en tres dimensiones. Esto genera el término pre-exponencial proporcional a $v^2$. 
 
 Vamos a ver si esto efectivamente ocurre en nuestras simulaciones. 
 
@@ -26,7 +26,7 @@ julia> plot(v,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequency")
 
 Un aspecto interesante de ver en las simulaciones es como evoluciona, y como 
 converge, la distribución de velocidades de las partículas. En nuestros programas
-tenemos trés diferentes maneras de generar la distribución *inicial* de velocidades: con normas distribuidas homogeneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro `initial_velocities` de `Options`. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: 
+tenemos tres diferentes maneras de generar la distribución *inicial* de velocidades: con normas distribuidas homogéneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro `initial_velocities` de `Options`. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: 
 
 ```julia-repl
 julia> sys = System(n=100_000,sides=[50,50,50])
@@ -48,7 +48,7 @@ julia> v_normal = init_velocities(sys,Options(initial_velocities=:normal))
 
 ```
 
-Para ver la distribución de velocidades en cada caso, vamos a usar la función `velocity_distribution`, que recibe lee las velocidades grabadas en un archivo de trayectorias (la razón desto va a quedar clara en seguida):
+Para ver la distribución de velocidades en cada caso, vamos a usar la función `velocity_distribution`, que recibe lee las velocidades grabadas en un archivo de trayectorias (la razón de esto va a quedar clara en seguida):
 
 ```julia-repl
 julia> printxyz(v_normal,sys,"vnormal.xyz")
@@ -70,7 +70,7 @@ Number of frames read = 1
 ```
 
 Note que generamos `100_000` puntos, para tener una distribución buen muestreada. 
-Las dos distribuciones tienen la misma energia cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:
+Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:
 
 ```julia-repl
 julia> plot(
@@ -90,11 +90,11 @@ que resulta en:
 
 A distribución normal es la que se parece a la distribución de Maxwell-Boltzmann y es la default en las simulaciones. 
 
-## 10.2. Las velocidades en equilíbrio
+## 10.2. Las velocidades en equilibrio
 
-Vamos a comparar las distribuciónes iniciales con una distribución obtenida de 
+Vamos a comparar las distribuciones iniciales con una distribución obtenida de 
 una simulación. Para eso, vamos a repetir la simulación de Langevin, pero ahora 
-en 3 dimensiones, la cual fué  iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trajectoria de las velocidades también:
+en 3 dimensiones, la cual fue iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trayectoria de las velocidades también:
 ```julia-repl
 julia> sys = System(n=100,sides=[50,50,50])
 System{Point3D}:
@@ -135,7 +135,7 @@ julia> plot(
        )
 ```
 
-Compare, visualmente, el resulado con lo que es esperado para la distribución de Maxwell-Boltzmann.
+Compare, visualmente, el resultado con lo que es esperado para la distribución de Maxwell-Boltzmann.
 
 ## 10.3. Ajustando los datos 
 
@@ -143,7 +143,7 @@ La curva de `v_sim` puede ser ajustada para ver como bien, o mal, corresponde a 
 
 $$f(v)dv = A v^2 e^{-v^2/2kT} dv$$
 
-Esta función tiene apenas dos parámetros ajustables: $A$ y $kT$ (o simplemente $T$, pero aqui mantenemos la constante junto con la 
+Esta función tiene apenas dos parámetros ajustables: $A$ y $kT$ (o simplemente $T$, pero aquí mantenemos la constante junto con la 
 temperatura). 
 
 Podemos ajustar esta curva a los datos obtenidos usando un software de ajuste, o por ejemplo el paquete [LsqFit.jl](https://github.com/JuliaNLSolvers/LsqFit.jl):
@@ -168,14 +168,14 @@ julia> p0 = rand(2) # punto inicial
 julia> fit = curve_fit(f, x, y, p0)
 ```
 
-Y vemos como bien los datos son ajustados con el modelo, calculando la suma de quadarados de los resíduos:
+Y vemos como bien los datos son ajustados con el modelo, calculando la suma de cuadrados de los residuos:
 
 ```julia-repl
 julia> sum(fit.resid.^2)
 2.016208460480086e-6
 ```
 
-Y podemos visuzalizar el modelo ajustado graficamente, con:
+Y podemos visualizar el modelo ajustado gráficamente, con:
 ```julia-repl
 julia> pars = coef(fit)
 
@@ -196,8 +196,8 @@ julia> plot(
 </center>
 ```
 
-Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribuición de Maxwell-Boltzmann. 
-Asimismo, el segundo parámetro del fit tiene que ser el $kT$ que fué definido para la simulación:
+Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribución de Maxwell-Boltzmann. 
+Asimismo, el segundo parámetro del ajuste tiene que ser el $kT$ que fue definido para la simulación:
 ```julia-repl
 julia> coef(fit)[2]
  0.5852713287386224

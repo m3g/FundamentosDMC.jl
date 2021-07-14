@@ -1,7 +1,7 @@
 # Ejecución en 3D
 
-Todos los códigos aqui pueden generar simulaciones tridimensionales. En realidad los únicos códigos que tienen alguna 
-dimensionalidad definida son los que escriben el archivo de salida (`printxyz`) y el que calcula la función de distribución
+Todos los códigos aquí pueden generar simulaciones tridimensionales. En realidad los únicos códigos que tienen alguna 
+dimensión definida son los que escriben el archivo de salida (`printxyz`) y el que calcula la función de distribución
 radial (`radial_distribution`). Todos los otros códigos son genéricos, y lo que hace depende apenas del tipo de variable de entrada, o sea, de la dimensión de la caja y de lo puntos.  
 
 ## 9.1. Inicializando el sistema con 3 dimensiones:
@@ -27,7 +27,7 @@ julia> sys.x0
  [3.9099597073208123, 7.797739759305074, 4.3056981321251655]
 ```
 
-La energia puede entonces ser mininimizada como antes:
+La energía puede entonces ser minimizada como antes:
 ```julia-repl
 julia> minimize!(sys)
 Energy before minimization: 1.8502746330219281e6
@@ -50,7 +50,7 @@ La simulación pude ser visualizada en `VMD`, con:
 shell> vmd md.xyz
 ```
 
-Y podemos visualizar la función de distribucion radial, con
+Y podemos visualizar la función de distribución radial, con
 
 ```julia-repl    
 julia> rmd, gmd = radial_distribution(sys,"md.xyz")

@@ -12,7 +12,7 @@ molecular.
 
 Al contrario de MD, MC no tiene tiempo. Hay una generación de posiciones
 aleatorias consecutivas, que son aceptadas o no de acuerdo con el
-criterio de Metropolis,
+criterio de Metrópolis,
 
 Si $V(\vec{x}_j) \leqslant V(\vec{x}_i)$, entonces $P(i\to j) = 1$ 
 
@@ -31,7 +31,7 @@ Tasas de aceptación del orden de 20 a 30\% son consideradas ideales.
 
 ## 7.1. Ejecución
 
-Ejecute la función `mc`. Vamos a variar la magnitud de las perturbaciones. Las perturbaciones de las posiciones son Gaussianas, y la magnitud de
+Ejecute la función `mc`. Vamos a variar la magnitud de las perturbaciones. Las perturbaciones de las posiciones son Gausianas, y la magnitud de
 entrada es el desvío estándar. El número de pasos corresponde al número
 de nuevas estructuras, no necesariamente aceptadas, generadas:
 
@@ -47,13 +47,13 @@ Una vez elegida la perturbación, ejecute el programa con número de pasos
 de 200.000, lo que implica que aproximadamente 60.000 pasos van a ser
 aceptados (para una tasa de 30\%). 
 
-Observe la evolución de la energia potencial, haciendo gráficos con: 
+Observe la evolución de la energía potencial, haciendo gráficos con: 
 
 ```julia-repl
 plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 ```
 
-En este caso no tiene sentido mostrar la energia cinética, que no está definida ya que las partículas no tienen efectivamente velocidades. Salve el gráfico en un archivo `pdf`, para comparación posterior, usando: 
+En este caso no tiene sentido mostrar la energía cinética, que no está definida ya que las partículas no tienen efectivamente velocidades. Salve el gráfico en un archivo `pdf`, para comparación posterior, usando: 
 ```julia-repl
 julai> savefig("./mc.pdf")
 ```

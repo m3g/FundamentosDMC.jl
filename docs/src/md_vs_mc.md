@@ -5,7 +5,7 @@ Vamos a comparar el conjunto de estructuras generados por una dinámica molecula
 ## 8.1. Generando un buen muestreo por MD
 
 Ejecute, nuevamente, el programa `md_langevin` con los
-parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trayectoria en un archivo con nombre próprio, como `md.xyz`: 
+parámetros $\lambda=0.01$, por 100 mil pasos, y salve la trayectoria en un archivo con nombre propio, como `md.xyz`: 
 
 ```julia-repl
 julia> md_out = md_langevin(
@@ -25,21 +25,21 @@ julia> mc_out = mc(
        );
 ```
 
-## 8.3. Comparando las energias potenciales
+## 8.3. Comparando las energías potenciales
 
-La primera columna de `md_out` tiene la energia potencial en la simulación de dinámica molecular. Vamos a hacer el gráfico de esta energia:
+La primera columna de `md_out` tiene la energía potencial en la simulación de dinámica molecular. Vamos a hacer el gráfico de esta energía:
 
 ```julia-repl
 julia> plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
 ```
 
-Y vamos a añadir al mismo gráfico la energia potencial obtenida en la simulación de Monte-Carlo, que está en `mc_out` (note el `!` al final de `plot!`, indicando que el gráfico anterior va a ser modificado):
+Y vamos a añadir al mismo gráfico la energía potencial obtenida en la simulación de Monte-Carlo, que está en `mc_out` (note el `!` al final de `plot!`, indicando que el gráfico anterior va a ser modificado):
 
 ```julia-repl
 julia> plot!(mc_out,label="Potential energy- MC",xlabel="step")
 ```
 
-Note la similaridad, o diferencia entre los dos gráficos. Acuerde-se que en ninguna de estas simulaciones controlamos explicitamente la energia potencial. 
+Note la similaridad, o diferencia entre los dos gráficos. Acuerde-se que en ninguna de estas simulaciones controlamos explícitamente la energía potencial. 
 
 ## 8.4. Función de distribución radial 
 

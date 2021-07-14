@@ -12,7 +12,7 @@ Leandro Martínez
 <br>
 ```
 
-Este tutorial contiene las explicaciones para rodar y analizar
+Esta tutoría contiene las explicaciones para rodar y analizar
 simulaciones de Dinámica Molecular y Mote-Carlo de un sistema
 bidimensional simple. El objetivo es que el estudiante entre en
 contacto con diversos detalles técnicos involucrados en la realización
@@ -22,7 +22,7 @@ de simulaciones y sus limitaciones.
 
 Instale el interpretador de `Julia`, de [https://julialang.org/](https://julialang.org).
 
-Ejecute el interpretador, e instale el paquete deste curso, usando: 
+Ejecute el interpretador, e instale el paquete de este curso, usando: 
 
 ```julia-repl
 julia> import Pkg
@@ -33,7 +33,7 @@ o, alternativamente,
 ```julia-repl
 julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
-(el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
+(el `]` te llevará al prompt de gerenciamiento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
 
 Instale también el paquete `Plots`, que va a ser usado para graficar algunos resultados:
 ```julia-repl
@@ -42,14 +42,14 @@ julia> ] add Plots
 
 ## 1.2. Instalación de VMD
 
-Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las trajectories. Certifique-se de tenerlo instalado también.
+Usaremos [VMD](https://www.ks.uiuc.edu/Research/vmd/) para visualización de las trayectorias. Certifique-se de tenerlo instalado también.
 
 ## 1.3. Códigos
 
-`Julia` es un lenguaje de programación de alta performance, dinámico, y con sintaxis bastante simple ([lea aqui](https://www.nature.com/articles/d41586-019-02310-3)). Todos los códigos de este curso están disponibles en repositório 
-[https://github.com/m3g/FundamentosDMC.jl](https://github.com/m3g/FundamentosDMC.jl), y su lectura será estimulada en la medida que avancemos en la ejecución del tutorial. 
+`Julia` es un lenguaje de programación de alto desempeño, dinámico, y con sintaxis bastante simple ([lea aquí](https://www.nature.com/articles/d41586-019-02310-3)). Todos los códigos de este curso están disponibles en repositorio 
+[https://github.com/m3g/FundamentosDMC.jl](https://github.com/m3g/FundamentosDMC.jl), y su lectura será estimulada en la medida que avancemos en la ejecución de la tutoría. 
 
-Los códigos aqui son razonablemente eficientes para al realización del tutorial, pero no están optimizados para máxima performance, para que su lectura sea más fácil. 
+Los códigos aquí son razonablemente eficientes para al realización de la tutoría, pero no están optimizados para máximo desempeño, para que su lectura sea más fácil. 
 
 ## 1.4. Código completo resumido
 

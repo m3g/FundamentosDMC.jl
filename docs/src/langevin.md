@@ -22,15 +22,15 @@ opción es introducirlos como cambios en la velocidad:
 
 $$v(t+\Delta t) = v(t) + a(t)\Delta t + \sqrt{2\lambda kT \Delta t}\delta(t)$$
 
-Donde $\delta(t)$ es una variable aleatoria Gaussiana con media cero y
+Donde $\delta(t)$ es una variable aleatoria Gausiana con media cero y
 desvío estándar 1. La relación entre el coeficiente de fricción, $\lambda$,
 que desacelera las partículas, y la intensidad de los choques
 estocásticos, $\sqrt{2\lambda kT}$ es resultado del teorema de
 fluctuación-disipación, que describe el movimiento Browniano.
 
-# 6.1. Control de parámetros y termalización  
+# 6.1. Control de parámetros y termostatización
 
-El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinámica de Langevin. En este caso, el programa inicializa las velocidades en cero, para que el efecto del termostato sea destacado. Vamos a imprimir la trayectoria con más frecuencia para que se note el efecto de la fricción al início:
+El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinámica de Langevin. En este caso, el programa inicializa las velocidades en cero, para que el efecto del termostato sea destacado. Vamos a imprimir la trayectoria con más frecuencia para que se note el efecto de la fricción al inicio:
 
 Por ejemplo,
 ```julia-repl
@@ -50,9 +50,9 @@ Ejecute el programa con diversos parámetros, en particular estos:
 | 10.   |  0.001|
 |       |       |
 
-En seguida de cada ejecución, observe los gráficos de energia y las
-trayectorias. Discuta si la temperatura llegó al valor deseado (energia
-cinética igual a 60 unidades), y si la energia total es en media
+En seguida de cada ejecución, observe los gráficos de energía y las
+trayectorias. Discuta si la temperatura llegó al valor deseado (energía
+cinética igual a 60 unidades), y si la energía total es en media
 constante. Observe el movimiento de las partículas en cada trayectoria. 
 La consistencia del termostato depende del paso de integración, en
 particular para acoplamientos grandes.  
