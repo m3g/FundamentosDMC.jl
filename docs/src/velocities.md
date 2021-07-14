@@ -19,7 +19,7 @@ mb (generic function with 1 method)
 
 julia> v = 0:0.1:5 # velocity range
 
-julia> y = mb.(x,0.6) # the . applies to all elements of x
+julia> y = mb.(v,0.6) # the . applies to all elements of x
 
 julia> plot(v,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequency")
 ```
