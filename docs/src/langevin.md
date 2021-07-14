@@ -65,7 +65,7 @@ sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_langevin(
   sys,
-  Options(lambda=0.1,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
+  Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
 )
 plot(
   out,ylim=[-100,100],
