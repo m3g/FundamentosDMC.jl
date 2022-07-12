@@ -55,7 +55,7 @@ plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 
 En este caso no tiene sentido mostrar la energía cinética, que no está definida ya que las partículas no tienen efectivamente velocidades. Salve el gráfico en un archivo `pdf`, para comparación posterior, usando: 
 ```julia-repl
-julai> savefig("./mc.pdf")
+julia> savefig("./mc.pdf")
 ```
 
 Observe la trayectoria (con los mismos comandos de antes). 
