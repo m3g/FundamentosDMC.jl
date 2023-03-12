@@ -10,7 +10,7 @@ export System, Options
 export Point2D, Point3D
 export minimize!
 export init_velocities
-export printxyz
+export printxyz, readxyz
 export md, md_isokinetic, md_berendsen, md_langevin, mc
 export radial_distribution, velocity_distribution
 
