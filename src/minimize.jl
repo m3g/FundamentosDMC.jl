@@ -1,5 +1,5 @@
 """
-  minimize!(sys::System{T},opt::Options)
+    minimize!(sys::System{T},opt::Options)
 
 Minimizes the potential energy of `sys.x0`. Modifies `sys.x0`.
 

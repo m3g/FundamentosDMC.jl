@@ -1,5 +1,5 @@
 """
-  kinetic(v)
+    kinetic(v)
 
 Function that computes the kinetic energy given a velocity vector `v`.
 

@@ -1,5 +1,5 @@
 """
-  md(sys::System{T},opt::Options) where T
+    md(sys::System{T},opt::Options) where T
 
 Performs a simple MD simulation.
 

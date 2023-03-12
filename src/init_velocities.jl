@@ -1,5 +1,5 @@
 """
-init_velocities(sys::System{T},opt::Options) where T
+    init_velocities(sys::System{T},opt::Options) where T
 
 Initialize velocities with random distribution.
 
@@ -28,10 +28,7 @@ function init_velocities(sys::System{T}, opt::Options) where {T}
 end
 
 """
-
-```
-function random_rotate(v)
-```
+    random_rotate(v)
 
 Randomly rotate vector `v`, which might be a `Point2D` or a `Point3D`
 

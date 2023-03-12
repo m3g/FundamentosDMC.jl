@@ -1,5 +1,5 @@
 """
-  forces!(x::Vector{T},f::Vector{T},opt::Options) where T
+    forces!(x::Vector{T},f::Vector{T},opt::Options) where T
 
 Subroutine that computes the force. It modifies the input `f` vector.
 

@@ -1,6 +1,5 @@
-
 """
-  mc(sys::System{T},opt=Options=Options()) where T
+    mc(sys::System{T},opt=Options=Options()) where T
 
 Peforms a Monte-Carlos simulation.
 

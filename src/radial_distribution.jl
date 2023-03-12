@@ -1,10 +1,10 @@
 """
-  radial_distribution(
-      sys::System{T},
-      trajfile::String;
-      dmax::Float64=10.,
-      nbins::Int=100
-  ) where T
+    radial_distribution(
+        sys::System{T},
+        trajfile::String;
+        dmax::Float64=10.,
+        nbins::Int=100
+    ) where T
 
 Computes the g(r). If `T=Point3D` the system will be read as three-dimensional.
 

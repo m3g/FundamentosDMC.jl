@@ -1,5 +1,5 @@
 """
-  printxyz(time,x,v,sys,traj_file_buffer,vel_file_buffer)
+    printxyz(time,x,v,sys,traj_file_buffer,vel_file_buffer)
 
 Subroutine that writes the current coordinates *and* velocities to 
 output files, previously opened in respective buffers.
@@ -26,7 +26,7 @@ end
 
 
 """
-  printxyz(time,x,sys,traj_file_buffer)
+    printxyz(time,x,sys,traj_file_buffer)
 
 Subroutine that writes the current coordinates (or velocities) to 
 output files, previously opened in respective buffers.
@@ -47,7 +47,7 @@ function printxyz(time, x, sys, traj_file_buffer)
 end
 
 """
-  printxyz(x,sys,file::String) 
+    printxyz(x,sys,file::String) 
 
 Prints one set of coordinates (or velocities), given in `x` to file `file`. Overwrites
 the file.  

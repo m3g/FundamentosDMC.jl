@@ -1,5 +1,5 @@
 """
-image(x,sides)
+    image(x,sides)
 
 Move coordinates to minimum perioddic image.
 
