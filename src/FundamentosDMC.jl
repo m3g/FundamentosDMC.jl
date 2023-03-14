@@ -6,7 +6,7 @@ using StaticArrays
 using FastPow
 using Statistics: mean
 
-export System, Options 
+export System, Options
 export Point2D, Point3D
 export minimize!
 export init_velocities
