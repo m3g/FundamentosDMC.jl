@@ -12,8 +12,8 @@ System{Point3D}:
  [3.9099597073208123, 7.797739759305074, 4.3056981321251655]</code></pre><p>La energía puede entonces ser minimizada como antes:</p><pre><code class="language-julia-repl hljs">julia&gt; minimize!(sys)
 Energy before minimization: 1.8502746330219281e6
 Energy after minimization: -451.7109718153855</code></pre><h2 id=".2.-Ejecutando-y-visualizando-la-simulación"><a class="docs-heading-anchor" href="#.2.-Ejecutando-y-visualizando-la-simulación">9.2. Ejecutando y visualizando la simulación</a><a id=".2.-Ejecutando-y-visualizando-la-simulación-1"></a><a class="docs-heading-anchor-permalink" href="#.2.-Ejecutando-y-visualizando-la-simulación" title="Permalink"></a></h2><p>La simulación, cualquiera que sea, puede ser ejecutada normalmente. Los códigos ejecutados son exactamente los mismos. Por ejemplo, una simulación con dinámica de Langevin puede ser ejecutada con:</p><pre><code class="language-julia-repl hljs">julia&gt; md_out = md_langevin(
-         sys,
-         Options(lambda=0.01,nsteps=20_000,trajectory_file=&quot;md.xyz&quot;)
+          sys,
+          Options(lambda=0.01,nsteps=20_000,trajectory_file=&quot;md.xyz&quot;)
        )</code></pre><p>La simulación pude ser visualizada en <code>VMD</code>, con:</p><pre><code class="nohighlight hljs">shell&gt; vmd md.xyz</code></pre><p>Y podemos visualizar la función de distribución radial, con</p><pre><code class="language-julia-repl hljs">julia&gt; rmd, gmd = radial_distribution(sys,&quot;md.xyz&quot;)
 
 julia&gt; plot(rmd,gmd,xlabel=&quot;r&quot;,ylabel=&quot;g(r)&quot;,label=&quot;MD&quot;)
@@ -23,8 +23,8 @@ sys = System(n=100,sides=[50,50,50])
 minimize!(sys)
 
 md_out = md_langevin(
-  sys,
-  Options(lambda=0.01,nsteps=20_000,trajectory_file=&quot;md.xyz&quot;)
+    sys,
+    Options(lambda=0.01,nsteps=20_000,trajectory_file=&quot;md.xyz&quot;)
 )
 rmd, gmd = radial_distribution(sys,&quot;md.xyz&quot;)
-plot(rmd,gmd,xlabel=&quot;r&quot;,ylabel=&quot;g(r)&quot;,label=&quot;MD&quot;)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../md_vs_mc/">« Comparando MD y MC</a><a class="docs-footer-nextpage" href="../velocities/">Distribución de velocidades »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Friday 31 March 2023 13:05">Friday 31 March 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot(rmd,gmd,xlabel=&quot;r&quot;,ylabel=&quot;g(r)&quot;,label=&quot;MD&quot;)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../md_vs_mc/">« Comparando MD y MC</a><a class="docs-footer-nextpage" href="../velocities/">Distribución de velocidades »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Wednesday 26 July 2023 18:41">Wednesday 26 July 2023</span>. Using Julia version 1.9.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

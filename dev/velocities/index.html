@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Distribución de velocidades · FundamentosDMC.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="FundamentosDMC.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">FundamentosDMC.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Início</a></li><li><a class="tocitem" href="../sistema/">Sistema simulado</a></li><li><a class="tocitem" href="../simple/">Simulación microcanónica</a></li><li><a class="tocitem" href="../isokinetic/">Termostato isocinético</a></li><li><a class="tocitem" href="../berendsen/">Termostato de Berendsen</a></li><li><a class="tocitem" href="../langevin/">Termostato de Langevin</a></li><li><a class="tocitem" href="../montecarlo/">Monte-Carlo</a></li><li><a class="tocitem" href="../md_vs_mc/">Comparando MD y MC</a></li><li><a class="tocitem" href="../running3D/">Ejecución en 3D</a></li><li class="is-active"><a class="tocitem" href>Distribución de velocidades</a><ul class="internal"><li><a class="tocitem" href="#.1.-Distribución-inicial-de-velocidades"><span>10.1. Distribución inicial de velocidades</span></a></li><li><a class="tocitem" href="#.2.-Las-velocidades-en-equilibrio"><span>10.2. Las velocidades en equilibrio</span></a></li><li><a class="tocitem" href="#.3.-Ajustando-los-datos"><span>10.3. Ajustando los datos</span></a></li><li><a class="tocitem" href="#.4.-Código-completo-resumido"><span>10.4. Código completo resumido</span></a></li></ul></li><li><a class="tocitem" href="../help/">Help entries</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Distribución de velocidades</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Distribución de velocidades</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/m3g/FundamentosDMC.jl/blob/master/docs/src/velocities.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Distribución-de-velocidades"><a class="docs-heading-anchor" href="#Distribución-de-velocidades">Distribución de velocidades</a><a id="Distribución-de-velocidades-1"></a><a class="docs-heading-anchor-permalink" href="#Distribución-de-velocidades" title="Permalink"></a></h1><p>Las velocidades de las partículas en un sistema molecular (tridimensional) siguen la distribución de Maxwell-Boltzmann:</p><p class="math-container">\[f(v) ~dv= \left(\frac{m}{2 \pi kT}\right)^{3/2}\, 4\pi v^2 e^{ -\frac{mv^2}{2kT}} ~ dv\]</p><p>Esencialmente, esta ecuación dice que la probabilidad de que una partícula tenga una velocidad en el intervalo <span>$v\pm dv$</span> es proporcional a <span>$v^2 e^{-v^2/kT}$</span>. Esto se debe a dos motivos: primero, la probabilidad de que una partícula tenga una energía <span>$E$</span> es dada por la distribución de Boltzmann, <span>$e^{-E/kT}$</span>. Como la energía cinética és <span>$mv^2/2$</span>, el cuadrado de la velocidad aparece en el exponente. Segundo, la <em>degeneración</em> aumenta con <span>$v^2$</span> con el aumento de la velocidad, porque el volumen del espacio que contiene los vectores de longitud <span>$v$</span> aumenta con <span>$v^2$</span> en tres dimensiones. Esto genera el término pre-exponencial proporcional a <span>$v^2$</span>. </p><p>Vamos a ver si esto efectivamente ocurre en nuestras simulaciones. </p><h2 id=".1.-Distribución-inicial-de-velocidades"><a class="docs-heading-anchor" href="#.1.-Distribución-inicial-de-velocidades">10.1. Distribución inicial de velocidades</a><a id=".1.-Distribución-inicial-de-velocidades-1"></a><a class="docs-heading-anchor-permalink" href="#.1.-Distribución-inicial-de-velocidades" title="Permalink"></a></h2><p>Podemos hacer el gráfico de la distribución de Maxwell-Boltzmann para ver su aspecto en función de la temperatura:</p><pre><code class="language-julia-repl hljs">julia&gt; mb(v,kT) = (1/(2π*kT))^(3/2)*4π*v^2*exp(-v^2/(2*kT))
-mb (generic function with 1 method)
 
 julia&gt; v = 0:0.1:5 # velocity range
 
@@ -17,12 +16,11 @@ julia&gt; v_normal = init_velocities(sys,Options(initial_velocities=:normal))
  ⋮
  [-0.13167046004485733, -0.8914869714395789]
 
- julia&gt; v_flat = init_velocities(sys,Options(initial_velocities=:flat))
+julia&gt; v_flat = init_velocities(sys,Options(initial_velocities=:flat))
 10000-element Vector{Point2D}:
  [-0.6634658506319203, 0.9721022278467606]
  ⋮
- [1.773444140352424, 0.27389840410745514]
-</code></pre><p>Para ver la distribución de velocidades en cada caso, vamos a usar la función <code>velocity_distribution</code>, que recibe lee las velocidades grabadas en un archivo de trayectorias (la razón de esto va a quedar clara en seguida):</p><pre><code class="language-julia-repl hljs">julia&gt; printxyz(v_normal,sys,&quot;vnormal.xyz&quot;)
+ [1.773444140352424, 0.27389840410745514]</code></pre><p>Para ver la distribución de velocidades en cada caso, vamos a usar la función <code>velocity_distribution</code>, que recibe lee las velocidades grabadas en un archivo de trayectorias (la razón de esto va a quedar clara en seguida):</p><pre><code class="language-julia-repl hljs">julia&gt; printxyz(v_normal,sys,&quot;vnormal.xyz&quot;)
 
 julia&gt; printxyz(v_flat,sys,&quot;vflat.xyz&quot;)
 
@@ -36,13 +34,12 @@ julia&gt; d_flat = velocity_distribution(sys,&quot;vflat.xyz&quot;);
 Number of frames read = 1
  Average velocity = [-4.9000000006849124e-8, -1.2999999991358812e-8]
  Average velocity norm = 0.9506616041200406
- Average kinetic energy = 0.5999232099558015
-</code></pre><p>Note que generamos <code>100_000</code> puntos, para tener una distribución buen muestreada.  Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:</p><pre><code class="language-julia-repl hljs">julia&gt; plot(
-         [d_normal,d_flat],
-         label=[&quot;Normal&quot; &quot;Flat&quot;],
-         xlabel=&quot;velocity norm&quot;,
-         ylabel=&quot;frequency&quot;,
-         linewidth=2
+ Average kinetic energy = 0.5999232099558015</code></pre><p>Note que generamos <code>100_000</code> puntos, para tener una distribución buen muestreada.  Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:</p><pre><code class="language-julia-repl hljs">julia&gt; plot(
+           [d_normal,d_flat],
+           label=[&quot;Normal&quot; &quot;Flat&quot;],
+           xlabel=&quot;velocity norm&quot;,
+           ylabel=&quot;frequency&quot;,
+           linewidth=2
        )</code></pre><p>que resulta en:</p><center>
 <img src=../figures/velocities.svg>
 </center><p>A distribución normal es la que se parece a la distribución de Maxwell-Boltzmann y es la default en las simulaciones. </p><h2 id=".2.-Las-velocidades-en-equilibrio"><a class="docs-heading-anchor" href="#.2.-Las-velocidades-en-equilibrio">10.2. Las velocidades en equilibrio</a><a id=".2.-Las-velocidades-en-equilibrio-1"></a><a class="docs-heading-anchor-permalink" href="#.2.-Las-velocidades-en-equilibrio" title="Permalink"></a></h2><p>Vamos a comparar las distribuciones iniciales con una distribución obtenida de  una simulación. Para eso, vamos a repetir la simulación de Langevin, pero ahora  en 3 dimensiones, la cual fue iniciada con velocidades nulas. Vamos llamar la atención para que la simulación salva la trayectoria de las velocidades también:</p><pre><code class="language-julia-repl hljs">julia&gt; sys = System(n=100,sides=[50,50,50])
@@ -53,25 +50,24 @@ System{Point3D}:
 julia&gt; minimize!(sys)
 
 julia&gt; md_out = md_langevin(
-         sys,
-         Options(
-           lambda=0.01,
-           nsteps=100_000,
-           velocity_file=&quot;vel.xyz&quot;,
-           initial_velocities=:zero
-         )
+           sys,
+           Options(
+               lambda=0.01,
+               nsteps=100_000,
+               velocity_file=&quot;vel.xyz&quot;,
+               initial_velocities=:zero
+           )
        )</code></pre><p>Calculamos la distribución de velocidades de esta trayectoria con:</p><pre><code class="language-julia-repl hljs">julia&gt; v_sim = velocity_distribution(sys,&quot;vel.xyz&quot;);
 Number of frames read = 10001
  Average velocity = [0.003014992500749613, -0.04277096828317029, -0.01629199255074569]
  Average velocity norm = 1.2234527952231138
- Average kinetic energy = 0.8819808992851449
-</code></pre><p>Haga el gráfico de esta distribución de velocidades: </p><pre><code class="language-julia-repl hljs">julia&gt; plot(
-         v_sim,
-         label=&quot;Langevin&quot;,
-         xlabel=&quot;velocity norm&quot;,
-         ylabel=&quot;frequency&quot;,
-         linewidth=2
-       )</code></pre><p>Compare, visualmente, el resultado con lo que es esperado para la distribución de Maxwell-Boltzmann.</p><h2 id=".3.-Ajustando-los-datos"><a class="docs-heading-anchor" href="#.3.-Ajustando-los-datos">10.3. Ajustando los datos</a><a id=".3.-Ajustando-los-datos-1"></a><a class="docs-heading-anchor-permalink" href="#.3.-Ajustando-los-datos" title="Permalink"></a></h2><p>La curva de <code>v_sim</code> puede ser ajustada para ver como bien, o mal, corresponde a la distribución de Maxwell-Boltzmann. Esta tiene la forma general</p><p class="math-container">\[f(v)dv = A v^2 e^{-v^2/2kT} dv\]</p><p>Esta función tiene apenas dos parámetros ajustables: <span>$A$</span> y <span>$kT$</span> (o simplemente <span>$T$</span>, pero aquí mantenemos la constante junto con la  temperatura). </p><p>Podemos ajustar esta curva a los datos obtenidos usando un software de ajuste, o por ejemplo el paquete <a href="https://github.com/JuliaNLSolvers/LsqFit.jl">LsqFit.jl</a>:</p><h3 id="Instalación"><a class="docs-heading-anchor" href="#Instalación">Instalación</a><a id="Instalación-1"></a><a class="docs-heading-anchor-permalink" href="#Instalación" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; ] add LsqFit</code></pre><h3 id="Ajustando-el-modelo"><a class="docs-heading-anchor" href="#Ajustando-el-modelo">Ajustando el modelo</a><a id="Ajustando-el-modelo-1"></a><a class="docs-heading-anchor-permalink" href="#Ajustando-el-modelo" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; using LsqFit
+ Average kinetic energy = 0.8819808992851449</code></pre><p>Haga el gráfico de esta distribución de velocidades: </p><pre><code class="language-julia-repl hljs">julia&gt; plot(
+           v_sim,
+           label=&quot;Langevin&quot;,
+           xlabel=&quot;velocity norm&quot;,
+           ylabel=&quot;frequency&quot;,
+           linewidth=2
+       )</code></pre><p>Compare, visualmente, el resultado con lo que es esperado para la distribución de Maxwell-Boltzmann.</p><h2 id=".3.-Ajustando-los-datos"><a class="docs-heading-anchor" href="#.3.-Ajustando-los-datos">10.3. Ajustando los datos</a><a id=".3.-Ajustando-los-datos-1"></a><a class="docs-heading-anchor-permalink" href="#.3.-Ajustando-los-datos" title="Permalink"></a></h2><p>La curva de <code>v_sim</code> puede ser ajustada para ver como bien, o mal, corresponde a la distribución de Maxwell-Boltzmann. Esta tiene la forma general</p><p class="math-container">\[f(v)dv = A v^2 e^{-v^2/2kT} dv\]</p><p>Esta función tiene apenas dos parámetros ajustables: <span>$A$</span> y <span>$kT$</span> (o simplemente <span>$T$</span>, pero aquí mantenemos la constante junto con la  temperatura). </p><p>Podemos ajustar esta curva a los datos obtenidos usando un software de ajuste, o por ejemplo el paquete <a href="https://github.com/JuliaNLSolvers/LsqFit.jl">LsqFit.jl</a>:</p><h3 id="Ajustando-el-modelo"><a class="docs-heading-anchor" href="#Ajustando-el-modelo">Ajustando el modelo</a><a id="Ajustando-el-modelo-1"></a><a class="docs-heading-anchor-permalink" href="#Ajustando-el-modelo" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; using LsqFit
 
 julia&gt; @. f(v,p) = p[1]*v^2*exp(-v^2/(2*p[2]))
 
@@ -85,11 +81,11 @@ julia&gt; fit = curve_fit(f, x, y, p0)</code></pre><p>Y vemos como bien los dato
 julia&gt; yfit = [ f(xi,pars) for xi in x ];
 
 julia&gt; plot(
-         [ (x,y), (x,yfit) ],
-         label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
-         xlabel=&quot;velocity norm&quot;,
-         ylabel=&quot;frequency&quot;,
-         linewidth=2
+           [ (x,y), (x,yfit) ],
+           label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
+           xlabel=&quot;velocity norm&quot;,
+           ylabel=&quot;frequency&quot;,
+           linewidth=2
        )</code></pre><center>
 <img src=../figures/velocities_fit.svg>
 </center><p>Note que el error es muy bajo, indicando que las velocidades de la simulación se ajustan bien a la distribución de Maxwell-Boltzmann.  Asimismo, el segundo parámetro del ajuste tiene que ser el <span>$kT$</span> que fue definido para la simulación:</p><pre><code class="language-julia-repl hljs">julia&gt; coef(fit)[2]
@@ -101,23 +97,23 @@ minimize!(sys)
 
 # simulation
 md_out = md_langevin(
-  sys,
-  Options(
-    lambda=0.01,
-    nsteps=100_000,
-    velocity_file=&quot;vel.xyz&quot;,
-    initial_velocities=:zero
-  )
+    sys,
+    Options(
+        lambda=0.01,
+        nsteps=100_000,
+        velocity_file=&quot;vel.xyz&quot;,
+        initial_velocities=:zero
+    )
 )
 
 # plot velocity distribution
 v_sim = velocity_distribution(sys,&quot;vel.xyz&quot;);
 plot(
-  v_sim,
-  label=&quot;Langevin&quot;,
-  xlabel=&quot;velocity norm&quot;,
-  ylabel=&quot;frequency&quot;,
-  linewidth=2
+    v_sim,
+    label=&quot;Langevin&quot;,
+    xlabel=&quot;velocity norm&quot;,
+    ylabel=&quot;frequency&quot;,
+    linewidth=2
 )
 
 # Fit model
@@ -130,13 +126,13 @@ fit = curve_fit(f, x, y, p0)
 pars = coef(fit)
 yfit = [ f(xi,pars) for xi in x ]
 plot(
-  [ (x,y), (x,yfit) ],
-  label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
-  xlabel=&quot;velocity norm&quot;,
-  ylabel=&quot;frequency&quot;,
-  linewidth=2
+    [ (x,y), (x,yfit) ],
+    label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
+    xlabel=&quot;velocity norm&quot;,
+    ylabel=&quot;frequency&quot;,
+    linewidth=2
 )
 savefig(&quot;./velocities_fit.pdf&quot;)
 
 # Check kT
-coef(fit)[2]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../running3D/">« Ejecución en 3D</a><a class="docs-footer-nextpage" href="../help/">Help entries »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Friday 31 March 2023 13:05">Friday 31 March 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+coef(fit)[2]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../running3D/">« Ejecución en 3D</a><a class="docs-footer-nextpage" href="../help/">Help entries »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Wednesday 26 July 2023 18:41">Wednesday 26 July 2023</span>. Using Julia version 1.9.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
