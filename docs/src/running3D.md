@@ -40,8 +40,8 @@ La simulación, cualquiera que sea, puede ser ejecutada normalmente. Los código
 
 ```julia-repl
 julia> md_out = md_langevin(
-         sys,
-         Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
+          sys,
+          Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
        )
 ```
 
@@ -68,8 +68,8 @@ sys = System(n=100,sides=[50,50,50])
 minimize!(sys)
 
 md_out = md_langevin(
-  sys,
-  Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
+    sys,
+    Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
 )
 rmd, gmd = radial_distribution(sys,"md.xyz")
 plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")

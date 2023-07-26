@@ -20,25 +20,25 @@ de simulaciones y sus limitaciones.
 
 ## 1.1. Instalación de FundamentosDMC.jl
 
-Instale el interpretador de `Julia`, de [https://julialang.org/](https://julialang.org).
+Instale el interpretador de [Julia](https://julialang.org), usando la
+herramienta [juliaup](https://github.com/JuliaLang/juliaup#juliaup---julia-version-manager).
+La version 1.9 de Julia va a ser instalada.
 
-Ejecute el interpretador, e instale el paquete de este curso, usando: 
+Ejecute el interpretador. Vamos a crear un ambiente donde instalaremos los paquetes necesarios:
 
 ```julia-repl
-julia> import Pkg
+julia> ] activate @FundamentosDMC 
+```
+(el `]` te llevará al prompt de gerenciamiento de paquetes, "`(@v1.9) pkg>`", donde debe ser ejecutado el `activate ... `)
+Pulsee `backspace` para volver al prompt `julia>`.
 
-julia> Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
-```
-o, alternativamente,
-```julia-repl
-julia> ] add https://github.com/m3g/FundamentosDMC.jl
-```
-(el `]` te llevará al prompt de gerenciamiento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ... `)
+En seguida, instalamos los paquetes:
 
-Instale también el paquete `Plots`, que va a ser usado para graficar algunos resultados:
 ```julia-repl
-julia> ] add Plots
+julia> ] add https://github.com/m3g/FundamentosDMC.jl, Plots, LsqFit
 ```
+
+Este proceso puede tardar un par de minutos, y va a compilar y instalar todos los paquetes en el ambiente `@FundamentosDMC`.
 
 ## 1.2. Instalación de VMD
 
@@ -57,8 +57,10 @@ Los paquetes pueden ser instalados desde un script, con:
 
 ```julia
 import Pkg
+Pkg.activate("FundamentosDMC", shared=true)
 Pkg.add(url="https://github.com/m3g/FundamentosDMC.jl")
 Pkg.add("Plots")
+Pkg.add("LsqFit")
 ```
 
 

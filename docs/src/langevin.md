@@ -35,8 +35,8 @@ El coeficiente de fricción, $\lambda$, controla el comportamiento de una dinám
 Por ejemplo,
 ```julia-repl
 julia> out = md_langevin(
-         sys,
-         Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
+           sys,
+           Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
        );
 
 ```
@@ -64,13 +64,13 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_langevin(
-  sys,
-  Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
+    sys,
+    Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
 )
 plot(
-  out,ylim=[-100,100],
-  label=["Potential" "Kinetic" "Total" "Temperature"],
-  xlabel="step"
+    out,ylim=[-100,100],
+    label=["Potential" "Kinetic" "Total" "Temperature"],
+    xlabel="step"
 )
 plot(out[:,4],label="Temperature",xlabel="step")
 ```

@@ -15,7 +15,6 @@ Podemos hacer el gráfico de la distribución de Maxwell-Boltzmann para ver su a
 
 ```julia-repl
 julia> mb(v,kT) = (1/(2π*kT))^(3/2)*4π*v^2*exp(-v^2/(2*kT))
-mb (generic function with 1 method)
 
 julia> v = 0:0.1:5 # velocity range
 
@@ -40,12 +39,11 @@ julia> v_normal = init_velocities(sys,Options(initial_velocities=:normal))
  ⋮
  [-0.13167046004485733, -0.8914869714395789]
 
- julia> v_flat = init_velocities(sys,Options(initial_velocities=:flat))
+julia> v_flat = init_velocities(sys,Options(initial_velocities=:flat))
 10000-element Vector{Point2D}:
  [-0.6634658506319203, 0.9721022278467606]
  ⋮
  [1.773444140352424, 0.27389840410745514]
-
 ```
 
 Para ver la distribución de velocidades en cada caso, vamos a usar la función `velocity_distribution`, que recibe lee las velocidades grabadas en un archivo de trayectorias (la razón de esto va a quedar clara en seguida):
@@ -66,7 +64,6 @@ Number of frames read = 1
  Average velocity = [-4.9000000006849124e-8, -1.2999999991358812e-8]
  Average velocity norm = 0.9506616041200406
  Average kinetic energy = 0.5999232099558015
-
 ```
 
 Note que generamos `100_000` puntos, para tener una distribución buen muestreada. 
@@ -74,11 +71,11 @@ Las dos distribuciones tienen la misma energía cinética media, claro, que corr
 
 ```julia-repl
 julia> plot(
-         [d_normal,d_flat],
-         label=["Normal" "Flat"],
-         xlabel="velocity norm",
-         ylabel="frequency",
-         linewidth=2
+           [d_normal,d_flat],
+           label=["Normal" "Flat"],
+           xlabel="velocity norm",
+           ylabel="frequency",
+           linewidth=2
        )
 ```
 que resulta en:
@@ -104,13 +101,13 @@ System{Point3D}:
 julia> minimize!(sys)
 
 julia> md_out = md_langevin(
-         sys,
-         Options(
-           lambda=0.01,
-           nsteps=100_000,
-           velocity_file="vel.xyz",
-           initial_velocities=:zero
-         )
+           sys,
+           Options(
+               lambda=0.01,
+               nsteps=100_000,
+               velocity_file="vel.xyz",
+               initial_velocities=:zero
+           )
        )
 ```
 
@@ -121,17 +118,16 @@ Number of frames read = 10001
  Average velocity = [0.003014992500749613, -0.04277096828317029, -0.01629199255074569]
  Average velocity norm = 1.2234527952231138
  Average kinetic energy = 0.8819808992851449
-
 ```
 
 Haga el gráfico de esta distribución de velocidades: 
 ```julia-repl
 julia> plot(
-         v_sim,
-         label="Langevin",
-         xlabel="velocity norm",
-         ylabel="frequency",
-         linewidth=2
+           v_sim,
+           label="Langevin",
+           xlabel="velocity norm",
+           ylabel="frequency",
+           linewidth=2
        )
 ```
 
@@ -147,12 +143,6 @@ Esta función tiene apenas dos parámetros ajustables: $A$ y $kT$ (o simplemente
 temperatura). 
 
 Podemos ajustar esta curva a los datos obtenidos usando un software de ajuste, o por ejemplo el paquete [LsqFit.jl](https://github.com/JuliaNLSolvers/LsqFit.jl):
-
-### Instalación
-
-```julia-repl
-julia> ] add LsqFit
-```
 
 ### Ajustando el modelo
 
@@ -182,11 +172,11 @@ julia> pars = coef(fit)
 julia> yfit = [ f(xi,pars) for xi in x ];
 
 julia> plot(
-         [ (x,y), (x,yfit) ],
-         label=[ "Simulation"  "Fit" ],
-         xlabel="velocity norm",
-         ylabel="frequency",
-         linewidth=2
+           [ (x,y), (x,yfit) ],
+           label=[ "Simulation"  "Fit" ],
+           xlabel="velocity norm",
+           ylabel="frequency",
+           linewidth=2
        )
 ```
 
@@ -214,23 +204,23 @@ minimize!(sys)
 
 # simulation
 md_out = md_langevin(
-  sys,
-  Options(
-    lambda=0.01,
-    nsteps=100_000,
-    velocity_file="vel.xyz",
-    initial_velocities=:zero
-  )
+    sys,
+    Options(
+        lambda=0.01,
+        nsteps=100_000,
+        velocity_file="vel.xyz",
+        initial_velocities=:zero
+    )
 )
 
 # plot velocity distribution
 v_sim = velocity_distribution(sys,"vel.xyz");
 plot(
-  v_sim,
-  label="Langevin",
-  xlabel="velocity norm",
-  ylabel="frequency",
-  linewidth=2
+    v_sim,
+    label="Langevin",
+    xlabel="velocity norm",
+    ylabel="frequency",
+    linewidth=2
 )
 
 # Fit model
@@ -243,11 +233,11 @@ fit = curve_fit(f, x, y, p0)
 pars = coef(fit)
 yfit = [ f(xi,pars) for xi in x ]
 plot(
-  [ (x,y), (x,yfit) ],
-  label=[ "Simulation"  "Fit" ],
-  xlabel="velocity norm",
-  ylabel="frequency",
-  linewidth=2
+    [ (x,y), (x,yfit) ],
+    label=[ "Simulation"  "Fit" ],
+    xlabel="velocity norm",
+    ylabel="frequency",
+    linewidth=2
 )
 savefig("./velocities_fit.pdf")
 

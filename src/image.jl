@@ -1,7 +1,7 @@
 """
     image(x,sides)
 
-Move coordinates to minimum perioddic image.
+Move coordinates to minimum periodic image.
 
 """
 image(x, sides) = image_one.(x, sides)

@@ -32,8 +32,8 @@ julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1));
 El gráfico de las energías en función del tiempo puede ser obtenido con:
 ```julia-repl
 julia> plot(out,ylim=[-100,100],
-         label=["Potential" "Kinetic" "Total" "Temperature"],
-         xlabel="step"
+           label=["Potential" "Kinetic" "Total" "Temperature"],
+           xlabel="step"
        )
 ```
 
@@ -42,9 +42,9 @@ Debe notar-se que la energía total no es más constante durante el período de 
 La temperatura puede ser observada con:
 ```julia-repl
 julia> plot(
-         out[:,4],
-         label=["Temperature"],
-         xlabel="step"
+           out[:,4],
+           label=["Temperature"],
+           xlabel="step"
        )
 ```
 Note que se mantiene prácticamente constante e igual a la temperatura objetivo (0.60) durante la equilibración, pero después divergencias pueden ser observadas. Si el sistema no está equilibrado, estas divergencias pueden ser sistemáticas. 
@@ -68,9 +68,9 @@ sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
 plot(
-  out,ylim=[-100,100],
-  label=["Potential" "Kinetic" "Total" "Temperature"],
-  xlabel="step"
+    out,ylim=[-100,100],
+    label=["Potential" "Kinetic" "Total" "Temperature"],
+    xlabel="step"
 )
 plot(out[:,4],label="Temperature",xlabel="step")
 ```

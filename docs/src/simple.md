@@ -32,7 +32,6 @@ La simulación no tiene control de temperatura o de presión. Es una propagació
 Para realizar una MD simple, con un paso de integración de `dt=1.0`, ejecute el comando:
 ```julia-repl
 julia> out = md(sys,Options(dt=0.1));
-
 ```
 En principio, está previsto realizar 2000 pasos de integración de las ecuaciones 
 de movimiento.  Pruebe pasos de integración entre `1.0` y `0.01`. 
@@ -53,9 +52,9 @@ La variable `out` que sale de la simulación es una matriz con las energías y l
 julia> using Plots
 
 julia> plot(
-         out,ylim=[-100,100],
-         label=["Potential" "Kinetic" "Total" "Temperature"],
-         xlabel="step"
+          out,ylim=[-100,100],
+          label=["Potential" "Kinetic" "Total" "Temperature"],
+          xlabel="step"
        )
 ```
 
@@ -113,8 +112,8 @@ minimize!(sys)
 out = md(sys,Options(dt=0.05))
 
 plot(out,ylim=[-100,100],
-  label=["Potential" "Kinetic" "Total" "Temperature"],
-  xlabel="step"
+    label=["Potential" "Kinetic" "Total" "Temperature"],
+    xlabel="step"
 )
 ```
 

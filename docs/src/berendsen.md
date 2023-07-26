@@ -43,9 +43,9 @@ Observe los gráficos de energía resultantes, usando los mismos comandos de ant
 julia> using Plots
 
 julia> plot(
-         out,ylim=[-100,100],
-         label=["Potential" "Kinetic" "Total" "Temperature"],
-         xlabel="step"
+           out,ylim=[-100,100],
+           label=["Potential" "Kinetic" "Total" "Temperature"],
+           xlabel="step"
        )
 ```
 
@@ -60,9 +60,9 @@ sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000))
 plot(
-  out,ylim=[-100,100],
-  label=["Potential" "Kinetic" "Total" "Temperature"],
-  xlabel="step"
+    out,ylim=[-100,100],
+    label=["Potential" "Kinetic" "Total" "Temperature"],
+    xlabel="step"
 )
 plot(out[:,4],label="Temperature",xlabel="step")
 ```
