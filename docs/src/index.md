@@ -25,11 +25,9 @@ herramienta [juliaup](https://github.com/JuliaLang/juliaup#juliaup---julia-versi
 La version 1.9 de Julia va a ser instalada.
 
 !!! tip
-    - Al pulsear `]` en el prompt the Julia, accederás al package manager (un prompt azul).
-    Una sequencia como `julia> ] add Package` **no** és para copiar y colar.
+    - Al pulsear `]` en el prompt the Julia, accederás al package manager (un prompt azul). Una sequencia como `julia> ] add Package` **no** és para copiar y colar.
 
-    - Todos los otros comandos de esta tutoria pueden ser copiados y colados directamente,
-    incluyendo en prompt de `julia>`, que es eliminado automaticamente.
+    - Todos los otros comandos de esta tutoria pueden ser copiados y colados directamente, incluyendo en prompt de `julia>`, que es eliminado automaticamente.
 
 Ejecute el interpretador. Vamos a crear un ambiente donde instalaremos los paquetes necesarios:
 
