@@ -1,27 +1,24 @@
 
 
-<p align=center>
-<img height=120px src=https://user-images.githubusercontent.com/31046348/125136756-c9a18000-e0e1-11eb-982b-dfb2386fef4f.png><br><br>
-https://sites.google.com/view/simulacionenquimica/
-</p>
+# Fundamentals of Classical Molecular Dynamics
 
-# Fundamentos de Dinámica Molecular Clásica
+<center><h3>Tutorial and documentation: https://m3g.github.io/FundamentosDMC.jl/stable</h3></center>
 
-<center><h3>Tutorial y documentación: https://m3g.github.io/FundamentosDMC.jl/stable</h3></center>
+Leandro Martínez - Institute of Chemistry - Universidade Estadual de Campinas (UNICAMP)
 
-Leandro Martínez - Instituto de Química - Universidad de Campinas
+This tutorial contains the explanations for running and analyzing Molecular Dynamics and Monte Carlo simulations of a simple two-dimensional system. The goal is for students to become familiar with the various technical details involved in performing simulations and their limitations.
 
-Este tutorial contiene las explicaciones para rodar y analizar simulaciones de Dinámica Molecular y Mote-Carlo de un sistema bi-dimensional simple. El objetivo es que el estudiante entre en contacto con diversos detalles técnicos involucrados en la realización de simulaciones y sus limitaciones.
+> **Available in:** [English](https://m3g.github.io/FundamentosDMC.jl/stable/en/) | [Español](https://m3g.github.io/FundamentosDMC.jl/stable/es/) | [Português](https://m3g.github.io/FundamentosDMC.jl/stable/pt/)
 
-### Instalación de `FundamentosDMC.jl`
+### Installation of `FundamentosDMC.jl`
 
-Instale el interpretador de Julia, de https://julialang.org/.
+Install the Julia interpreter from https://julialang.org/.
 
-Ejecute el interpretador, e instale el paquete deste curso, usando:
+Run the interpreter and install the package for this course using:
 ```julia
 julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
-(el `]` te llevará al prompt the gerenciamento de paquetes, "`(@v1.6) pkg>`", donde debe ser ejecutado el `add ...`)
+(the `]` key will take you to the package management prompt, "`(@v1.6) pkg>`", where the `add ...` command should be run)
 
 ##
 <p align=center>
