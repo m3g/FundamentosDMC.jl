@@ -1,6 +1,10 @@
+```@meta
+CollapsedDocStrings = true
+```
+
 # Help entries
 
-Estas entradas pueden ser vistas en el REPL de `Julia` usando `? name`. 
+In the Julia REPL type `? name`: 
 
 ```@autodocs
 Modules=[FundamentosDMC]

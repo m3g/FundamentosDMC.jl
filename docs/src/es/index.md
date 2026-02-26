@@ -5,7 +5,7 @@
 <br>
 Leandro Martínez
 <br>
-<i>Instituto de Quimica, Universidad de Campinas</i>
+<i>Instituto de Quimica, Universidade Estadual de Campinas (UNICAMP)</i>
 <br>
 <a href=http://m3g.iqm.unicamp.br>http://m3g.iqm.unicamp.br</a>
 <br>
