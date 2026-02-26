@@ -1181,7 +1181,7 @@ require(['jquery'], function($) {
 
 // Manages the showing and hiding of the sidebar.
 $(document).ready(function () {
-  var sidebar = $("#documenter > .docs-sidebar");
+  var sidebar = $("#documenter .docs-sidebar");
   var sidebar_button = $("#documenter-sidebar-button");
   sidebar_button.click(function (ev) {
     ev.preventDefault();
@@ -1191,7 +1191,7 @@ $(document).ready(function () {
       $("#documenter .docs-menu a.is-active").focus();
     }
   });
-  $("#documenter > .docs-main").bind("click", function (ev) {
+  $("#documenter .docs-main").bind("click", function (ev) {
     if ($(ev.target).is(sidebar_button)) {
       return;
     }
