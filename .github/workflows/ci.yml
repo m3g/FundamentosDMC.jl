@@ -50,6 +50,7 @@ jobs:
           version: '1'
       - run: |
           julia --project=docs -e '
+            import Pkg; Pkg.instantiate()
             using Documenter: doctest
             using FundamentosDMC
             doctest(FundamentosDMC)'
