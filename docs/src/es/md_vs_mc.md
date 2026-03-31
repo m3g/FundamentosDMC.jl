@@ -59,7 +59,7 @@ es, por lo tanto $n(r)=\rho A(r)$, donde $A(r)$ es el área de una cáscara
 circular de radio menor $r$ y radio mayor $r+\Delta r$:
 ```@raw html
 <center>
-<img src=../figures/area.svg>
+<img src=/figures/area.svg>
 </center>
 ```
 Vemos que $A(r)=\pi (r+\Delta r)^2 - \pi r^2 \approx 2\pi r\Delta r$.

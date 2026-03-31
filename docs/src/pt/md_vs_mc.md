@@ -47,7 +47,7 @@ Vamos comparar a estrutura média obtida usando MD com a estrutura média obtida
 No nosso caso bidimensional, o número de partículas por unidade de volume é $\rho=n/A$, onde $n=100$ é o número de partículas e $A=100^2$ é a área total do sistema simulado. O número de partículas esperado em um intervalo de distâncias entre $r$ e $r+\Delta r$ de cada partícula é, portanto, $n(r)=\rho A(r)$, onde $A(r)$ é a área de uma casca circular de raio menor $r$ e raio maior $r+\Delta r$:
 ```@raw html
 <center>
-<img src=../figures/area.svg>
+<img src=/figures/area.svg>
 </center>
 ```
 Vemos que $A(r)=\pi (r+\Delta r)^2 - \pi r^2 \approx 2\pi r\Delta r$.
