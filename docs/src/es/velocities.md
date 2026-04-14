@@ -81,7 +81,7 @@ julia> plot(
 que resulta en:
 ```@raw html
 <center>
-<img src=/figures/velocities.svg>
+<img src=../../figures/velocities.svg>
 </center>
 ```
 
@@ -182,7 +182,7 @@ julia> plot(
 
 ```@raw html
 <center>
-<img src=/figures/velocities_fit.svg>
+<img src=../../figures/velocities_fit.svg>
 </center>
 ```
 
