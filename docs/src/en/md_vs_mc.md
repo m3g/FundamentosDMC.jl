@@ -59,7 +59,7 @@ is therefore $n(r)=\rho A(r)$, where $A(r)$ is the area of a
 circular shell with inner radius $r$ and outer radius $r+\Delta r$:
 ```@raw html
 <center>
-<img src=/figures/area.svg>
+<img src=../../figures/area.svg>
 </center>
 ```
 We see that $A(r)=\pi (r+\Delta r)^2 - \pi r^2 \approx 2\pi r\Delta r$.
