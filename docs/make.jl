@@ -3,7 +3,8 @@ using FundamentosDMC
 makedocs(
     modules=[FundamentosDMC],
     sitename="FundamentosDMC.jl",
-    top_menu = [
+    format = Documenter.HTML(top_menu = true),
+    pages = [
         "Português" => [
             "Inicio" => "pt/index.md",
             "Sistema simulado" => "pt/sistema.md",
