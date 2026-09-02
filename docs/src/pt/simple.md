@@ -49,14 +49,14 @@ julia> plot(
 E obteremos um gráfico semelhante a:
 ```@raw html
 <center> 
-<img src="/figures/exploded.png">
+<img src="../../figures/exploded.png">
 </center>
 ```
 
 Para passos de tempo menores a simulação deve conseguir chegar até o fim. Podemos ver o resultado novamente, e deve ser algo semelhante a:
 ```@raw html
 <center> 
-<img src="/figures/not_exploded.png">
+<img src="../../figures/not_exploded.png">
 </center>
 ```
 
