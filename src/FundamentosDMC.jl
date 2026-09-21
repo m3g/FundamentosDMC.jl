@@ -62,17 +62,21 @@ julia> simulate_gui()
 ```
 
 """
-function simulate_gui(; kwargs...)
-    error("""
+function simulate_gui end
 
-    `simulate_gui` requires the GLMakie package to be loaded. Install and load it with:
+function _simulate_gui_hint(io, exc, _argtypes, _kwargs)
+    if exc.f === simulate_gui
+        print(
+            io,
+            "\nHINT: `simulate_gui` requires the GLMakie package to be loaded. Install and load it with:\n\n",
+            "    import Pkg; Pkg.add(\"GLMakie\")\n    using GLMakie\n\n",
+            "and call `simulate_gui()` again.",
+        )
+    end
+end
 
-        import Pkg; Pkg.add("GLMakie")
-        using GLMakie
-
-    and call `simulate_gui()` again.
-
-    """)
+function __init__()
+    Base.Experimental.register_error_hint(_simulate_gui_hint, MethodError)
 end
 
 end

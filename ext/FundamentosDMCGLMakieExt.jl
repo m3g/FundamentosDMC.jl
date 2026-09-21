@@ -1,16 +1,17 @@
 module FundamentosDMCGLMakieExt
 
 using GLMakie
+using Printf: @sprintf
 using FundamentosDMC
 using FundamentosDMC: Point2D, System, Options
 import FundamentosDMC: potential, forces!, kinetic, remove_drift!, image, dim
 
 # Simulation kinds exposed in the interface, and their display labels.
 const KIND_OPTIONS = [
-    "Microcanonical (NVE)" => :md,
-    "Isokinetic bath (NVT)" => :md_isokinetic,
-    "Berendsen bath (NVT)" => :md_berendsen,
-    "Langevin bath (NVT)" => :md_langevin,
+    "NVE" => :md,
+    "NVT - Isokinetic" => :md_isokinetic,
+    "NVT - Berendsen" => :md_berendsen,
+    "NVT - Langevin" => :md_langevin,
     "Monte Carlo" => :mc,
 ]
 const KIND_LABELS = Dict(v => k for (k, v) in KIND_OPTIONS)
@@ -18,13 +19,19 @@ const KIND_LABELS = Dict(v => k for (k, v) in KIND_OPTIONS)
 const VELOCITY_OPTIONS = ["Normal" => :normal, "Flat" => :flat, "Zero" => :zero]
 const VELOCITY_LABELS = Dict(v => k for (k, v) in VELOCITY_OPTIONS)
 
+# Compact control-panel styling, so labels/boxes don't overflow the figure.
+const CTRL_FONTSIZE = 11
+const CTRL_HEIGHT = 19
+const CTRL_TEXTBOX_WIDTH = 140
+
 #
 # Mutable state of the interactive simulation: the current parameters (which
 # mirror `System` and `Options`), the current physical state (positions,
 # velocities, forces), and the history of the logged quantities used for the
 # energy/temperature plots. A fresh `SimState` is built every time a
 # parameter is changed, which is how the interface implements "restart on
-# option change".
+# option change". Minimization is *not* performed automatically here: it is
+# a separate, explicit action triggered from the interface (see `minimize_now!`).
 #
 mutable struct SimState
     # Parameters (mirror System/Options)
@@ -43,7 +50,6 @@ mutable struct SimState
     tau::Int
     lambda::Float64
     alpha::Float64
-    minimize_first::Bool
 
     # Derived System/Options
     sys::System{Point2D}
@@ -87,8 +93,7 @@ function SimState(;
     iequil::Int=10,
     tau::Int=10,
     lambda::Float64=0.1,
-    alpha::Float64=0.1,
-    minimize_first::Bool=true,
+    alpha::Float64=0.05,
 )
     n = max(n, 2)
     nsteps = max(nsteps, 1)
@@ -97,10 +102,6 @@ function SimState(;
 
     sys = System(n=n, sides=[Lx, Ly])
     opt = Options(; dt, nsteps, eps, sig, initial_velocities, kT, ibath, iequil, tau, lambda, alpha)
-
-    if minimize_first
-        minimize!(sys, opt)
-    end
 
     x = copy(sys.x0)
     v = kind == :mc ? zeros(Point2D, n) : init_velocities(sys, opt)
@@ -116,7 +117,7 @@ function SimState(;
     end
 
     return SimState(
-        kind, n, Lx, Ly, dt, nsteps, eps, sig, initial_velocities, kT, ibath, iequil, tau, lambda, alpha, minimize_first,
+        kind, n, Lx, Ly, dt, nsteps, eps, sig, initial_velocities, kT, ibath, iequil, tau, lambda, alpha,
         sys, opt,
         x, v, f, flast, xtrial, u0, 0,
         0, 0.0,
@@ -199,6 +200,18 @@ function mc_step!(state::SimState)
     return true
 end
 
+# Appends `msg` (possibly several lines) to the on-screen status log,
+# keeping only the last 4 lines. Kept as a plain Observable{Vector{String}},
+# separate from `SimState`, so it persists across restarts instead of being
+# wiped out every time the simulation parameters change.
+function log!(log_obs::Observable{Vector{String}}, msg::AbstractString)
+    lines = [String(strip(l)) for l in split(msg, '\n') if !isempty(strip(l))]
+    isempty(lines) && return nothing
+    newlog = vcat(log_obs[], lines)
+    log_obs[] = newlog[max(1, end - 3):end]
+    return nothing
+end
+
 # Runs the simulation to completion (or until stopped), notifying `obs`
 # after every step so the interface redraws. Meant to be `@async`ed.
 #
@@ -206,11 +219,12 @@ end
 # parameter was changed while this loop was running, `restart!` will have
 # already replaced `obs[]` with a brand new `SimState`, and this (now stale)
 # loop must not clobber it back.
-function run!(obs::Observable{SimState})
+function run!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
     state = obs[]
     state.running = true
     state.stop = false
     obs[] = state
+    log!(log_obs, "Running $(KIND_LABELS[state.kind]) from step $(state.step) to $(state.nsteps)...")
 
     step! = state.kind == :mc ? mc_step! : md_step!
     exploded = false
@@ -220,7 +234,11 @@ function run!(obs::Observable{SimState})
         exploded && break
         sleep(1 / 60)
     end
-    exploded && @warn "Simulation exploded (potential energy too large). Stopping."
+    if exploded
+        log!(log_obs, "Simulation exploded (potential energy too large). Stopping.")
+    else
+        log!(log_obs, "Stopped at step $(state.step)/$(state.nsteps).")
+    end
 
     state.running = false
     obs[] === state && (obs[] = state)
@@ -238,31 +256,117 @@ function restart!(obs::Observable{SimState}, field::Symbol, value)
         :dt => old.dt, :nsteps => old.nsteps, :eps => old.eps, :sig => old.sig,
         :initial_velocities => old.initial_velocities, :kT => old.kT,
         :ibath => old.ibath, :iequil => old.iequil, :tau => old.tau,
-        :lambda => old.lambda, :alpha => old.alpha, :minimize_first => old.minimize_first,
+        :lambda => old.lambda, :alpha => old.alpha,
     )
     kwargs[field] = value
     obs[] = SimState(; kwargs...)
     return nothing
 end
 
+# Minimizes the *current* configuration in place (explicit user action, not
+# run automatically). Pauses any running loop first, then recomputes the
+# forces (or the MC energy) and resets the step counter and the logged
+# history, so the simulation (and its plots) restart cleanly from the
+# relaxed configuration, exactly as `minimize!` followed by `md`/`mc` does
+# in the tutorial. The energies before/after (the same figures `minimize!`
+# itself prints to the terminal) are mirrored into the on-screen status log.
+function minimize_now!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
+    s = obs[]
+    s.stop = true
+    ubefore = potential(s.x, s.sys, s.opt)
+    tmp_sys = System(n=s.sys.n, x0=s.x, sides=s.sys.sides)
+    minimize!(tmp_sys, s.opt)
+    uafter = potential(s.x, s.sys, s.opt)
+    log!(log_obs, "Energy before minimization: $ubefore")
+    log!(log_obs, "Energy after minimization: $uafter")
+    if s.kind == :mc
+        s.ucurrent = uafter
+        u0, k0 = uafter, 0.0
+    else
+        forces!(s.f, s.x, s.sys, s.opt)
+        s.flast .= s.f
+        u0, k0 = uafter, kinetic(s.v)
+    end
+    s.step = 0
+    s.time = 0.0
+    empty!(s.steps_history)
+    empty!(s.potential_history)
+    empty!(s.kinetic_history)
+    empty!(s.total_history)
+    empty!(s.temperature_history)
+    push!(s.steps_history, 0)
+    push!(s.potential_history, u0)
+    push!(s.kinetic_history, k0)
+    push!(s.total_history, u0 + k0)
+    push!(s.temperature_history, k0 / s.sys.n)
+    obs[] === s && (obs[] = s)
+    return nothing
+end
+
 function particles_title(s::SimState)
     label = KIND_LABELS[s.kind]
+    # Fixed-width step/time/acceptance fields, so the title doesn't jitter
+    # horizontally as the digit count changes from step to step.
+    stepstr = lpad(s.step, ndigits(max(s.nsteps, 1)))
     if s.kind == :mc
         ar = s.step == 0 ? 0.0 : 100 * s.naccepted / s.step
-        return "$label  |  step $(s.step)/$(s.nsteps)  |  acceptance = $(round(ar, digits=1))%"
+        return "$label  |  step $stepstr/$(s.nsteps)  |  acceptance = $(@sprintf("%5.1f", ar))%"
     else
-        return "$label  |  step $(s.step)/$(s.nsteps)  |  t = $(round(s.time, digits=2))"
+        return "$label  |  step $stepstr/$(s.nsteps)  |  t = $(@sprintf("%8.2f", s.time))"
     end
+end
+
+# The 8 first periodic images surrounding the primary cell (edges + corners).
+const IMAGE_OFFSETS = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1))
+
+const PRIMARY_COLOR = to_color((:dodgerblue, 0.85))
+const IMAGE_COLOR = to_color((:dodgerblue, 0.3))
+
+# Builds the list of scatter points to display (the particles inside the
+# primary cell, plus, if `show`, all 8 of their first periodic images) and
+# the matching per-point colors (images are drawn more transparent).
+function periodic_points_colors(x, sides, show::Bool)
+    hx, hy = sides[1], sides[2]
+    n = length(x)
+    npts = show ? 9n : n
+    pts = Vector{Point2f}(undef, npts)
+    cols = Vector{typeof(PRIMARY_COLOR)}(undef, npts)
+    for (i, p) in enumerate(x)
+        pts[i] = Point2f(image(p, sides))
+        cols[i] = PRIMARY_COLOR
+    end
+    if show
+        k = n
+        for (ox, oy) in IMAGE_OFFSETS
+            for i in 1:n
+                k += 1
+                b = image(x[i], sides)
+                pts[k] = Point2f(b[1] + ox * hx, b[2] + oy * hy)
+                cols[k] = IMAGE_COLOR
+            end
+        end
+    end
+    return pts, cols
 end
 
 function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::Symbol=:md)
     state = SimState(; kind, n, Lx=Float64(sides[1]), Ly=Float64(sides[2]))
     obs = Observable(state)
 
+    # Independent view-only toggle: showing the first periodic images does
+    # not change the physics, so it must not restart the simulation.
+    show_periodic = Observable(false)
+
+    # Status log (last 4 lines), independent of `SimState` so it survives
+    # restarts instead of being cleared every time a parameter changes.
+    log_obs = Observable(String[])
+
     GLMakie.activate!(title="FundamentosDMC - Interactive simulation")
-    fig = Figure(size=(1500, 820))
+    fig = Figure(size=(1400, 820), fontsize=CTRL_FONTSIZE, figure_padding=(10, 10, 10, 30))
 
     controls = fig[1, 1] = GridLayout(tellwidth=false, valign=:top)
+    rowgap!(controls, 3)
+    colgap!(controls, 8)
 
     row = 0
     next_row!() = (row += 1; row)
@@ -271,72 +375,111 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
     # Simulation type and initial velocities menus
     #
     r = next_row!()
-    Label(controls[r, 1], "Simulation type", halign=:right)
-    kind_menu = Menu(controls[r, 2], options=first.(KIND_OPTIONS), default=KIND_LABELS[state.kind])
+    Label(controls[r, 1], "Type", halign=:right, fontsize=CTRL_FONTSIZE)
+    kind_menu = Menu(controls[r, 2], options=first.(KIND_OPTIONS), default=KIND_LABELS[state.kind],
+        fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT)
     on(kind_menu.selection) do s
+        log!(log_obs, "Restarted: type = $s.")
         restart!(obs, :kind, Dict(KIND_OPTIONS)[s])
     end
 
     r = next_row!()
-    Label(controls[r, 1], "Initial velocities", halign=:right)
-    iv_menu = Menu(controls[r, 2], options=first.(VELOCITY_OPTIONS), default=VELOCITY_LABELS[state.initial_velocities])
+    Label(controls[r, 1], "Velocities", halign=:right, fontsize=CTRL_FONTSIZE)
+    iv_menu = Menu(controls[r, 2], options=first.(VELOCITY_OPTIONS), default=VELOCITY_LABELS[state.initial_velocities],
+        fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT)
     on(iv_menu.selection) do s
+        log!(log_obs, "Restarted: velocities = $s.")
         restart!(obs, :initial_velocities, Dict(VELOCITY_OPTIONS)[s])
     end
 
     #
-    # Numeric parameters
+    # Numeric parameters (labels match the `Options`/`System` field names)
     #
+    # Commits whatever is currently typed (whether or not Enter was
+    # pressed) as soon as the textbox loses focus — including when focus
+    # moves to another field or a button (e.g. Run) is clicked — instead of
+    # requiring Enter and discarding the input otherwise.
     function add_numeric_row!(label, field::Symbol, valtype::Type)
         r = next_row!()
-        Label(controls[r, 1], label, halign=:right)
+        Label(controls[r, 1], label, halign=:right, fontsize=CTRL_FONTSIZE)
         tb = Textbox(
             controls[r, 2];
             placeholder=@lift(string(getfield($obs, field))),
             validator=valtype,
-            reset_on_defocus=true,
+            fontsize=CTRL_FONTSIZE,
+            height=CTRL_HEIGHT,
+            width=CTRL_TEXTBOX_WIDTH,
+            textpadding=(6, 6, 3, 3),
         )
-        on(tb.stored_string) do s
-            restart!(obs, field, parse(valtype, s))
+        on(tb.focused) do focused
+            focused && return nothing
+            value = tryparse(valtype, tb.displayed_string[])
+            value === nothing && return nothing
+            value == getfield(obs[], field) && return nothing
+            log!(log_obs, "Restarted: $field = $value.")
+            restart!(obs, field, value)
+            return nothing
         end
         return tb
     end
 
-    add_numeric_row!("Number of particles (n)", :n, Int)
-    add_numeric_row!("Box side Lx", :Lx, Float64)
-    add_numeric_row!("Box side Ly", :Ly, Float64)
-    add_numeric_row!("Time step (dt)", :dt, Float64)
-    add_numeric_row!("Number of steps (nsteps)", :nsteps, Int)
-    add_numeric_row!("LJ eps", :eps, Float64)
-    add_numeric_row!("LJ sig", :sig, Float64)
-    add_numeric_row!("Target temperature (kT)", :kT, Float64)
-    add_numeric_row!("Isokinetic bath frequency (ibath)", :ibath, Int)
-    add_numeric_row!("Equilibration steps (iequil)", :iequil, Int)
-    add_numeric_row!("Berendsen relaxation time (tau)", :tau, Int)
-    add_numeric_row!("Langevin friction (lambda)", :lambda, Float64)
-    add_numeric_row!("MC trial displacement (alpha)", :alpha, Float64)
+    add_numeric_row!("n", :n, Int)
+    add_numeric_row!("Lx", :Lx, Float64)
+    add_numeric_row!("Ly", :Ly, Float64)
+    add_numeric_row!("dt", :dt, Float64)
+    add_numeric_row!("nsteps", :nsteps, Int)
+    add_numeric_row!("eps", :eps, Float64)
+    add_numeric_row!("sig", :sig, Float64)
+    add_numeric_row!("kT", :kT, Float64)
+    add_numeric_row!("ibath", :ibath, Int)
+    add_numeric_row!("iequil", :iequil, Int)
+    add_numeric_row!("tau", :tau, Int)
+    add_numeric_row!("lambda", :lambda, Float64)
+    add_numeric_row!("alpha", :alpha, Float64)
 
+    #
+    # Periodic-image display toggle (view-only, does not affect the physics)
+    #
     r = next_row!()
-    Label(controls[r, 1], "Minimize before run", halign=:right)
-    minimize_cb = Checkbox(controls[r, 2], checked=state.minimize_first)
-    on(minimize_cb.checked) do checked
-        restart!(obs, :minimize_first, checked)
+    Label(controls[r, 1], "Images", halign=:right, fontsize=CTRL_FONTSIZE)
+    periodic_cb = Checkbox(controls[r, 2], checked=false)
+    on(periodic_cb.checked) do v
+        show_periodic[] = v
     end
 
     #
-    # Run / Stop / Reset buttons
+    # Minimize / Run / Stop / Reset buttons, side by side on a single row
+    # (Minimize first, since it is normally the first thing to do).
     #
     r = next_row!()
-    buttons = controls[r, 1:3] = [Button(fig, label="Run"), Button(fig, label="Stop"), Button(fig, label="Reset")]
+    button_grid = controls[r, 1:2] = GridLayout()
+    colgap!(button_grid, 4)
+    buttons = button_grid[1, 1:4] = [
+        Button(fig, label="Minimize", fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT,
+            buttoncolor=:seagreen, labelcolor=:white),
+        Button(fig, label="Run", fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT,
+            buttoncolor=:gold, labelcolor=:black),
+        Button(fig, label="Stop", fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT,
+            buttoncolor=:firebrick, labelcolor=:white),
+        Button(fig, label="Reset", fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT,
+            buttoncolor=:thistle, labelcolor=:black),
+    ]
     on(buttons[1].clicks) do _
-        obs[].running || @async run!(obs)
+        minimize_now!(obs, log_obs)
     end
     on(buttons[2].clicks) do _
-        obs[].stop = true
+        obs[].running || @async run!(obs, log_obs)
     end
     on(buttons[3].clicks) do _
+        obs[].stop = true
+    end
+    on(buttons[4].clicks) do _
+        log!(log_obs, "Reset: new random configuration.")
         restart!(obs, :n, obs[].n)
     end
+
+    colsize!(controls, 1, Fixed(70))
+    colsize!(controls, 2, Fixed(150))
 
     #
     # Visualization: particle motion, energies, and temperature
@@ -347,32 +490,42 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
         viz[1:2, 1],
         aspect=DataAspect(),
         title=@lift(particles_title($obs)),
+        titlealign=:left,
+        xticks=@lift([-$(obs).sys.sides[1] / 2, $(obs).sys.sides[1] / 2]),
+        yticks=@lift([-$(obs).sys.sides[2] / 2, $(obs).sys.sides[2] / 2]),
     )
     boxpts = @lift(let sides = $(obs).sys.sides
         hx, hy = sides[1] / 2, sides[2] / 2
         Point2f[(-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy), (-hx, -hy)]
     end)
     lines!(ax_particles, boxpts, color=:black)
-    positions = @lift([Point2f(image(p, $(obs).sys.sides)) for p in $(obs).x])
+    pts_and_colors = @lift(periodic_points_colors($(obs).x, $(obs).sys.sides, $show_periodic))
     scatter!(
-        ax_particles, positions;
+        ax_particles, @lift($pts_and_colors[1]);
         markersize=@lift(Float32($(obs).sig)),
         markerspace=:data,
-        color=(:dodgerblue, 0.85),
+        color=@lift($pts_and_colors[2]),
         strokewidth=1,
         strokecolor=:black,
     )
 
-    last_box = Ref((NaN, NaN))
-    on(obs) do s
-        b = (s.sys.sides[1], s.sys.sides[2])
-        if b != last_box[]
-            last_box[] = b
-            hx, hy = b[1] / 2, b[2] / 2
-            pad = 0.05 * max(b[1], b[2])
-            limits!(ax_particles, -hx - pad, hx + pad, -hy - pad, hy + pad)
-        end
+    # The view box always extends half a box-width/height beyond the
+    # primary cell on each side (i.e. ±Lx, ±Ly — showing half of each
+    # neighboring image, not the full one), whether or not periodic images
+    # are currently displayed, so it never changes when the toggle is
+    # switched — it only depends on the box size, i.e. it is only
+    # recomputed on restart.
+    last_sides = Ref((NaN, NaN))
+    function update_view_limits!(s)
+        sides = (s.sys.sides[1], s.sys.sides[2])
+        sides == last_sides[] && return nothing
+        last_sides[] = sides
+        hx, hy = sides[1], sides[2]
+        limits!(ax_particles, -hx, hx, -hy, hy)
+        return nothing
     end
+    update_view_limits!(obs[])
+    on(update_view_limits!, obs)
 
     ax_energy = Axis(viz[1, 2], xlabel="step", ylabel="Energy", title="Potential, kinetic and total energy")
     lines!(ax_energy, @lift(Point2f.($(obs).steps_history, $(obs).potential_history)), color=:royalblue, label="Potential")
@@ -392,10 +545,33 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
         autolimits!(ax_temp)
     end
 
-    colsize!(viz, 1, Relative(0.45))
-    colsize!(viz, 2, Relative(0.55))
-    colsize!(fig.layout, 1, Fixed(300))
+    colsize!(viz, 1, Relative(0.62))
+    colsize!(viz, 2, Relative(0.38))
+    colsize!(fig.layout, 1, Fixed(250))
     colsize!(fig.layout, 2, Auto())
+
+    #
+    # Status log: a small "console" panel at the bottom (last 4 lines)
+    # mirroring what is happening under the hood (minimization output,
+    # run/stop/explosion notices, restarts), so it doesn't only go to the
+    # terminal.
+    #
+    status_panel = fig[2, 1:2] = GridLayout()
+    Box(status_panel[1, 1], color=(:black, 0.05), strokecolor=(:black, 0.3), strokewidth=1)
+    Label(
+        status_panel[1, 1],
+        @lift(isempty($log_obs) ? "Status: waiting (Run, Minimize, Reset, or a parameter change will show output here)..." : join($log_obs, "\n"));
+        fontsize=CTRL_FONTSIZE,
+        halign=:left,
+        valign=:top,
+        justification=:left,
+        padding=(10, 10, 8, 8),
+        tellwidth=false,
+        tellheight=false,
+    )
+    rowgap!(fig.layout, 16)
+    rowsize!(fig.layout, 1, Fixed(575))
+    rowsize!(fig.layout, 2, Fixed(130))
 
     return fig
 end
