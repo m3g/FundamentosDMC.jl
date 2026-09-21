@@ -13,8 +13,8 @@ function mc(sys::System{T}, opt::Options=Options()) where {T}
     """)
 
     # aliases to simplify code
-    @unpack x0 = sys
-    @unpack nsteps, kT, alpha = opt
+    (; x0) = sys
+    (; steps, kT, alpha) = opt
     u(x) = potential(x, sys, opt)
 
     # Copy the initial point, to preserve it

@@ -17,7 +17,7 @@ function velocity_distribution(
 ) where {T}
 
     # Initialize histogram
-    @unpack n = sys
+    (; n) = sys
     Δv = vmax / nbins
     vvals = vmax * [(i - 1 / 2) * Δv for i in 1:nbins]
     vcount = zeros(nbins)

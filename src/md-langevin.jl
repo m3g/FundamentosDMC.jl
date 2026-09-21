@@ -13,8 +13,8 @@ function md_langevin(sys::System{T}, opt::Options=Options()) where {T}
     """)
 
     # aliases to simplify code
-    @unpack n, x0 = sys
-    @unpack dt, nsteps, kT, lambda = opt
+    (; n, x0) = sys
+    (; dt, nsteps, kT, lambda) = opt
     u(x) = potential(x, sys, opt)
     f!(f, x) = forces!(f, x, sys, opt)
 

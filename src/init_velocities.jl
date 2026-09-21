@@ -5,8 +5,8 @@ Initialize velocities with random distribution.
 
 """
 function init_velocities(sys::System{T}, opt::Options) where {T}
-    @unpack n = sys
-    @unpack kT = opt
+    (; n) = sys
+    (; kT) = opt
     # type of random distribution to be created
     if opt.initial_velocities == :normal
         v = randn(T, n)

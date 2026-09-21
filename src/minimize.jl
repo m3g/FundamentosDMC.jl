@@ -15,7 +15,7 @@ Energy after minimization: -74.15646912098042
 """
 function minimize!(sys::System{T}, opt::Options=Options()) where {T}
     # Simplify code by aliasing common variables
-    @unpack n, x0, sides = sys
+    (; n, x0, sides) = sys
     x = x0
     u(x) = potential(x, sys, opt)
     f!(f, x) = forces!(f, x, sys, opt)

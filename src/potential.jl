@@ -5,8 +5,8 @@ Function that computes the potential energy given a vector of positions, `x`.
 
 """
 function potential(x::Vector{T}, sys::System{T}, opt::Options) where {T}
-    @unpack n, sides = sys
-    @unpack eps, sig = opt
+    (; n, sides) = sys
+    (; eps, sig) = opt
     u = 0.0
     for i in 1:n-1
         for j in i+1:n

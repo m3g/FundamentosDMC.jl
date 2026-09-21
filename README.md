@@ -20,6 +20,19 @@ julia> ] add https://github.com/m3g/FundamentosDMC.jl
 ```
 (the `]` key will take you to the package management prompt, "`(@v1.6) pkg>`", where the `add ...` command should be run)
 
+### Interactive graphical interface
+
+In addition to running simulations from the Julia REPL as described in the tutorial, an interactive graphical interface is available, built as a package extension on top of [GLMakie](https://github.com/MakieOrg/Makie.jl). It lets you choose the simulation type (microcanonical MD, isokinetic/Berendsen/Langevin baths, or Monte Carlo) and all its parameters from the interface, showing the 2D motion of the particles live, together with the potential, kinetic and total energies, and the temperature. Changing any parameter restarts the simulation.
+
+To use it, install and load `GLMakie` in addition to `FundamentosDMC`:
+```julia
+julia> import Pkg; Pkg.add("GLMakie")
+
+julia> using FundamentosDMC, GLMakie
+
+julia> simulate_gui()
+```
+
 ##
 <p align=center>
 <img height=80px src=https://user-images.githubusercontent.com/5021636/124803402-7091ea80-df2f-11eb-8307-1305ac0d1d9a.png>

@@ -27,7 +27,7 @@ function radial_distribution(
     end
 
     # Initialize histogram
-    @unpack n, sides = sys
+    (; n, sides) = sys
     x = zeros(T, n)
     density = n / prod(sides)
 
