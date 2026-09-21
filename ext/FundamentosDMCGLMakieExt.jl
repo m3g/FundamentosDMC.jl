@@ -66,6 +66,7 @@ mutable struct SimState
 
     # Bookkeeping and logs
     step::Int
+    run_start_step::Int
     time::Float64
     steps_history::Vector{Int}
     potential_history::Vector{Float64}
@@ -90,7 +91,7 @@ function SimState(;
     initial_velocities::Symbol=:normal,
     kT::Float64=0.6,
     ibath::Int=10,
-    iequil::Int=10,
+    iequil::Int=1000,
     tau::Int=10,
     lambda::Float64=0.1,
     alpha::Float64=0.05,
@@ -133,7 +134,7 @@ function SimState(;
         kind, n, Lx, Ly, dt, nsteps, eps, sig, initial_velocities, kT, ibath, iequil, tau, lambda, alpha,
         sys, opt,
         x, v, f, flast, xtrial, u0, 0,
-        0, 0.0,
+        0, 0, 0.0,
         [0], [u0], [k0], [u0 + k0], [k0 / n],
         false, false,
     )
@@ -145,9 +146,16 @@ end
 # md-langevin.jl, selected by `state.kind`. Returns `false` if the
 # simulation exploded (as in the original `md` functions).
 #
+# `opt.iequil`/`opt.ibath` gate the isokinetic/Berendsen rescaling relative
+# to `state.run_start_step` (the step count at which the current "Run"
+# click started, set in `run!`), not relative to absolute step 0 — so
+# clicking "Run" again always re-applies equilibration to the *next*
+# `iequil` steps of that run, rather than only ever to the first `iequil`
+# steps of the whole trajectory.
 function md_step!(state::SimState)
     state.step += 1
     istep = state.step
+    rel_step = istep - state.run_start_step
     x, v, f, flast = state.x, state.v, state.f, state.flast
     sys, opt = state.sys, state.opt
     dt = opt.dt
@@ -173,9 +181,9 @@ function md_step!(state::SimState)
         return false
     end
 
-    if state.kind == :md_isokinetic && istep <= opt.iequil && mod(istep, opt.ibath) == 0
+    if state.kind == :md_isokinetic && rel_step <= opt.iequil && mod(rel_step, opt.ibath) == 0
         @. v = v * sqrt((dim(T) * opt.kT / 2) / kavg)
-    elseif state.kind == :md_berendsen && istep <= opt.iequil
+    elseif state.kind == :md_berendsen && rel_step <= opt.iequil
         lam = sqrt(1 + (opt.dt / opt.tau) * ((dim(T) * opt.kT / 2) / kavg - 1))
         @. v = v * lam
     end
@@ -228,20 +236,29 @@ end
 # Runs the simulation to completion (or until stopped), notifying `obs`
 # after every step so the interface redraws. Meant to be `@async`ed.
 #
-# Every write to `obs` is guarded by an identity check against `state`: if a
-# parameter was changed while this loop was running, `restart!` will have
-# already replaced `obs[]` with a brand new `SimState`, and this (now stale)
-# loop must not clobber it back.
+# `nsteps` (and, through `run_start_step`, `iequil`/`ibath` in `md_step!`)
+# count from the step the run *starts at*, not from absolute step 0:
+# clicking "Run" always advances the simulation by `nsteps` more steps from
+# wherever it currently is, and re-applies equilibration to the next
+# `iequil` steps of this run.
+#
+# Every write to `obs` is guarded by an identity check against `state`: it is
+# only ever swapped out from under a running loop by `reset!` (a genuinely
+# fresh restart); `update_params!` mutates this very state object in place,
+# so a running loop simply keeps going, picking up new parameters (and even
+# a new `kind`, hence re-selecting `step!` on every iteration below) on the
+# very next step.
 function run!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
     state = obs[]
+    state.run_start_step = state.step
     state.running = true
     state.stop = false
     obs[] = state
-    log!(log_obs, "Running $(KIND_LABELS[state.kind]) from step $(state.step) to $(state.nsteps)...")
+    log!(log_obs, "Running $(KIND_LABELS[state.kind]) from step $(state.step) to $(state.run_start_step + state.nsteps)...")
 
-    step! = state.kind == :mc ? mc_step! : md_step!
     exploded = false
-    while state.step < state.nsteps && !state.stop
+    while state.step < state.run_start_step + state.nsteps && !state.stop
+        step! = state.kind == :mc ? mc_step! : md_step!
         exploded = !step!(state)
         obs[] === state && (obs[] = state)
         exploded && break
@@ -250,7 +267,7 @@ function run!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
     if exploded
         log!(log_obs, "Simulation exploded (potential energy too large). Stopping.")
     else
-        log!(log_obs, "Stopped at step $(state.step)/$(state.nsteps).")
+        log!(log_obs, "Stopped at step $(state.step)/$(state.run_start_step + state.nsteps).")
     end
 
     state.running = false
@@ -258,38 +275,66 @@ function run!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
     return nothing
 end
 
-# Rebuilds the simulation state with a single field changed, restarting the
-# step counter/plot history with the new parameters, but *continuing from
-# the current coordinates and velocities* rather than jumping to a new
-# random configuration — a parameter tweak should let you keep watching
-# the same particles, not start over. Coordinates are only regenerated
-# automatically when `n` changes (the array length wouldn't match) or when
+# Applies a single changed parameter (or a new `kind`) directly to the
+# *current* SimState, in place: the step counter, elapsed time, and the
+# whole plot history are left untouched, so tweaking a parameter (say,
+# `kT`) or switching between NVE/NVT/MC continues the running trajectory
+# and its plots instead of restarting them. A running simulation loop is
+# not interrupted either (see `run!`), since it reads `state.sys`,
+# `state.opt` and `state.kind` fresh on every step.
+#
+# Coordinates/arrays are only regenerated when `n` changes (the array
+# length wouldn't match anymore). Velocities are only regenerated when
 # `initial_velocities` itself is the field being changed (a new
-# distribution was explicitly requested). An actual fresh random
-# configuration is only ever produced at startup or via `reset!` (the
-# "Reset" button).
-function restart!(obs::Observable{SimState}, field::Symbol, value)
-    old = obs[]
-    old.stop = true
-    kwargs = Dict{Symbol,Any}(
-        :kind => old.kind, :n => old.n, :Lx => old.Lx, :Ly => old.Ly,
-        :dt => old.dt, :nsteps => old.nsteps, :eps => old.eps, :sig => old.sig,
-        :initial_velocities => old.initial_velocities, :kT => old.kT,
-        :ibath => old.ibath, :iequil => old.iequil, :tau => old.tau,
-        :lambda => old.lambda, :alpha => old.alpha,
-        :x0 => old.x,
+# distribution was explicitly requested), or when switching away from
+# Monte Carlo (which does not carry meaningful velocities). An actual
+# fresh random configuration is only ever produced at startup or via
+# `reset!` (the "Reset" button).
+function update_params!(obs::Observable{SimState}, field::Symbol, value)
+    s = obs[]
+    old_kind = s.kind
+    setfield!(s, field, value)
+
+    s.opt = Options(;
+        dt=s.dt, nsteps=s.nsteps, eps=s.eps, sig=s.sig,
+        initial_velocities=s.initial_velocities, kT=s.kT,
+        ibath=s.ibath, iequil=s.iequil, tau=s.tau, lambda=s.lambda, alpha=s.alpha,
     )
-    if field != :initial_velocities && old.kind != :mc
-        kwargs[:v0] = old.v
+
+    if field == :n
+        n = max(s.n, 2)
+        s.n = n
+        s.sys = System(n=n, sides=[s.Lx, s.Ly])
+        s.x = copy(s.sys.x0)
+        s.xtrial = copy(s.x)
+        s.f = zeros(Point2D, n)
+        s.flast = zeros(Point2D, n)
+        s.v = s.kind == :mc ? zeros(Point2D, n) : init_velocities(s.sys, s.opt)
+        s.naccepted = 0
+    elseif field in (:Lx, :Ly)
+        s.sys = System(n=s.n, x0=copy(s.x), sides=[s.Lx, s.Ly])
     end
-    kwargs[field] = value
-    obs[] = SimState(; kwargs...)
+
+    if field == :initial_velocities || (field == :kind && old_kind == :mc && s.kind != :mc)
+        s.v = init_velocities(s.sys, s.opt)
+    elseif field == :kind && s.kind == :mc
+        s.v = zeros(Point2D, s.n)
+    end
+
+    if s.kind == :mc
+        s.ucurrent = potential(s.x, s.sys, s.opt)
+    else
+        forces!(s.f, s.x, s.sys, s.opt)
+        s.flast .= s.f
+    end
+
+    obs[] = s
     return nothing
 end
 
 # Generates a genuinely fresh random configuration, keeping the current
 # parameters. This is the explicit user action (the "Reset" button) that
-# `restart!` deliberately does not perform on its own.
+# `update_params!` deliberately does not perform on its own.
 function reset!(obs::Observable{SimState})
     old = obs[]
     old.stop = true
@@ -328,6 +373,7 @@ function minimize_now!(obs::Observable{SimState}, log_obs::Observable{Vector{Str
         u0, k0 = uafter, kinetic(s.v)
     end
     s.step = 0
+    s.run_start_step = 0
     s.time = 0.0
     empty!(s.steps_history)
     empty!(s.potential_history)
@@ -345,14 +391,17 @@ end
 
 function particles_title(s::SimState)
     label = KIND_LABELS[s.kind]
+    # Target step of the current (or most recent) run, not just `nsteps` on
+    # its own, since `nsteps` counts from `run_start_step` forward.
+    target = s.run_start_step + s.nsteps
     # Fixed-width step/time/acceptance fields, so the title doesn't jitter
     # horizontally as the digit count changes from step to step.
-    stepstr = lpad(s.step, ndigits(max(s.nsteps, 1)))
+    stepstr = lpad(s.step, ndigits(max(target, 1)))
     if s.kind == :mc
         ar = s.step == 0 ? 0.0 : 100 * s.naccepted / s.step
-        return "$label  |  step $stepstr/$(s.nsteps)  |  acceptance = $(@sprintf("%5.1f", ar))%"
+        return "$label  |  step $stepstr/$target  |  acceptance = $(@sprintf("%5.1f", ar))%"
     else
-        return "$label  |  step $stepstr/$(s.nsteps)  |  t = $(@sprintf("%8.2f", s.time))"
+        return "$label  |  step $stepstr/$target  |  t = $(@sprintf("%8.2f", s.time))"
     end
 end
 
@@ -419,8 +468,8 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
     kind_menu = Menu(controls[r, 2], options=first.(KIND_OPTIONS), default=KIND_LABELS[state.kind],
         fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT)
     on(kind_menu.selection) do s
-        log!(log_obs, "Restarted: type = $s.")
-        restart!(obs, :kind, Dict(KIND_OPTIONS)[s])
+        log!(log_obs, "Changed: type = $s.")
+        update_params!(obs, :kind, Dict(KIND_OPTIONS)[s])
     end
 
     r = next_row!()
@@ -428,8 +477,8 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
     iv_menu = Menu(controls[r, 2], options=first.(VELOCITY_OPTIONS), default=VELOCITY_LABELS[state.initial_velocities],
         fontsize=CTRL_FONTSIZE, height=CTRL_HEIGHT)
     on(iv_menu.selection) do s
-        log!(log_obs, "Restarted: velocities = $s.")
-        restart!(obs, :initial_velocities, Dict(VELOCITY_OPTIONS)[s])
+        log!(log_obs, "Changed: velocities = $s.")
+        update_params!(obs, :initial_velocities, Dict(VELOCITY_OPTIONS)[s])
     end
 
     #
@@ -456,8 +505,8 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
             value = tryparse(valtype, tb.displayed_string[])
             value === nothing && return nothing
             value == getfield(obs[], field) && return nothing
-            log!(log_obs, "Restarted: $field = $value.")
-            restart!(obs, field, value)
+            log!(log_obs, "Changed: $field = $value.")
+            update_params!(obs, field, value)
             return nothing
         end
         return tb
@@ -573,7 +622,7 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
         color=:seagreen, label="Kinetic", visible=@lift($(obs).kind != :mc))
     lines!(ax_energy, @lift(Point2f.($(obs).steps_history, $(obs).total_history)),
         color=:firebrick, label="Total", visible=@lift($(obs).kind != :mc))
-    axislegend(ax_energy, position=:rb)
+    axislegend(ax_energy, position=:lb)
 
     ax_temp = Axis(viz[2, 2], xlabel="step", ylabel="Temperature", title="Temperature (average kinetic energy/particle)")
     lines!(ax_temp, @lift(Point2f.($(obs).steps_history, $(obs).temperature_history)),
