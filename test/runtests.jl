@@ -1,6 +1,6 @@
-using CELFI
+using FundamentosDMC
 using Test
 
-@testset "CELFI.jl" begin
+@testset "FundamentosDMC.jl" begin
     # Write your tests here.
 end

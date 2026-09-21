@@ -5,8 +5,8 @@ Subroutine that computes the force. It modifies the input `f` vector.
 
 """
 function forces!(f::Vector{T}, x::Vector{T}, sys::System{T}, opt::Options) where {T}
-    @unpack n, sides = sys
-    @unpack eps, sig = opt
+    (; n, sides) = sys
+    (; eps, sig) = opt
     @. f = zero(T)
     for i in 1:n-1
         for j in i+1:n
