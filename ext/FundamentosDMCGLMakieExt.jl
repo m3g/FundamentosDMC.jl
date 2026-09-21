@@ -94,17 +94,30 @@ function SimState(;
     tau::Int=10,
     lambda::Float64=0.1,
     alpha::Float64=0.05,
+    x0::Union{Nothing,Vector{Point2D}}=nothing,
+    v0::Union{Nothing,Vector{Point2D}}=nothing,
 )
     n = max(n, 2)
     nsteps = max(nsteps, 1)
     Lx = max(Lx, 1.0)
     Ly = max(Ly, 1.0)
 
-    sys = System(n=n, sides=[Lx, Ly])
+    # Reuse the given coordinates/velocities when they are compatible with
+    # the (possibly new) number of particles; otherwise fall back to a
+    # fresh random configuration. This is how a parameter change continues
+    # the current trajectory instead of jumping to a new configuration.
+    reuse_x = x0 !== nothing && length(x0) == n
+    sys = reuse_x ? System(n=n, x0=copy(x0), sides=[Lx, Ly]) : System(n=n, sides=[Lx, Ly])
     opt = Options(; dt, nsteps, eps, sig, initial_velocities, kT, ibath, iequil, tau, lambda, alpha)
 
     x = copy(sys.x0)
-    v = kind == :mc ? zeros(Point2D, n) : init_velocities(sys, opt)
+    v = if kind == :mc
+        zeros(Point2D, n)
+    elseif v0 !== nothing && length(v0) == n
+        copy(v0)
+    else
+        init_velocities(sys, opt)
+    end
     f = zeros(Point2D, n)
     flast = zeros(Point2D, n)
     xtrial = copy(x)
@@ -245,9 +258,16 @@ function run!(obs::Observable{SimState}, log_obs::Observable{Vector{String}})
     return nothing
 end
 
-# Rebuilds the simulation state with a single field changed, which
-# restarts the simulation with the new parameters (or a fresh random
-# configuration, if `field` is set to its current value).
+# Rebuilds the simulation state with a single field changed, restarting the
+# step counter/plot history with the new parameters, but *continuing from
+# the current coordinates and velocities* rather than jumping to a new
+# random configuration — a parameter tweak should let you keep watching
+# the same particles, not start over. Coordinates are only regenerated
+# automatically when `n` changes (the array length wouldn't match) or when
+# `initial_velocities` itself is the field being changed (a new
+# distribution was explicitly requested). An actual fresh random
+# configuration is only ever produced at startup or via `reset!` (the
+# "Reset" button).
 function restart!(obs::Observable{SimState}, field::Symbol, value)
     old = obs[]
     old.stop = true
@@ -257,9 +277,29 @@ function restart!(obs::Observable{SimState}, field::Symbol, value)
         :initial_velocities => old.initial_velocities, :kT => old.kT,
         :ibath => old.ibath, :iequil => old.iequil, :tau => old.tau,
         :lambda => old.lambda, :alpha => old.alpha,
+        :x0 => old.x,
     )
+    if field != :initial_velocities && old.kind != :mc
+        kwargs[:v0] = old.v
+    end
     kwargs[field] = value
     obs[] = SimState(; kwargs...)
+    return nothing
+end
+
+# Generates a genuinely fresh random configuration, keeping the current
+# parameters. This is the explicit user action (the "Reset" button) that
+# `restart!` deliberately does not perform on its own.
+function reset!(obs::Observable{SimState})
+    old = obs[]
+    old.stop = true
+    obs[] = SimState(;
+        kind=old.kind, n=old.n, Lx=old.Lx, Ly=old.Ly,
+        dt=old.dt, nsteps=old.nsteps, eps=old.eps, sig=old.sig,
+        initial_velocities=old.initial_velocities, kT=old.kT,
+        ibath=old.ibath, iequil=old.iequil, tau=old.tau,
+        lambda=old.lambda, alpha=old.alpha,
+    )
     return nothing
 end
 
@@ -475,7 +515,7 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
     end
     on(buttons[4].clicks) do _
         log!(log_obs, "Reset: new random configuration.")
-        restart!(obs, :n, obs[].n)
+        reset!(obs)
     end
 
     colsize!(controls, 1, Fixed(70))
