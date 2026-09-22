@@ -14,7 +14,7 @@ function mc(sys::System{T}, opt::Options=Options()) where {T}
 
     # aliases to simplify code
     (; x0) = sys
-    (; steps, kT, alpha) = opt
+    (; nsteps, kT, alpha) = opt
     u(x) = potential(x, sys, opt)
 
     # Copy the initial point, to preserve it
