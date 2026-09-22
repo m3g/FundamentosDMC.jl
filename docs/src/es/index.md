@@ -68,5 +68,17 @@ Pkg.add("Plots")
 Pkg.add("LsqFit")
 ```
 
+## 1.5. Interfaz gráfica
+
+Además de ejecutar las simulaciones desde el REPL de Julia, como se describe en esta tutoría, `FundamentosDMC.jl` ofrece una interfaz gráfica interactiva, construida sobre [GLMakie](https://github.com/MakieOrg/Makie.jl). Puede ser usada para acompañar, en tiempo real, la ejecución de las simulaciones en los diferentes ensembles presentados aquí — la simulación microcanónica (NVE) y las simulaciones NVT con los termostatos isocinético, de Berendsen y de Langevin — además de acompañar simulaciones de Monte Carlo, mostrando el movimiento de las partículas junto con las energías potencial, cinética y total, y la temperatura. Todos los parámetros del sistema y de la simulación pueden ser definidos directamente en la interfaz.
+
+Para usarla, instale y cargue el `GLMakie` además del `FundamentosDMC`:
+```julia-repl
+julia> import Pkg; Pkg.add("GLMakie")
+
+julia> using FundamentosDMC, GLMakie
+
+julia> simulate_gui()
+```
 
 
