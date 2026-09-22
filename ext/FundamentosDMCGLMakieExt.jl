@@ -162,12 +162,16 @@ function md_step!(state::SimState)
     T = Point2D
 
     @. x = x + v * dt + 0.5 * f * dt^2
+    # `f`/`flast` are kept as the pure conservative force (reused for the
+    # position update above): Langevin friction is applied directly in the
+    # velocity update below instead of being folded into `f`, or it would
+    # leak into the next step with an extra step of lag and bias the
+    # temperature (worse the larger `lambda*dt` is).
     @. flast = f
     forces!(f, x, sys, opt)
 
     if state.kind == :md_langevin
-        @. f = f - opt.lambda * v
-        @. v = v + 0.5 * (f + flast) * dt + sqrt(2 * opt.lambda * opt.kT * opt.dt) * randn(T)
+        @. v = v + 0.5 * (f + flast) * dt - opt.lambda * v * dt + sqrt(2 * opt.lambda * opt.kT * opt.dt) * randn(T)
     else
         @. v = v + 0.5 * (f + flast) * dt
     end

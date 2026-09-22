@@ -50,18 +50,16 @@ function md_langevin(sys::System{T}, opt::Options=Options()) where {T}
 
         # Write coordinates to trajectory file, and update log vectors
 
-        # Updating positions 
+        # Updating positions
         @. x = x + v * dt + 0.5 * f * dt^2
 
         # Updating the forces
         @. flast = f
         f!(f, x)
 
-        # Add Langevin friction
-        @. f = f - lambda * v
-
-        # Updating velocities including random forces
-        @. v = v + 0.5 * (f + flast) * dt +
+        # Updating velocities, including Langevin friction (using the
+        # current, pre-update velocity) and random forces
+        @. v = v + 0.5 * (f + flast) * dt - lambda * v * dt +
                sqrt(2 * lambda * kT * dt) * randn(T)
         remove_drift!(v)
 
