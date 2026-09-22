@@ -59,8 +59,9 @@ function md_langevin(sys::System{T}, opt::Options=Options()) where {T}
 
         # Updating velocities, including Langevin friction (using the
         # current, pre-update velocity) and random forces
-        @. v = v + 0.5 * (f + flast) * dt - lambda * v * dt +
-               sqrt(2 * lambda * kT * dt) * randn(T)
+        @. v = v + 0.5 * (f + flast) * dt 
+               - lambda * v * dt + # friction
+               sqrt(2 * lambda * kT * dt) * randn(T) # random kicks
         remove_drift!(v)
 
         # Update step and print data
