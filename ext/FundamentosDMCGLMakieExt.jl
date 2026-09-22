@@ -405,6 +405,16 @@ function particles_title(s::SimState)
     end
 end
 
+# How many trailing steps the temperature-plot title averages over.
+const TEMP_AVG_WINDOW = 200
+
+function temperature_title(s::SimState)
+    hist = s.temperature_history
+    window = @view hist[max(1, end - TEMP_AVG_WINDOW + 1):end]
+    avgT = isempty(window) ? 0.0 : sum(window) / length(window)
+    return "Temperature (<K>/N) - Last $TEMP_AVG_WINDOW steps: $(@sprintf("%.2f", avgT))"
+end
+
 # The 8 first periodic images surrounding the primary cell (edges + corners).
 const IMAGE_OFFSETS = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1))
 
@@ -624,7 +634,7 @@ function FundamentosDMC.simulate_gui(; n::Int=100, sides=(100.0, 100.0), kind::S
         color=:firebrick, label="Total", visible=@lift($(obs).kind != :mc))
     axislegend(ax_energy, position=:lb)
 
-    ax_temp = Axis(viz[2, 2], xlabel="step", ylabel="Temperature", title="Temperature (average kinetic energy/particle)")
+    ax_temp = Axis(viz[2, 2], xlabel="step", ylabel="Temperature", title=@lift(temperature_title($obs)))
     lines!(ax_temp, @lift(Point2f.($(obs).steps_history, $(obs).temperature_history)),
         color=:purple, visible=@lift($(obs).kind != :mc))
     hlines!(ax_temp, @lift(Float32($(obs).kT)), color=:gray, linestyle=:dash)
