@@ -8,7 +8,7 @@ Leandro Martínez - Institute of Chemistry - Universidade Estadual de Campinas (
 
 This tutorial contains the explanations for running and analyzing Molecular Dynamics and Monte Carlo simulations of a simple two-dimensional system. The goal is for students to become familiar with the various technical details involved in performing simulations and their limitations.
 
-> **Available in:** [English](https://m3g.github.io/FundamentosDMC.jl/stable/en/) | [Español](https://m3g.github.io/FundamentosDMC.jl/stable/es/) | [Português](https://m3g.github.io/FundamentosDMC.jl/stable/pt/)
+> **Available in:** [English](https://m3g.github.io/FundamentosDMC.jl/stable/) | [Español](https://m3g.github.io/FundamentosDMC.jl/stable/es/) | [Português](https://m3g.github.io/FundamentosDMC.jl/stable/pt/)
 
 ### Installation of `FundamentosDMC.jl`
 
