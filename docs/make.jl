@@ -30,7 +30,7 @@ makedocs(
             "Distribución de velocidades" => "es/velocities.md",
         ],
         "English" => [
-            "Start" => "en/index.md",
+            "Start" => "index.md",
             "Simulated system" => "en/sistema.md",
             "Microcanonical simulation" => "en/simple.md",
             "Isokinetic thermostat" => "en/isokinetic.md",
