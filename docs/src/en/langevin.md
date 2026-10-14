@@ -63,10 +63,10 @@ out = md_langevin(
     sys,
     Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
 )
-plot(
+Plots.plot
     out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )
-plot(out[:,4],label="Temperature",xlabel="step")
+Plots.plotout[:,4],label="Temperature",xlabel="step")
 ```

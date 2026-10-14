@@ -39,7 +39,7 @@ A variável `out` que sai da simulação é uma matriz com as energias e a tempe
 ```julia-repl
 julia> using Plots
 
-julia> plot(
+julia> Plots.plot
           out,ylim=[-100,100],
           label=["Potential" "Kinetic" "Total" "Temperature"],
           xlabel="step"
@@ -94,7 +94,7 @@ sys = System(n=100)
 minimize!(sys)
 out = md(sys,Options(dt=0.05))
 
-plot(out,ylim=[-100,100],
+Plots.plotout,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )

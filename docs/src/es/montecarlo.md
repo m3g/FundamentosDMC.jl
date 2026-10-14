@@ -50,7 +50,7 @@ aceptados (para una tasa de 30\%).
 Observe la evolución de la energía potencial, haciendo gráficos con: 
 
 ```julia-repl
-plot(out,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
 ```
 
 En este caso no tiene sentido mostrar la energía cinética, que no está definida ya que las partículas no tienen efectivamente velocidades. Salve el gráfico en un archivo `pdf`, para comparación posterior, usando: 
@@ -67,5 +67,5 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = mc(sys,Options(alpha=0.05,nsteps=50_000))
-plot(out,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
 ```

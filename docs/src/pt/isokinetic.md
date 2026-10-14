@@ -23,7 +23,7 @@ julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1));
 
 O gráfico das energias em função do tempo pode ser obtido com:
 ```julia-repl
-julia> plot(out,ylim=[-100,100],
+julia> Plots.plotout,ylim=[-100,100],
            label=["Potential" "Kinetic" "Total" "Temperature"],
            xlabel="step"
        )
@@ -33,7 +33,7 @@ Note que a energia total não é mais constante durante o período de equilibrat
 
 A temperatura pode ser observada com:
 ```julia-repl
-julia> plot(
+julia> Plots.plot
            out[:,4],
            label=["Temperature"],
            xlabel="step"
@@ -59,10 +59,10 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
-plot(
+Plots.plot
     out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )
-plot(out[:,4],label="Temperature",xlabel="step")
+Plots.plotout[:,4],label="Temperature",xlabel="step")
 ```

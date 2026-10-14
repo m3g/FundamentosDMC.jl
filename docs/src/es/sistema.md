@@ -105,13 +105,13 @@ Podemos ver rápidamente que ocurrió con las partículas, colocando-las en un g
 ```julia-repl
 julia> using Plots
 
-julia> scatter(Tuple.(x0))
+julia> Plots.scatter(Tuple.(x0))
 ```
 Los puntos deben estar aleatoriamente distribuidos, y en particular algunos puntos deben estar muy cercanos a los otros, lo que genera potenciales muy repulsivos.
 
 En seguida, hacemos el gráfico del punto con energía mínima obtenido:
 ```julia-repl
-julia> scatter(Tuple.(sys.x0))
+julia> Plots.scatter(Tuple.(sys.x0))
 ```
 y notará que los puntos ahora tienen una nueva disposición: hay puntos formando clusteres, porque el potencial de Lennard-Jones es atractivo en distancias largas. Pero no hay más puntos muy cercanos generando repulsiones muy grandes.
 
@@ -157,8 +157,8 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 x0 = copy(sys.x0)
 minimize!(sys)
-scatter(Tuple.(x0))
-scatter(Tuple.(sys.x0))
+Plots.scatter(Tuple.(x0))
+Plots.scatter(Tuple.(sys.x0))
 ```
 
 Observación: el comando `Tuple.(x)` convierte el vector de vectores en un vector de pares (tuplas), que es correctamente interpretado por `Plots` como una única serie de puntos.

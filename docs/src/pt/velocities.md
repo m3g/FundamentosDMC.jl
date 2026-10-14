@@ -20,7 +20,7 @@ julia> v = 0:0.1:5 # intervalo de velocidades
 
 julia> y = mb.(v,0.6) # o . aplica a todos os elementos de x
 
-julia> plot(v,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequência")
+julia> Plots.plotv,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequência")
 ```
 
 Um aspecto interessante de observar nas simulações é como evolui, e como
@@ -70,7 +70,7 @@ Note que geramos `100_000` pontos, para obter uma distribuição bem amostrada.
 As duas distribuições têm a mesma energia cinética média, claro, que corresponde à temperatura desejada. As distribuições, por outro lado, são bem diferentes:
 
 ```julia-repl
-julia> plot(
+julia> Plots.plot
            [d_normal,d_flat],
            label=["Normal" "Uniforme"],
            xlabel="norma da velocidade",
@@ -122,7 +122,7 @@ Number of frames read = 10001
 
 Faça o gráfico dessa distribuição de velocidades:
 ```julia-repl
-julia> plot(
+julia> Plots.plot
            v_sim,
            label="Langevin",
            xlabel="norma da velocidade",
@@ -170,7 +170,7 @@ julia> pars = coef(fit)
 
 julia> yfit = [ f(xi,pars) for xi in x ];
 
-julia> plot(
+julia> Plots.plot
            [ (x,y), (x,yfit) ],
            label=[ "Simulação"  "Ajuste" ],
            xlabel="norma da velocidade",
@@ -214,7 +214,7 @@ md_out = md_langevin(
 
 # plotar distribuição de velocidades
 v_sim = velocity_distribution(sys,"vel.xyz");
-plot(
+Plots.plot
     v_sim,
     label="Langevin",
     xlabel="norma da velocidade",
@@ -231,7 +231,7 @@ fit = curve_fit(f, x, y, p0)
 # comparar ajuste com simulação
 pars = coef(fit)
 yfit = [ f(xi,pars) for xi in x ]
-plot(
+Plots.plot
     [ (x,y), (x,yfit) ],
     label=[ "Simulação"  "Ajuste" ],
     xlabel="norma da velocidade",

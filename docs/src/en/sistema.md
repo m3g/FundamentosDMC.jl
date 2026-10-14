@@ -105,13 +105,13 @@ We can quickly see what happened to the particles by plotting them. First, we ge
 ```julia-repl
 julia> using Plots
 
-julia> scatter(Tuple.(x0))
+julia> Plots.scatter(Tuple.(x0))
 ```
 The points should be randomly distributed, and in particular some points should be very close to others, generating very repulsive potentials.
 
 Then, we plot the energy-minimized configuration:
 ```julia-repl
-julia> scatter(Tuple.(sys.x0))
+julia> Plots.scatter(Tuple.(sys.x0))
 ```
 and you will notice that the points now have a new arrangement: there are points forming clusters, because the Lennard-Jones potential is attractive at long distances. But there are no longer very close points generating very large repulsions.
 
@@ -155,8 +155,8 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 x0 = copy(sys.x0)
 minimize!(sys)
-scatter(Tuple.(x0))
-scatter(Tuple.(sys.x0))
+Plots.scatter(Tuple.(x0))
+Plots.scatter(Tuple.(sys.x0))
 ```
 
 Note: the `Tuple.(x)` command converts the vector of vectors into a vector of pairs (tuples), which is correctly interpreted by `Plots` as a single data series.
