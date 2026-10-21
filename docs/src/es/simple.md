@@ -111,7 +111,7 @@ sys = System(n=100)
 minimize!(sys)
 out = md(sys,Options(dt=0.05))
 
-Plots.plotout,ylim=[-100,100],
+Plots.plot(out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )

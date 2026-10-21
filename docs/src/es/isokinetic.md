@@ -31,7 +31,7 @@ julia> out = md_isokinetic(sys,Options(iequil=200,nsteps=2_000,ibath=1));
 
 El gráfico de las energías en función del tiempo puede ser obtenido con:
 ```julia-repl
-julia> Plots.plotout,ylim=[-100,100],
+julia> Plots.plot(out,ylim=[-100,100],
            label=["Potential" "Kinetic" "Total" "Temperature"],
            xlabel="step"
        )
@@ -72,5 +72,5 @@ Plots.plot
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )
-Plots.plotout[:,4],label="Temperature",xlabel="step")
+Plots.plot(out[:,4],label="Temperature",xlabel="step")
 ```

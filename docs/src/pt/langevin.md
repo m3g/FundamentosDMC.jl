@@ -52,5 +52,5 @@ Plots.plot
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
 )
-Plots.plotout[:,4],label="Temperature",xlabel="step")
+Plots.plot(out[:,4],label="Temperature",xlabel="step")
 ```

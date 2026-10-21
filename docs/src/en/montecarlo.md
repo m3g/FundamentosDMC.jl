@@ -47,7 +47,7 @@ accepted (for a 30\% acceptance rate).
 Observe the evolution of the potential energy by making plots with:
 
 ```julia-repl
-Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 ```
 
 In this case it does not make sense to show the kinetic energy, which is not defined since the particles do not have actual velocities. Save the plot to a `pdf` file for later comparison, using:
@@ -64,5 +64,5 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = mc(sys,Options(alpha=0.05,nsteps=50_000))
-Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 ```

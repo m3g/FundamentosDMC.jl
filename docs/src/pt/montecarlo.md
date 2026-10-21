@@ -29,7 +29,7 @@ Uma vez escolhida a perturbação, execute o programa com número de passos de 2
 Observe a evolução da energia potencial, fazendo gráficos com:
 
 ```julia-repl
-Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 ```
 
 Neste caso não faz sentido mostrar a energia cinética, que não está definida já que as partículas não têm efetivamente velocidades. Salve o gráfico em um arquivo `pdf`, para comparação posterior, usando:
@@ -46,5 +46,5 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = mc(sys,Options(alpha=0.05,nsteps=50_000))
-Plots.plotout,ylim=[-100,100], label="Potential", xlabel="step")
+Plots.plot(out,ylim=[-100,100], label="Potential", xlabel="step")
 ```
