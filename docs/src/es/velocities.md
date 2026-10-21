@@ -20,7 +20,7 @@ julia> v = 0:0.1:5 # velocity range
 
 julia> y = mb.(v,0.6) # the . applies to all elements of x
 
-julia> Plots.plotv,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequency")
+julia> Plots.plot(v,y,label="Maxwell-Bolztmann",xlabel="v",ylabel="frequency")
 ```
 
 Un aspecto interesante de ver en las simulaciones es como evoluciona, y como 
@@ -70,7 +70,7 @@ Note que generamos `100_000` puntos, para tener una distribución buen muestread
 Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:
 
 ```julia-repl
-julia> Plots.plot
+julia> Plots.plot(
            [d_normal,d_flat],
            label=["Normal" "Flat"],
            xlabel="velocity norm",
@@ -122,7 +122,7 @@ Number of frames read = 10001
 
 Haga el gráfico de esta distribución de velocidades: 
 ```julia-repl
-julia> Plots.plot
+julia> Plots.plot(
            v_sim,
            label="Langevin",
            xlabel="velocity norm",
@@ -171,7 +171,7 @@ julia> pars = coef(fit)
 
 julia> yfit = [ f(xi,pars) for xi in x ];
 
-julia> Plots.plot
+julia> Plots.plot(
            [ (x,y), (x,yfit) ],
            label=[ "Simulation"  "Fit" ],
            xlabel="velocity norm",
@@ -215,7 +215,7 @@ md_out = md_langevin(
 
 # plot velocity distribution
 v_sim = velocity_distribution(sys,"vel.xyz");
-Plots.plot
+Plots.plot(
     v_sim,
     label="Langevin",
     xlabel="velocity norm",
@@ -232,7 +232,7 @@ fit = curve_fit(f, x, y, p0)
 # compare fit with simulation
 pars = coef(fit)
 yfit = [ f(xi,pars) for xi in x ]
-Plots.plot
+Plots.plot(
     [ (x,y), (x,yfit) ],
     label=[ "Simulation"  "Fit" ],
     xlabel="velocity norm",

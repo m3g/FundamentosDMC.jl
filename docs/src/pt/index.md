@@ -68,7 +68,9 @@ Para usá-la, instale e carregue o `GLMakie` além do `FundamentosDMC`:
 ```julia-repl
 julia> import Pkg; Pkg.add("GLMakie")
 
-julia> using FundamentosDMC, GLMakie
+julia> using FundamentosDMC
+
+julia> import GLMakie
 
 julia> simulate_gui()
 ```

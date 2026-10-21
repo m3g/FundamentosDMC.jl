@@ -41,7 +41,7 @@ Debe notar-se que la energía total no es más constante durante el período de 
 
 La temperatura puede ser observada con:
 ```julia-repl
-julia> Plots.plot
+julia> Plots.plot(
            out[:,4],
            label=["Temperature"],
            xlabel="step"
@@ -67,7 +67,7 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_isokinetic(sys,Options(iequil=5_000,ibath=50,nsteps=20_000))
-Plots.plot
+Plots.plot(
     out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"

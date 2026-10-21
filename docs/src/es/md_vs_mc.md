@@ -30,13 +30,13 @@ julia> mc_out = mc(
 La primera columna de `md_out` tiene la energía potencial en la simulación de dinámica molecular. Vamos a hacer el gráfico de esta energía:
 
 ```julia-repl
-julia> Plots.plotmd_out[:,1],label="Potential energy- MD",xlabel="step")
+julia> Plots.plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
 ```
 
 Y vamos a añadir al mismo gráfico la energía potencial obtenida en la simulación de Monte-Carlo, que está en `mc_out` (note el `!` al final de `plot!`, indicando que el gráfico anterior va a ser modificado):
 
 ```julia-repl
-julia> Plots.plot!mc_out,label="Potential energy- MC",xlabel="step")
+julia> Plots.plot!(mc_out,label="Potential energy- MC",xlabel="step")
 ```
 
 Note la similaridad, o diferencia entre los dos gráficos. Acuerde-se que en ninguna de estas simulaciones controlamos explícitamente la energía potencial. 
@@ -93,14 +93,14 @@ julia> rmc, gmc = radial_distribution(sys,"mc.xyz")
 
 Cree en gráfico de la función de distribución de la simulación de dinámica molecular, con:
 ```julia-repl
-julia> Plots.plotrmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+julia> Plots.plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
 ```
 
 Note el aumento de densidad local en distancias cortas, que resulta de las interacciones favorables entre las partículas. Note también que la densidad relativa tiende a `1.0` en distancias grandes, cuando la correlación de la posición entre partículas no és mas importante.  
 
 Agregue al mismo gráfico la función de distribución obtenida a partir de la simulación de Monte-Carlo:  
 ```julia-repl
-julia> Plots.plot!rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
+julia> Plots.plot!(rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
 ```
  Compare. Las simulaciones, con sus naturalezas
 totalmente distintas, muestrearon las mismas estructuras?  
@@ -120,14 +120,14 @@ mc_out = mc(
     sys,
     Options(alpha=0.05,nsteps=300_000,trajectory_file="mc.xyz")
 )
-Plots.plotmd_out[:,1],label="Potential energy- MD",xlabel="step")
-Plots.plot!mc_out,label="Potential energy- MC",xlabel="step")
+Plots.plot(md_out[:,1],label="Potential energy- MD",xlabel="step")
+Plots.plot!(mc_out,label="Potential energy- MC",xlabel="step")
 savefig("potential_energy.pdf")
 
 rmd, gmd = radial_distribution(sys,"md.xyz")
 rmc, gmc = radial_distribution(sys,"mc.xyz")
-Plots.plotrmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
-Plots.plot!rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
+Plots.plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+Plots.plot!(rmc,gmc,xlabel="r",ylabel="g(r)",label="MC")
 savefig("gr.pdf")
 ```
 

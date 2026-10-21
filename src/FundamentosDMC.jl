@@ -56,7 +56,9 @@ This function is implemented as a package extension and requires `GLMakie`
 to be loaded:
 
 ```julia-repl
-julia> using FundamentosDMC, GLMakie
+julia> using FundamentosDMC
+
+julia> import GLMakie
 
 julia> simulate_gui()
 ```
@@ -69,7 +71,7 @@ function _simulate_gui_hint(io, exc, _argtypes, _kwargs)
         print(
             io,
             "\nHINT: `simulate_gui` requires the GLMakie package to be loaded. Install and load it with:\n\n",
-            "    import Pkg; Pkg.add(\"GLMakie\")\n    using GLMakie\n\n",
+            "    import Pkg; Pkg.add(\"GLMakie\")\n    import GLMakie\n\n",
             "and call `simulate_gui()` again.",
         )
     end

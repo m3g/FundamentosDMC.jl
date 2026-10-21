@@ -42,7 +42,7 @@ Observe los gráficos de energía resultantes, usando los mismos comandos de ant
 ```julia-repl
 julia> using Plots
 
-julia> Plots.plot
+julia> Plots.plot(
            out,ylim=[-100,100],
            label=["Potential" "Kinetic" "Total" "Temperature"],
            xlabel="step"
@@ -59,7 +59,7 @@ using FundamentosDMC, Plots
 sys = System(n=100,sides=[100,100])
 minimize!(sys)
 out = md_berendsen(sys,Options(tau=50,iequil=500,nsteps=20_000))
-Plots.plot
+Plots.plot(
     out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"

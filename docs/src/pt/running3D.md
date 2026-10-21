@@ -51,7 +51,7 @@ E podemos visualizar a função de distribuição radial, com
 ```julia-repl
 julia> rmd, gmd = radial_distribution(sys,"md.xyz")
 
-julia> Plots.plotrmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+julia> Plots.plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
 ```
 
 ## 9.3. Código completo resumido
@@ -67,5 +67,5 @@ md_out = md_langevin(
     Options(lambda=0.01,nsteps=20_000,trajectory_file="md.xyz")
 )
 rmd, gmd = radial_distribution(sys,"md.xyz")
-Plots.plotrmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
+Plots.plot(rmd,gmd,xlabel="r",ylabel="g(r)",label="MD")
 ```

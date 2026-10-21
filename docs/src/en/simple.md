@@ -50,7 +50,7 @@ The `out` variable returned from the simulation is a matrix with the energies an
 ```julia-repl
 julia> using Plots
 
-julia> Plots.plot
+julia> Plots.plot(
           out,ylim=[-100,100],
           label=["Potential" "Kinetic" "Total" "Temperature"],
           xlabel="step"

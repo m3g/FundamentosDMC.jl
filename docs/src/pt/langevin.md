@@ -47,7 +47,7 @@ out = md_langevin(
     sys,
     Options(lambda=0.1,dt=0.05,nsteps=20_000,iprintxyz=5,initial_velocities=:zero)
 )
-Plots.plot
+Plots.plot(
     out,ylim=[-100,100],
     label=["Potential" "Kinetic" "Total" "Temperature"],
     xlabel="step"
