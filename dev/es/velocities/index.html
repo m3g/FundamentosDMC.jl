@@ -5,7 +5,7 @@ julia&gt; v = 0:0.1:5 # velocity range
 
 julia&gt; y = mb.(v,0.6) # the . applies to all elements of x
 
-julia&gt; Plots.plotv,y,label=&quot;Maxwell-Bolztmann&quot;,xlabel=&quot;v&quot;,ylabel=&quot;frequency&quot;)</code></pre><p>Un aspecto interesante de ver en las simulaciones es como evoluciona, y como  converge, la distribución de velocidades de las partículas. En nuestros programas tenemos tres diferentes maneras de generar la distribución <em>inicial</em> de velocidades: con normas distribuidas homogéneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro <code>initial_velocities</code> de <code>Options</code>. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: </p><pre><code class="language-julia-repl hljs">julia&gt; sys = System(n=100_000,sides=[50,50,50])
+julia&gt; Plots.plot(v,y,label=&quot;Maxwell-Bolztmann&quot;,xlabel=&quot;v&quot;,ylabel=&quot;frequency&quot;)</code></pre><p>Un aspecto interesante de ver en las simulaciones es como evoluciona, y como  converge, la distribución de velocidades de las partículas. En nuestros programas tenemos tres diferentes maneras de generar la distribución <em>inicial</em> de velocidades: con normas distribuidas homogéneamente entre 0 y 1, con una distribución normal de normas, o todas nulas. Esto se puede ajustar con el parámetro <code>initial_velocities</code> de <code>Options</code>. Por ejemplo, velocidades iniciales con distribuciones distintas pueden ser generadas de la siguiente forma: </p><pre><code class="language-julia-repl hljs">julia&gt; sys = System(n=100_000,sides=[50,50,50])
 System{Point2D}:
  Number of particles = 100000
  Box sides = [100.0, 100.0]
@@ -34,7 +34,7 @@ julia&gt; d_flat = velocity_distribution(sys,&quot;vflat.xyz&quot;);
 Number of frames read = 1
  Average velocity = [-4.9000000006849124e-8, -1.2999999991358812e-8]
  Average velocity norm = 0.9506616041200406
- Average kinetic energy = 0.5999232099558015</code></pre><p>Note que generamos <code>100_000</code> puntos, para tener una distribución buen muestreada.  Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:</p><pre><code class="language-julia-repl hljs">julia&gt; Plots.plot
+ Average kinetic energy = 0.5999232099558015</code></pre><p>Note que generamos <code>100_000</code> puntos, para tener una distribución buen muestreada.  Las dos distribuciones tienen la misma energía cinética media, claro, que corresponde a la temperatura deseada. Las distribuciones, por otro lado, son muy distintas:</p><pre><code class="language-julia-repl hljs">julia&gt; Plots.plot(
            [d_normal,d_flat],
            label=[&quot;Normal&quot; &quot;Flat&quot;],
            xlabel=&quot;velocity norm&quot;,
@@ -61,7 +61,7 @@ julia&gt; md_out = md_langevin(
 Number of frames read = 10001
  Average velocity = [0.003014992500749613, -0.04277096828317029, -0.01629199255074569]
  Average velocity norm = 1.2234527952231138
- Average kinetic energy = 0.8819808992851449</code></pre><p>Haga el gráfico de esta distribución de velocidades: </p><pre><code class="language-julia-repl hljs">julia&gt; Plots.plot
+ Average kinetic energy = 0.8819808992851449</code></pre><p>Haga el gráfico de esta distribución de velocidades: </p><pre><code class="language-julia-repl hljs">julia&gt; Plots.plot(
            v_sim,
            label=&quot;Langevin&quot;,
            xlabel=&quot;velocity norm&quot;,
@@ -80,7 +80,7 @@ julia&gt; fit = curve_fit(f, x, y, p0)</code></pre><p>Y vemos como bien los dato
 
 julia&gt; yfit = [ f(xi,pars) for xi in x ];
 
-julia&gt; Plots.plot
+julia&gt; Plots.plot(
            [ (x,y), (x,yfit) ],
            label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
            xlabel=&quot;velocity norm&quot;,
@@ -108,7 +108,7 @@ md_out = md_langevin(
 
 # plot velocity distribution
 v_sim = velocity_distribution(sys,&quot;vel.xyz&quot;);
-Plots.plot
+Plots.plot(
     v_sim,
     label=&quot;Langevin&quot;,
     xlabel=&quot;velocity norm&quot;,
@@ -125,7 +125,7 @@ fit = curve_fit(f, x, y, p0)
 # compare fit with simulation
 pars = coef(fit)
 yfit = [ f(xi,pars) for xi in x ]
-Plots.plot
+Plots.plot(
     [ (x,y), (x,yfit) ],
     label=[ &quot;Simulation&quot;  &quot;Fit&quot; ],
     xlabel=&quot;velocity norm&quot;,
@@ -135,4 +135,4 @@ Plots.plot
 savefig(&quot;./velocities_fit.pdf&quot;)
 
 # Check kT
-coef(fit)[2]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../running3D/">« Ejecución en 3D</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Wednesday 21 October 2026 18:03">Wednesday 21 October 2026</span>. Using Julia version 1.13.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+coef(fit)[2]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../running3D/">« Ejecución en 3D</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Wednesday 21 October 2026 18:20">Wednesday 21 October 2026</span>. Using Julia version 1.13.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
